@@ -214,6 +214,8 @@ export default function UsersDetail() {
                 >
                   <SelectItem key="ADMIN">ADMIN</SelectItem>
                   <SelectItem key="SALES">SALES</SelectItem>
+                  <SelectItem key="PURCHASING">PURCHASING</SelectItem>
+                  <SelectItem key="INVENTORY">INVENTORY</SelectItem>
                 </Select>
               </div>
 

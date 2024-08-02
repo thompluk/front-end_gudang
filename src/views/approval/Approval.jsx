@@ -10,22 +10,22 @@ import {
 } from "@nextui-org/react";
 import { VerticalDotsIcon } from "../../assets/VerticalDotIcon";
 
-export default function Prinsipal() {
+export default function Approval() {
 
   const navigate = useNavigate();
   const columns = [
     {name: "ID", uid: "id", sortable: true},
-    {name: "NAME", uid: "name", sortable: true},
-    {name: "TELEPHONE", uid: "telephone", sortable: true},
-    {name: "FAX", uid: "fax", sortable: true},
+    {name: "NO_PPB", uid: "no_ppb", sortable: true},
+    {name: "TANGGAL", uid: "tanggal", sortable: true},
+    {name: "PEMOHON", uid: "pemohon", sortable: true},
+    {name: "TIPE", uid: "tipe", sortable: true},
     {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
   ];
 
-  const apiname = "prinsipal";
-  const pathname = "prinsipal";
+  const apiname = "indexApproval";
 
   const addBtn =()=>{
-    navigate("/prinsipal/new");
+    navigate("/approval");
   }
 
   const handleAction = async (key) => {
@@ -69,9 +69,7 @@ export default function Prinsipal() {
             </Button>
           </DropdownTrigger>
           <DropdownMenu onAction={handleAction}>
-            <DropdownItem key={"/prinsipal/" + data.id + "/view"}>View</DropdownItem>
-            <DropdownItem key={"/prinsipal/" + data.id}>Edit</DropdownItem>
-            <DropdownItem key={data.id}>Delete</DropdownItem>
+            <DropdownItem key={"/approval/" + data.id + "/"+data.tipe}>View</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>
@@ -81,7 +79,7 @@ export default function Prinsipal() {
   return (
     <div className="flex-col justify-center bg-white p-4 rounded-large animated fadeInDown ">
       <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
-          <h1>Prinsipal List</h1>
+          <h1>Approval List</h1>
       </div>
       <TableCustom columns={columns} apiname={apiname} addBtn={addBtn} renderCellTable={renderCellTable}>
       </TableCustom>

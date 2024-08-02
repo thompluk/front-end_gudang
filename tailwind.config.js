@@ -10,7 +10,12 @@ export default {
   ],
   theme: {
     extend: {
-      
+      width: {
+        '1/20': '5%',
+        '1/10': '10%',
+        '2/10': '20%',
+        '4/20': '40%',
+      }
     },
   },
   darkMode: "class",

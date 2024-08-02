@@ -23,7 +23,7 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure}
 import TableSelect from '../../custom/TableSelect'
 // import { IconButton } from "@material-tailwind/react";
 
-export default function PermintaanPembelianBarangDetail() {
+export default function ApprovalPPBView() {
   const navigate = useNavigate()
   const [ppb_id, setPpbid] = useState([])
   // const [details, setDetails] = useState([])
@@ -42,12 +42,6 @@ export default function PermintaanPembelianBarangDetail() {
   const handleOpenModalMenyetujui = () => setIsModalOpenMenyetujui(true);
   const handleCloseModalMenyetujui = () => setIsModalOpenMenyetujui(false);
 
-  // const tanggalRef = createRef()
-  // const no_ppbRef = createRef()
-  // const pemohonRef = createRef()
-  // const mengetahuiRef = createRef()
-  // const menyetujuiRef = createRef() 
-  // const purchasingRef = createRef()
   const [ppbData, setPpbData] = useState({
     tanggal: '',
     no_ppb: '',
@@ -60,7 +54,6 @@ export default function PermintaanPembelianBarangDetail() {
     menyetujui_id: '',
     menyetujui_status: '',
     purchasing: '',
-    remarks: '',
   })
 
   const [details, setDetails] = useState([
@@ -75,39 +68,13 @@ export default function PermintaanPembelianBarangDetail() {
     }
   ]);
 
-  const addData = () => {
-    const newData = {
-      id: null,
-      nama_barang: "",
-      kode: "",
-      spesifikasi: "",
-      quantity: "",
-      expected_eta: "",
-      project_and_customer: "",
-    };
-
-    setDetails([...details, newData]);
-
-  };
-
-
-  const btnBack = () => [
-    navigate('/ppb')
-  ]
-
 
   useEffect(() => {
 
-    if (param == 'new'){
-      // addData();
-    }
-    if (param != 'new') {
-      getDetails();
-      getPpb();
-    }
-    if (param2 == 'view') {
-      setDisabledView(true)
-    }
+    getDetails();
+    getPpb();
+    setDisabledView(true)
+    
 
   }, [])
 
@@ -129,8 +96,7 @@ export default function PermintaanPembelianBarangDetail() {
           menyetujui_id: data.data.menyetujui_id,
           menyetujui_status: data.data.menyetujui_status,
           purchasing: data.data.purchasing,
-          purchasing_status: data.data.purchasing_status,
-          remarks: data.data.remarks,
+          purchasing_status: data.data.purchasing_status
         })
         setLoading(false)
       })
@@ -306,24 +272,11 @@ export default function PermintaanPembelianBarangDetail() {
     }
 
   return (
-    <div className="bg-white p-4 rounded-large animated fadeInDown">
+    <div className="bg-white p-4 rounded-large animated fadeInDown border">
       <div className="flex-col items-center">
-        <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
-          <h1 hidden={param != 'new'}>Create Permintaan Pembelian Barang</h1>
-          <h1 hidden={param == 'new' || param2 == 'view'}>Edit Permintaan Pembelian Barang</h1>
-          <h1 hidden={param2 != 'view'}>View Permintaan Pembelian Barang</h1>
-          <Button className="bg-red-300" onClick={btnBack}>
-            Back
-          </Button>
-        </div>
-          <div className="pt-8">
+          <div>
               <div className="flex w-full flex-wrap md:flex-nowrap p-2" >
-                  <Button className="bg-green-300" onClick={onSubmit} hidden={disabledView}>
-                    Save
-                  </Button>
-                  <Button className="bg-green-300" onClick={post} hidden={!disabledView || ppbData.status !== 'Draft' && ppbData.status !== 'Returned'}>
-                    Post
-                  </Button>
+                <h2> Permintaan Pembelian Barang</h2>
               </div>
 
               {loading && (
@@ -379,7 +332,6 @@ export default function PermintaanPembelianBarangDetail() {
                     <TableColumn className='w-1/10'>QTY</TableColumn>
                     <TableColumn className='w-1/10'>EXPECTED ETA</TableColumn>
                     <TableColumn className='w-1/5'>PROJECT & CUSTOMER</TableColumn>
-                    <TableColumn className='w-1/20' hideHeader={disabledView}>ACTION</TableColumn>
                 </TableHeader>
                 <TableBody emptyContent={"No Data found"} items={rows} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
                     {rows.map((item,index) => (
@@ -438,62 +390,10 @@ export default function PermintaanPembelianBarangDetail() {
                                     onChange={(e) => handleInputChange(index, 'project_and_customer', e.target.value)}
                                 />
                             </TableCell>
-                            <TableCell hidden={disabledView}>
-                                <Button className='bg-red-300' onClick={() => handleDelete(index)}>
-                                    <img
-                                        src={DeleteIcon}
-                                        alt="Delete Icon"
-                                        className="w-6 h-6"
-                                    />
-                                </Button>
-                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
-                {/* <TableBody emptyContent={"No Data found"} items={details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
-                  {(item) => (
-                    <TableRow key={item.id}>                      
-                      <TableCell>
-                        <Input variant='bordered' defaultValue={item.nama_barang}></Input>
-                    </TableCell>
-                    <TableCell>
-                        <Input variant='bordered' defaultValue={item.kode}></Input>
-                    </TableCell>
-                    <TableCell>
-                        <Input variant='bordered' defaultValue={item.spesifikasi}></Input>
-                    </TableCell>
-                    <TableCell>
-                        <Input variant='bordered' defaultValue={item.quantity}></Input>
-                    </TableCell>
-                    <TableCell>
-                        <Input variant='bordered' defaultValue={item.expected_eta}></Input>
-                    </TableCell>
-                    <TableCell>
-                        <Textarea variant='bordered' defaultValue={item.project_and_customer}></Textarea>
-                    </TableCell>
-                    <TableCell>
-                      <Button className='bg-red-300' onClick={() => btnDeleteDetail(item.id)}>
-                        <img
-                          src={DeleteIcon}
-                          alt="Delete Icon"
-                          className="w-6 h-6"
-                        />
-                      </Button>
-                    </TableCell>
-                      
-                    </TableRow>
-                  )}
-                </TableBody> */}
                 </Table>
-                <Button
-                  hidden={disabledView}
-                  color="primary"
-                  endContent={<PlusIcon className="w-5 h-5" />}
-                  className="p-2 w-2 h-12 rounded-full flex items-center justify-center bg-blue-500 hover:bg-blue-600"
-                  onClick={addData}
-                >
-                </Button>
-                
                 <div className=" w-full flex-wrap md:flex-nowrap pt-4 pb-2">
                   <div className='flex'>
                     <div  className=" p-2 xl:w-1/4 w-full">
@@ -529,20 +429,7 @@ export default function PermintaanPembelianBarangDetail() {
                         errorMessage={message?.mengetahui}
                         isDisabled={disabledView}
                         isReadOnly={true}
-                      />                    
-                      <Modal isOpen={isModalMengetahui} onOpenChange={handleCloseModalMengetahui} size='4xl'>
-                        <ModalContent>
-                          {(onClose) => (
-                            <>
-                              <ModalHeader className="flex flex-col gap-1">Select Mengetahui</ModalHeader>
-                              <ModalBody>
-                                <TableSelect columns={columns} apiname={apiname} handleAction={handleMengetahui}>
-                                </TableSelect>
-                              </ModalBody>
-                            </>
-                          )}
-                        </ModalContent>
-                      </Modal>
+                      />             
                     </div>
                     <div className='p-4 w-1/4' hidden={ppbData.status === 'Draft' || ppbData.status === ''}>
                           <p id="status" >
@@ -569,19 +456,6 @@ export default function PermintaanPembelianBarangDetail() {
                         isDisabled={disabledView}
                         isReadOnly={true}
                       />
-                      <Modal isOpen={isModalMenyetujui} onOpenChange={handleCloseModalMenyetujui} size='4xl'>
-                        <ModalContent>
-                          {(onClose) => (
-                            <>
-                              <ModalHeader className="flex flex-col gap-1">Select Menyetujui</ModalHeader>
-                              <ModalBody>
-                                <TableSelect columns={columns} apiname={apiname} handleAction={handleMenyetujui}>
-                                </TableSelect>
-                              </ModalBody>
-                            </>
-                          )}
-                        </ModalContent>
-                      </Modal>
                     </div>
                     <div className='p-4 w-1/4' hidden={ppbData.status === 'Draft' || ppbData.status === ''}>
                         <p id="status" >
@@ -610,22 +484,7 @@ export default function PermintaanPembelianBarangDetail() {
                           Status : {ppbData.purchasing_status}
                         </p>
                     </div>
-                  </div> 
-                  
-                  <hr hidden = {ppbData.remarks == null || param =='new'}></hr>
-                  <div className='flex' hidden = {ppbData.remarks == null || param =='new'}>
-                    <div  className=" p-2 xl:w-2/4 w-full">
-                      <Textarea
-                      id="remarks"
-                      variant="bordered"
-                      className="bg-white "
-                      type="text"
-                      defaultValue={ppbData.remarks}
-                      label="Remarks"
-                      isDisabled= {true}
-                    />
-                    </div>
-                  </div>         
+                  </div>          
 
                 </div>
               </div>

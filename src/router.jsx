@@ -11,6 +11,11 @@ import Dashboard from "./views/Dashboard.jsx"
 import { Navigate } from "react-router-dom"
 import Prinsipal from "./views/prinsipal/Prinsipal.jsx"
 import PrinsipalDetail from "./views/prinsipal/PrinsipalDetail.jsx"
+import PermintaanPembelianBarang from "./views/permintaanPembelianBarang/PermintaanPembelianBarang.jsx"
+import PrinsipalTest from "./views/prinsipal copy/Prinsipal.jsx"
+import PermintaanPembelianBarangDetail from "./views/permintaanPembelianBarang/PermintaanPembelianBarangDetail.jsx"
+import Approval from "./views/approval/Approval.jsx"
+import ApprovalDetail from "./views/approval/ApprovalDetail.jsx"
 
 const router = createBrowserRouter( [
     {
@@ -53,6 +58,34 @@ const router = createBrowserRouter( [
             {
                 path: '/prinsipal/:param/:param2',
                 element: <PrinsipalDetail/>
+            },
+
+            // permintaan pembelian barang
+            
+            {
+                path: '/ppb',
+                element: <PermintaanPembelianBarang/>
+            },
+            {
+                path: '/ppb/:param',
+                element: <PermintaanPembelianBarangDetail/>
+            }, 
+            {
+                path: '/ppb/:param/:param2',
+                element: <PermintaanPembelianBarangDetail/>
+            },
+
+            {
+                path: '/approval',
+                element: <Approval/>
+            },
+            {
+                path: '/approval/:param',
+                element: <ApprovalDetail/>
+            }, 
+            {
+                path: '/approval/:param/:param2',
+                element: <ApprovalDetail/>
             },
         ]
     },

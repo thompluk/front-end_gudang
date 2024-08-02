@@ -1,7 +1,7 @@
 import { Outlet, Link, Navigate} from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "../axios-client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Logo from "../assets/image.png"
 import React from 'react';
 import {
@@ -13,10 +13,13 @@ import {
   CDBSidebarMenuItem,
 } from 'cdbreact';
 import { NavLink } from 'react-router-dom';
+import NotificationIcon from '../assets/notification.png'
+import RedDot from '../assets/record-button.png'
 
 export default function DefaultLayout(){
 
     const {user, token, setUser, setToken, notification} = useStateContext(); 
+    const [approval, setApproval] = useState([])
 
     if(!token){
         return <Navigate to ='/login'/>
@@ -37,6 +40,16 @@ export default function DefaultLayout(){
           .then(({data}) => {
             setUser(data);
           })
+        axiosClient.get('/allindexApproval')
+          .then(response => {
+            if (response.data.data) {
+              setApproval(response.data.data);
+            } else {
+              setApproval([]);
+            }
+            console.log(response.data.data)
+        })
+        console.log(approval.length)
       }, [])
 
       return (
@@ -51,17 +64,31 @@ export default function DefaultLayout(){
       
               <CDBSidebarContent className="sidebar-content">
                 <CDBSidebarMenu>
-                  <NavLink exact to="/dashboard" activeClassName="activeClicked">
+                  <NavLink exact to="/dashboard">
                     <CDBSidebarMenuItem icon="columns">Dashboard</CDBSidebarMenuItem>
                   </NavLink>
-                  <NavLink exact to="/users" activeClassName="activeClicked">
+                  <NavLink exact to="/users">
                     <CDBSidebarMenuItem icon="user">Users</CDBSidebarMenuItem>
                   </NavLink>
-                  <NavLink exact to="/prinsipal" activeClassName="activeClicked">
+                  <NavLink exact to="/prinsipal" >
                     <CDBSidebarMenuItem>Prinsipal</CDBSidebarMenuItem>
                   </NavLink>
-                  <NavLink exact to="/permintaanPembelianBarang" activeClassName="activeClicked">
-                    <CDBSidebarMenuItem>Permintaan Pembelian <br/> Barang Branson</CDBSidebarMenuItem>
+                  <NavLink exact to="/ppb">
+                    <CDBSidebarMenuItem>Permintaan Pembelian Barang</CDBSidebarMenuItem>
+                  </NavLink>
+                  <NavLink exact to="/approval">
+                  <CDBSidebarMenuItem className="flex">
+                    <div className="flex gap-2">
+                      Approval
+                      <img 
+                        src={RedDot}
+                        alt="RedDot"
+                        className="w-4 h-4"
+                        hidden={approval.length === 0}
+                      />
+                    </div>
+                    
+                  </CDBSidebarMenuItem>
                   </NavLink>
                 </CDBSidebarMenu>
               </CDBSidebarContent>

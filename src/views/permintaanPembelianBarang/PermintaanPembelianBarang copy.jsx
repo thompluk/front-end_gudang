@@ -23,36 +23,35 @@ import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 // import withReactContent from 'sweetalert2-react-content'
 
-export default function Users() {
-  const [users, setUsers] = useState([])
+export default function PermintaanPembelianBarang() {
+  const [pbbs, setPbbs] = useState([])
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [sortDescriptor, setSortDescriptor] = React.useState({
-    column: "id",
-    direction: "ascending",
+    column: "tanggal",
+    direction: "descending",
   });
 
   const columns = [
-    {name: "ID", uid: "id", sortable: true},
-    {name: "NAME", uid: "name", sortable: true},
-    {name: "EMAIL", uid: "email", sortable: true},
-    {name: "PHONE NUMBER", uid: "phone_number", sortable: true},
-    {name: "ROLE", uid: "role", sortable: true},
+    {name: "No PBB", uid: "no_pbb", sortable: true},
+    {name: "TANGGAL", uid: "tanggal", sortable: true},
+    {name: "PEMOHON", uid: "pemohon", sortable: true},
+    // {name: "FAX", uid: "fax", sortable: true},
     {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
   ];
 
   useEffect(() => {
-    getUsers()
+    getPbbs()
   }, [])
 
-  const getUsers = () => {
+  const getPbbs = () => {
     // setLoading(true)
     axiosClient
-      .get('/alluser')
+      .get('/allpbb')
       .then(({ data }) => {
         // setLoading(false)
-        setUsers(data.data)
+        setPbbs(data.data)
       })
       .catch(() => {
         // setLoading(false)
@@ -64,20 +63,18 @@ export default function Users() {
   const hasSearchFilter = Boolean(filterValue);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...users];
+    let filteredPbbs = [...pbbs];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.name.toLowerCase().includes(filterValue.toLowerCase()) ||
-        // user.id.toLowerCase().includes(filterValue.toLowerCase()) ||
-        user.email.toLowerCase().includes(filterValue.toLowerCase())||
-        user.phone_number.toLowerCase().includes(filterValue.toLowerCase())||
-        user.role.toLowerCase().includes(filterValue.toLowerCase())
+      filteredPbbs = filteredPbbs.filter((pbb) =>
+        pbb.no_pbb.toLowerCase().includes(filterValue.toLowerCase()) ||
+        pbb.tanggal.toLowerCase().includes(filterValue.toLowerCase())||
+        pbb.pemohon.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
 
-    return filteredUsers;
-  }, [users, filterValue]);
+    return filteredPbbs;
+  }, [pbbs, filterValue]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -117,21 +114,21 @@ export default function Users() {
         confirmButtonText: "Yes, delete it!"
       }).then((result) => {
         if (result.isConfirmed) {
-          axiosClient.delete(`/user/${key}`).then(() => {
+          axiosClient.delete(`/pbb/${key}`).then(() => {
             Swal.fire({
               title: "Deleted!",
               text: "Your file has been deleted.",
               icon: "success"
             });
-            getUsers()
+            getPbbs()
           });
         }
       });
     }
   };
 
-  const renderCell = React.useCallback((user, columnKey) => {
-    const cellValue = user[columnKey];
+  const renderCell = React.useCallback((pbb, columnKey) => {
+    const cellValue = pbb[columnKey];
 
     switch (columnKey) {
       case "actions":
@@ -144,9 +141,9 @@ export default function Users() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu onAction={handleAction}>
-                <DropdownItem key={"/users/"+user.id +"/view"}>View</DropdownItem>
-                <DropdownItem key={"/users/"+user.id}>Edit</DropdownItem>
-                <DropdownItem key={user.id}>Delete</DropdownItem>
+                <DropdownItem key={"/pbb/"+pbb.id +"/view"}>View</DropdownItem>
+                <DropdownItem key={"/pbb/"+pbb.id}>Edit</DropdownItem>
+                <DropdownItem key={pbb.id}>Delete</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -201,7 +198,7 @@ export default function Users() {
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            <Link to="/users/new">
+            <Link to="/pbb/new">
               <Button color="primary" endContent={<PlusIcon />}>
                 Add New
               </Button>
@@ -209,7 +206,7 @@ export default function Users() {
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">Total {users.length} users</span>
+          <span className="text-default-400 text-small">Total {pbbs.length} pbbs</span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
             <select
@@ -227,7 +224,7 @@ export default function Users() {
   }, [
     filterValue,
     onRowsPerPageChange,
-    users.length,
+    pbbs.length,
     onSearchChange,
     hasSearchFilter,
   ]);
@@ -264,7 +261,7 @@ export default function Users() {
   return (
     <div className="flex-col justify-center bg-white p-4 rounded-large animated fadeInDown ">
       <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
-          <h1>User List</h1>
+          <h1>Permintaan Pembelian Barang List</h1>
       </div>
       <Table
         aria-label="Table with custom cells, pagination and sorting"
@@ -295,9 +292,9 @@ export default function Users() {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={"No users found"} items={sortedItems}>
+        <TableBody emptyContent={"No Permintaan Pembelian Barang found"} items={sortedItems}>
           {(item) => (
-            <TableRow key={item.id}>
+            <TableRow key={item.no_pbb}>
               {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
             </TableRow>
           )}
