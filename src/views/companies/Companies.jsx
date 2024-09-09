@@ -13,22 +13,22 @@ import { VerticalDotsIcon } from "../../assets/VerticalDotIcon";
 import { PlusIcon } from "../../assets/PlusIcon";
 import Swal from 'sweetalert2'
 
-export default function Users() {
- 
+export default function Companies() {
+
   const [loading, setLoading] = useState(false)
   const [datas, setDatas] = useState([])
   const navigate = useNavigate();
   const columns = [
-    {name: "ID", uid: "id", sortable: true},
     {name: "NAME", uid: "name", sortable: true},
+    {name: "ADDRESS", uid: "address", sortable: true},
+    {name: "TELEPHONE", uid: "telephone", sortable: true},
+    {name: "FAX", uid: "fax", sortable: true},
     {name: "EMAIL", uid: "email", sortable: true},
-    {name: "PHONE NUMBER", uid: "phone_number", sortable: true},
-    {name: "ROLE", uid: "role", sortable: true},
     {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
   ];
 
   const addBtn =()=>{
-    navigate("/users/new");
+    navigate("/companies/new");
   }
 
   const addButton = () => {
@@ -56,7 +56,7 @@ export default function Users() {
         confirmButtonText: "Yes, delete it!"
       }).then((result) => {
         if (result.isConfirmed) {
-          axiosClient.delete(`/user/${key}`).then(() => {
+          axiosClient.delete(`/companies/${key}`).then(() => {
             Swal.fire({
               title: "Deleted!",
               text: "Your file has been deleted.",
@@ -72,7 +72,7 @@ export default function Users() {
   const getDatas = () => {
     setLoading(true)
     axiosClient
-      .get('/alluser')
+      .get('/allcompanies')
       .then(({ data }) => {
         setLoading(false)
         setDatas(data.data)
@@ -93,8 +93,8 @@ export default function Users() {
             </Button>
           </DropdownTrigger>
           <DropdownMenu onAction={handleAction}>
-            <DropdownItem key={"/users/" + data.id + "/view"}>View</DropdownItem>
-            <DropdownItem key={"/users/" + data.id}>Edit</DropdownItem>
+            <DropdownItem key={"/companies/" + data.id + "/view"}>View</DropdownItem>
+            <DropdownItem key={"/companies/" + data.id}>Edit</DropdownItem>
             <DropdownItem key={data.id}>Delete</DropdownItem>
           </DropdownMenu>
         </Dropdown>
@@ -102,11 +102,10 @@ export default function Users() {
     );
   };
 
-
   return (
     <div className="flex-col justify-center bg-white p-4 rounded-large animated fadeInDown ">
       <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
-          <h1>User List</h1>
+          <h1>Companies List</h1>
       </div>
       <TableCustom columns={columns} addButton={addButton} renderCellTable={renderCellTable} getDatas={getDatas} loading={loading} datas={datas}/>
     </div>

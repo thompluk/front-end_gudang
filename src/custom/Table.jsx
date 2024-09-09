@@ -23,12 +23,12 @@ import { VerticalDotsIcon } from "../assets/VerticalDotIcon";
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 
-const TableCustom = ( {columns = [], apiname, addBtn, renderCellTable}) => {
-    const [datas, setDatas] = useState([])
+const TableCustom = ( {columns = [], addButton, renderCellTable, getDatas, loading, datas}) => {
+    // const [datas, setDatas] = useState([])
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [loading, setLoading] = useState(false)
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    // const [loading, setLoading] = useState(false)
     const [sortDescriptor, setSortDescriptor] = React.useState({
       column: "id",
       direction: "ascending",
@@ -38,18 +38,18 @@ const TableCustom = ( {columns = [], apiname, addBtn, renderCellTable}) => {
         getDatas()
     }, [])
   
-    const getDatas = () => {
-      setLoading(true)
-      axiosClient
-        .get('/all'+apiname)
-        .then(({ data }) => {
-          setLoading(false)
-          setDatas(data.data)
-        })
-        .catch(() => {
-          setLoading(false)
-        })
-    }
+    // const getDatas = () => {
+    //   setLoading(true)
+    //   axiosClient
+    //     .get('/all'+apiname)
+    //     .then(({ data }) => {
+    //       setLoading(false)
+    //       setDatas(data.data)
+    //     })
+    //     .catch(() => {
+    //       setLoading(false)
+    //     })
+    // }
   
     const [page, setPage] = React.useState(1);
   
@@ -209,9 +209,10 @@ const TableCustom = ( {columns = [], apiname, addBtn, renderCellTable}) => {
             />
             <div className="flex gap-3">
               {/* <Link to={path}> */}
-                <Button color="primary" endContent={<PlusIcon />} onClick={addBtn}>
+                {/* <Button color="primary" endContent={<PlusIcon />} onClick={addBtn}>
                   Add New
-                </Button>
+                </Button> */}
+                {addButton()}
               {/* </Link> */}
             </div>
           </div>
@@ -223,9 +224,9 @@ const TableCustom = ( {columns = [], apiname, addBtn, renderCellTable}) => {
                 className="bg-transparent outline-none text-default-400 text-small"
                 onChange={onRowsPerPageChange}
               >
-                <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="15">15</option>
+                <option value="20">20</option>
               </select>
             </label>
           </div>

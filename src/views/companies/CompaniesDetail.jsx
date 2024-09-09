@@ -5,13 +5,15 @@ import { useState, useEffect } from 'react'
 import { useStateContext } from '../../contexts/ContextProvider.jsx'
 import { useNavigate } from 'react-router-dom'
 // import { Input } from 'mdb-react-ui-kit'
-import { Button, Input, Select, SelectItem } from '@nextui-org/react'
+import { Button, Input, Select, SelectItem, Textarea } from '@nextui-org/react'
 import Swal from 'sweetalert2'
 
-export default function PrinsipalDetail() {
+export default function CompaniesDetail() {
   const nameRef = createRef()
+  const addressRef = createRef()
   const faxRef = createRef()
   const telephoneRef = createRef()
+  const emailRef = createRef()
   const [errors, setErrors] = useState(false);
   const [message, setMessage] = useState(null)
   const navigate = useNavigate()
@@ -19,34 +21,38 @@ export default function PrinsipalDetail() {
   const [loading, setLoading] = useState(false)
   const [hidePass, setHidePass] = useState(false)
   const [disabledView, setDisabledView ] = useState(false)
-  const [prinsipalData, setPrinsipalData] = useState({
+  const [companiesData, setCompaniesData] = useState({
     name: '',
+    address: '',
     telephone: '',
     fax: '',
+    email: ''
   })
   // const history = useHistory();
 
   useEffect(() => {
     if (param != 'new') {
-      getPrinsipals()
-      setHidePass(true)
+        getCompanies()
+        setHidePass(true)
     }
     if (param2 == 'view') {
-      getPrinsipals()
-      setDisabledView(true)
+        getCompanies()
+        setDisabledView(true)
     }
 
   }, [])
 
-  const getPrinsipals = () => {
+  const getCompanies = () => {
     setLoading(true)
     axiosClient
-      .get('/prinsipal/' + param)
+      .get('/companies/' + param)
       .then(({ data }) => {
-        setPrinsipalData({
+        setCompaniesData({
           name: data.data.name,
+          address: data.data.address,
           telephone: data.data.telephone,
           fax: data.data.fax,
+          email: data.data.email,
         })
         setLoading(false)
       })
@@ -67,24 +73,27 @@ export default function PrinsipalDetail() {
     }
   });
 
+
   const onSubmit = ev => {
     ev.preventDefault()
 
     if (param == 'new') {
       const payload = {
         name: nameRef.current.value,
+        address: addressRef.current.value,
         telephone: telephoneRef.current.value,
         fax: faxRef.current.value,
+        email: emailRef.current.value,
       }
 
       axiosClient
-        .post('/prinsipal', payload)
+        .post('/companies', payload)
         .then(({}) => {
           Toast.fire({
             icon: "success",
             title: "Create is successfully"
           });
-          navigate('/prinsipal')
+          navigate('/companies')
         })
         .catch(err => {
           const response = err.response
@@ -97,18 +106,20 @@ export default function PrinsipalDetail() {
     } else {
       const payload = {
         name: nameRef.current.value,
+        address: addressRef.current.value,
         fax: faxRef.current.value,
         telephone: telephoneRef.current.value,
+        email: emailRef.current.value,
       }
 
       axiosClient
-        .put('/prinsipal/update/' + param, payload)
+        .put('/companies/update/' + param, payload)
         .then(({}) => {
           Toast.fire({
             icon: "success",
             title: "Update is successfully"
           });
-          navigate('/prinsipal')
+          navigate('/companies')
         })
         .catch(err => {
           const response = err.response
@@ -120,15 +131,15 @@ export default function PrinsipalDetail() {
     }
   }
 
-  const btnBack = () => [navigate('/prinsipal')]
+  const btnBack = () => [navigate('/companies')]
 
   return (
     <div className="bg-white p-4 rounded-large animated fadeInDown">
       <div className="flex-col items-center">
         <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
-          <h1 hidden={hidePass || disabledView} >Create Prinsipal</h1>
-          <h1 hidden={!hidePass || disabledView}>Edit Prinsipal</h1>
-          <h1 hidden={!disabledView}>View Prinsipal</h1>
+          <h1 hidden={hidePass || disabledView} >Create Companies</h1>
+          <h1 hidden={!hidePass || disabledView}>Edit Companies</h1>
+          <h1 hidden={!disabledView}>View Companies</h1>
           <Button className="bg-red-300" onClick={btnBack}>
             Back
           </Button>
@@ -156,10 +167,26 @@ export default function PrinsipalDetail() {
                 variant="bordered"
                 className="bg-white "
                 type="text"
-                defaultValue={prinsipalData.name}
+                defaultValue={companiesData.name}
                 label="Name"
                 isInvalid={message?.name != null}
                 errorMessage={message?.name}
+                isDisabled={disabledView}
+                
+              />
+              </div>
+
+              <div  className=" p-2 xl:w-1/3 w-full">
+                <Textarea
+                id="address"
+                ref={addressRef}
+                variant="bordered"
+                className="bg-white "
+                type="text"
+                defaultValue={companiesData.address}
+                label="Address"
+                isInvalid={message?.address != null}
+                errorMessage={message?.address}
                 isDisabled={disabledView}
                 
               />
@@ -172,7 +199,7 @@ export default function PrinsipalDetail() {
                   variant="bordered"
                   className="bg-white"
                   type="text"
-                  defaultValue={prinsipalData.telephone}
+                  defaultValue={companiesData.telephone}
                   label="Telephone"
                   isInvalid={message?.telephone != null}
                   errorMessage={message?.telephone}
@@ -186,11 +213,26 @@ export default function PrinsipalDetail() {
                   ref={faxRef}
                   variant="bordered"
                   className="bg-white"
-                  type="text"
-                  defaultValue={prinsipalData.fax}
+                  type="fax"
+                  defaultValue={companiesData.fax}
                   label="Fax"
                   isInvalid={message?.fax != null}
                   errorMessage={message?.fax}
+                  isDisabled={disabledView}
+                />
+              </div>
+
+              <div  className=" p-2 xl:w-1/3 w-full">
+                <Input
+                  id="email"
+                  ref={emailRef}
+                  variant="bordered"
+                  className="bg-white"
+                  type="email"
+                  defaultValue={companiesData.email}
+                  label="Email"
+                  isInvalid={message?.email != null}
+                  errorMessage={message?.email}
                   isDisabled={disabledView}
                 />
               </div>

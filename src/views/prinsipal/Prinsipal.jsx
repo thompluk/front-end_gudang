@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import TableCustom from "../../custom/Table.jsx";
 import { useNavigate } from "react-router-dom";
+import axiosClient from "../../axios-client.js";
 import { 
   DropdownTrigger,
   Dropdown,
@@ -9,24 +10,32 @@ import {
   Button,
 } from "@nextui-org/react";
 import { VerticalDotsIcon } from "../../assets/VerticalDotIcon";
+import { PlusIcon } from "../../assets/PlusIcon";
+import Swal from 'sweetalert2'
 
 export default function Prinsipal() {
 
+  const [loading, setLoading] = useState(false)
+  const [datas, setDatas] = useState([])
   const navigate = useNavigate();
   const columns = [
-    {name: "ID", uid: "id", sortable: true},
     {name: "NAME", uid: "name", sortable: true},
     {name: "TELEPHONE", uid: "telephone", sortable: true},
     {name: "FAX", uid: "fax", sortable: true},
     {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
   ];
 
-  const apiname = "prinsipal";
-  const pathname = "prinsipal";
-
   const addBtn =()=>{
     navigate("/prinsipal/new");
   }
+
+  const addButton = () => {
+    return (
+      <Button color="primary" endContent={<PlusIcon />} onClick={addBtn}>
+        Add New
+      </Button>
+    );
+  };
 
   const handleAction = async (key) => {
     if (key.startsWith('/')) {
@@ -45,7 +54,7 @@ export default function Prinsipal() {
         confirmButtonText: "Yes, delete it!"
       }).then((result) => {
         if (result.isConfirmed) {
-          axiosClient.delete(`/${apiname}/${key}`).then(() => {
+          axiosClient.delete(`/prinsipal/${key}`).then(() => {
             Swal.fire({
               title: "Deleted!",
               text: "Your file has been deleted.",
@@ -57,6 +66,19 @@ export default function Prinsipal() {
       });
     }
   };
+
+  const getDatas = () => {
+    setLoading(true)
+    axiosClient
+      .get('/allprinsipal')
+      .then(({ data }) => {
+        setLoading(false)
+        setDatas(data.data)
+      })
+      .catch(() => {
+        setLoading(false)
+      })
+  }
 
   const renderCellTable = (data) => {
 
@@ -83,8 +105,7 @@ export default function Prinsipal() {
       <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
           <h1>Prinsipal List</h1>
       </div>
-      <TableCustom columns={columns} apiname={apiname} addBtn={addBtn} renderCellTable={renderCellTable}>
-      </TableCustom>
+      <TableCustom columns={columns} addButton={addButton} renderCellTable={renderCellTable} getDatas={getDatas} loading={loading} datas={datas}/>
     </div>
   );
 }

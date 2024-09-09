@@ -1,9 +1,11 @@
 
-import { Button, Textarea} from '@nextui-org/react'
+import { Button, Modal, ModalBody, ModalContent, ModalHeader, Textarea} from '@nextui-org/react'
 import { useNavigate, useParams } from 'react-router-dom'
 import ApprovalPPBView from './ApprovalPPBView'
-import { createRef } from 'react'
+import { createRef, useState } from 'react'
 import axiosClient from '../../axios-client'
+import ApprovalPOView from './ApprovalPOView'
+import Swal from 'sweetalert2'
 
 
 export default function ApprovalDetail() {
@@ -13,16 +15,34 @@ export default function ApprovalDetail() {
     
     const btnBack = () => [navigate('/approval')]
 
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+  
+
     const btnApprove = () => {
       const payload = {
         id: param,
         tipe: param2,
-        remarks: remarksRef.current.value
+        // remarks: remarksRef.current.value
       }
       axiosClient
         .post('/approval/approve', payload)
         .then(({}) => {
           console.log('Success Approve')
+          Toast.fire({
+            icon: "success",
+            title: "Approve is successfully"
+          });
+
           navigate('/approval')
         })
         .catch(err => {
@@ -34,16 +54,41 @@ export default function ApprovalDetail() {
         })
       
     }
-    const btnReturn = () => {
+
+    const handleApprove = () => {
+
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Approve it!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          btnApprove();
+        }
+      });
+  
+      
+    };
+
+    const btnReturn = (remarks) => {
       const payload = {
         id: param,
         tipe: param2,
-        remarks: remarksRef.current.value
+        remarks: remarks
       }
       axiosClient
         .post('/approval/return', payload)
         .then(({}) => {
           console.log('Success Return')
+          Toast.fire({
+            icon: "success",
+            title: "Return is successfully"
+          });
+
           navigate('/approval')
         })
         .catch(err => {
@@ -55,16 +100,21 @@ export default function ApprovalDetail() {
         })
       
     }
-    const btnReject = () => {
+    const btnReject = (remarks) => {
       const payload = {
         id: param,
         tipe: param2,
-        remarks: remarksRef.current.value
+        remarks: remarks
       }
       axiosClient
         .post('/approval/reject', payload)
         .then(({}) => {
           console.log('Success Reject')
+          Toast.fire({
+            icon: "success",
+            title: "Reject is successfully"
+          });
+
           navigate('/approval')
         })
         .catch(err => {
@@ -76,6 +126,31 @@ export default function ApprovalDetail() {
         })
       
     }
+
+    const handleClick = async (tipe) => {
+      const { value: text } = await Swal.fire({
+          title: "Enter your " + tipe + " Remarks",
+          input: "textarea",
+          inputLabel: "Remarks",
+          inputPlaceholder: "Type your remarks message here...",
+          inputAttributes: {
+              "aria-label": "Type your remarks message here"
+          },
+          showCancelButton: true,
+          inputValidator: (value) => {
+            if (!value) {
+              return "You need to write something!";
+            }
+          }
+      });
+      if (text) {
+        if(tipe === 'Return'){
+          btnReturn(text);
+        }else if(tipe === 'Reject'){
+          btnReject(text);
+        }
+      }
+  };
 
   return (
     <div className="bg-white p-4 rounded-large animated fadeInDown">
@@ -91,30 +166,25 @@ export default function ApprovalDetail() {
             <ApprovalPPBView>
             </ApprovalPPBView>
           )}
+          {param2 == 'po' && (
+            <ApprovalPOView>
+            </ApprovalPOView>
+          )}
         </div>
         <div className='flex justify-between p-4'>
             <div className="flex items-center gap-2 ">
-                <Button className="bg-green-300" onClick={btnApprove}>
+                <Button className="bg-green-300" onClick={handleApprove}>
                     Approve
                 </Button>
-                <Button className="bg-yellow-300" onClick={btnReturn}>
+
+                <Button className="bg-yellow-300" onClick={() => handleClick('Return')}>
                     Return
                 </Button>
-                <Button className="bg-red-300" onClick={btnReject}>
+                <Button className="bg-red-300" onClick={() => handleClick('Reject')}>
                     Reject
                 </Button>
             </div>
-            <div className="w-2/4">
-                <Textarea
-                    id="remarks"
-                    ref = {remarksRef}
-                    variant="bordered"
-                    className="bg-white"
-                    type="text"
-                    label="Remarks"
-                />
-            </div>
-
+           
         </div>
           
       </div>

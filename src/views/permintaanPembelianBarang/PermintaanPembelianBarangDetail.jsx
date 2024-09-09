@@ -210,7 +210,7 @@ export default function PermintaanPembelianBarangDetail() {
   };
 
     const handleSaveAll = (ppb_id) => {
-      axiosClient.post('/saveAll/'+ppb_id, rows)
+      axiosClient.post('/ppbsaveAll/'+ppb_id, rows)
             .then(response => {
                 // Handle successful save
                 console.log('Data saved successfully');
@@ -221,6 +221,18 @@ export default function PermintaanPembelianBarangDetail() {
             });
     };
     
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });  
+
     const onSubmit = ev => {
       ev.preventDefault()
 
@@ -237,6 +249,10 @@ export default function PermintaanPembelianBarangDetail() {
             // setPpbid(data.ppb_id);
             console.log(data.data.id)
             handleSaveAll(data.data.id)
+            Toast.fire({
+              icon: "success",
+              title: "Create is successfully"
+            });  
             navigate('/ppb')
           })
           .catch(err => {
@@ -253,6 +269,11 @@ export default function PermintaanPembelianBarangDetail() {
           .then(({}) => {
             console.log(param)
             handleSaveAll(param)
+            Toast.fire({
+              icon: "success",
+              title: "Update is successfully"
+            });
+  
             navigate('/ppb')
           })
           .catch(err => {
@@ -267,22 +288,50 @@ export default function PermintaanPembelianBarangDetail() {
     }
 
     const post = () => {
+
       axiosClient
       .post('/ppb/post/' + param)
       .then(({}) => {
         console.log(param)
         handleSaveAll(param)
+        Toast.fire({
+          icon: "success",
+          title: "Post is successfully"
+        }); 
         navigate('/ppb')
       })
       .catch(err => {
         const response = err.response
         if (response && response.status === 400) {
-          setMessage(response.data.message);
-          setErrors(true);
+
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: response.data.message,
+            // footer: '<a href="#">Why do I have this issue?</a>'
+          });
         }
       })
     }
 
+    const handlePost = () => {
+
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Post it!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          post();
+        }
+      });
+    };
+
+    // User Select Table
     const columns = [
       {name: "ID", uid: "id", sortable: true},
       {name: "NAME", uid: "name", sortable: true},
@@ -321,7 +370,7 @@ export default function PermintaanPembelianBarangDetail() {
                   <Button className="bg-green-300" onClick={onSubmit} hidden={disabledView}>
                     Save
                   </Button>
-                  <Button className="bg-green-300" onClick={post} hidden={!disabledView || ppbData.status !== 'Draft' && ppbData.status !== 'Returned'}>
+                  <Button className="bg-green-300" onClick={handlePost} hidden={!disabledView || ppbData.status !== 'Draft' && ppbData.status !== 'Returned'}>
                     Post
                   </Button>
               </div>
@@ -439,11 +488,12 @@ export default function PermintaanPembelianBarangDetail() {
                                 />
                             </TableCell>
                             <TableCell hidden={disabledView}>
-                                <Button className='bg-red-300' onClick={() => handleDelete(index)}>
+                                <Button className='bg-red-300' isIconOnly>
                                     <img
                                         src={DeleteIcon}
                                         alt="Delete Icon"
-                                        className="w-6 h-6"
+                                        className="w-6 h-6 hover:cursor-pointer"
+                                        onClick={() => handleDelete(index)}
                                     />
                                 </Button>
                             </TableCell>

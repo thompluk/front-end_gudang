@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useEffect, useState} from 'react'
 import axiosClient from "../axios-client";
 import {
@@ -23,11 +23,12 @@ import { VerticalDotsIcon } from "../assets/VerticalDotIcon";
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 
-const TableSelect = ( {columns = [], apiname, handleAction}) => {
+const TableSelect = ( {columns = [], apiname, payload, handleAction}) => {
     const [datas, setDatas] = useState([])
     const [filterValue, setFilterValue] = React.useState("");
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [loading, setLoading] = useState(false)
+    const prevPayload = useRef(payload);
     const [sortDescriptor, setSortDescriptor] = React.useState({
       column: "id",
       direction: "ascending",
@@ -36,15 +37,16 @@ const TableSelect = ( {columns = [], apiname, handleAction}) => {
     const handleRowClick = (data) => {
         handleAction(data);
       }
-  
+
     useEffect(() => {
         getDatas()
-    }, [])
-  
+    }, [])  
+
     const getDatas = () => {
+      // console.log(payload)
       setLoading(true)
       axiosClient
-        .get('/'+apiname)
+        .post('/'+apiname, payload)
         .then(({ data }) => {
           setLoading(false)
           setDatas(data.data)
@@ -243,5 +245,5 @@ const TableSelect = ( {columns = [], apiname, handleAction}) => {
     );
 }
 
-export default TableSelect;
+export default React.memo(TableSelect);;
 

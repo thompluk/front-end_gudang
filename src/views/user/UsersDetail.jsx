@@ -6,6 +6,7 @@ import { useStateContext } from '../../contexts/ContextProvider.jsx'
 import { useNavigate } from 'react-router-dom'
 // import { Input } from 'mdb-react-ui-kit'
 import { Button, Input, Select, SelectItem } from '@nextui-org/react'
+import Swal from 'sweetalert2'
 
 export default function UsersDetail() {
   const nameRef = createRef()
@@ -59,6 +60,18 @@ export default function UsersDetail() {
       })
   }
 
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    }
+  });
+
   const onSubmit = ev => {
     ev.preventDefault()
 
@@ -74,6 +87,10 @@ export default function UsersDetail() {
       axiosClient
         .post('/user', payload)
         .then(({}) => {
+          Toast.fire({
+            icon: "success",
+            title: "Create is successfully"
+          });
           navigate('/users')
         })
         .catch(err => {
@@ -96,13 +113,21 @@ export default function UsersDetail() {
       axiosClient
         .put('/user/update/' + param, payload)
         .then(({}) => {
+          Toast.fire({
+            icon: "success",
+            title: "Update is successfully"
+          });
           navigate('/users')
         })
         .catch(err => {
           const response = err.response
           if (response && response.status === 400) {
-            setMessage(response.data.message);
-            setErrors(true);
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: response.data.message,
+              // footer: '<a href="#">Why do I have this issue?</a>'
+            });
           }
         })
     }

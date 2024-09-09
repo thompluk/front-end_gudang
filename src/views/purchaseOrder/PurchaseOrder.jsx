@@ -14,39 +14,39 @@ import { VerticalDotsIcon } from "../../assets/VerticalDotIcon";
 import { PlusIcon } from "../../assets/PlusIcon";
 import Swal from 'sweetalert2'
 
-export default function PermintaanPembelianBarang() {
+export default function PurchaseOrder() {
 
   const [loading, setLoading] = useState(false)
   const [datas, setDatas] = useState([])
   const [activeTab, setActiveTab] = useState('draft');
-  const [activeTabData, setActiveTabData] = useState([]);
+  const [activeTabData, setActiveTabData] = useState([]);;
   let tabs = [
     {
       id: "draft",
       label: "Draft",
-      title: "Permintaan Pembelian Barang Draft List",
-      apiname: "ppb/draft",
+      title: "Purchase Order Draft List",
+      apiname: "po/draft",
       isHidden: false
     },
     {
       id: "onApproval",
       label: "On Approval",
-      title: "Permintaan Pembelian Barang On Approval List",
-      apiname: "ppb/onApproval",
+      title: "Purchase Order On Approval List",
+      apiname: "po/onApproval",
       isHidden: true
     },
     {
       id: "done",
       label: "Done",
-      title: "Permintaan Pembelian Barang Done List",
-      apiname: "ppb/done",
+      title: "Purchase Order Done List",
+      apiname: "po/done",
       isHidden: true
     },
     {
       id: "rejected",
       label: "Rejected",
-      title: "Permintaan Pembelian Barang Rejected List",
-      apiname: "ppb/rejected",
+      title: "Purchase Order Rejected List",
+      apiname: "po/rejected",
       isHidden: true
     }
   ];
@@ -59,19 +59,18 @@ export default function PermintaanPembelianBarang() {
   };
 
   const navigate = useNavigate();
-  const [ppb, setPpb] = useState([])
 
   const columns = [
-      {name: "No. PPB", uid: "no_ppb", sortable: true},
+      {name: "No. Po", uid: "no_po", sortable: true},
       {name: "TANGGAL", uid: "tanggal", sortable: true},
-      {name: "PEMOHON", uid: "pemohon", sortable: true},
+      {name: "PEMOHON", uid: "prepared_by", sortable: true},
       {name: "STATUS", uid: "status", sortable: true},
       {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
     ];
 
 
   const addBtn =()=>{
-    navigate("/ppb/new");
+    navigate("/po/new");
   }
 
   const addButton = () => {
@@ -100,7 +99,7 @@ export default function PermintaanPembelianBarang() {
         confirmButtonText: "Yes, delete it!"
       }).then((result) => {
         if (result.isConfirmed) {
-          axiosClient.delete(`/ppb/${key}`).then(() => {
+          axiosClient.delete(`/po/${key}`).then(() => {
             Swal.fire({
               title: "Deleted!",
               text: "Your file has been deleted.",
@@ -114,17 +113,17 @@ export default function PermintaanPembelianBarang() {
   };
 
   const getDatas = () => {
-      setLoading(true)
-      axiosClient
-        .get('/all'+activeTabData.apiname)
-        .then(({ data }) => {
-          setLoading(false)
-          setDatas(data.data)
-        })
-        .catch(() => {
-          setLoading(false)
-        })
-    }
+    setLoading(true)
+    axiosClient
+      .get('/all'+activeTabData.apiname)
+      .then(({ data }) => {
+        setLoading(false)
+        setDatas(data.data)
+      })
+      .catch(() => {
+        setLoading(false)
+      })
+  }
 
   const renderCellTable = (data) => {
     return (
@@ -136,8 +135,8 @@ export default function PermintaanPembelianBarang() {
             </Button>
           </DropdownTrigger>
           <DropdownMenu onAction={handleAction}>
-            <DropdownItem key={"/ppb/" + data.id + "/view"}>View</DropdownItem>
-            <DropdownItem key={"/ppb/" + data.id} hidden={activeTabData.isHidden}>Edit</DropdownItem>
+            <DropdownItem key={"/po/" + data.id + "/view"}>View</DropdownItem>
+            <DropdownItem key={"/po/" + data.id} hidden={activeTabData.isHidden}>Edit</DropdownItem>
             <DropdownItem key={data.id} hidden={activeTabData.isHidden}>Delete</DropdownItem>
           </DropdownMenu>
         </Dropdown>

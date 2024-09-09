@@ -14,7 +14,7 @@ import { VerticalDotsIcon } from "../../assets/VerticalDotIcon";
 import { PlusIcon } from "../../assets/PlusIcon";
 import Swal from 'sweetalert2'
 
-export default function PermintaanPembelianBarang() {
+export default function SuratJalan() {
 
   const [loading, setLoading] = useState(false)
   const [datas, setDatas] = useState([])
@@ -24,29 +24,29 @@ export default function PermintaanPembelianBarang() {
     {
       id: "draft",
       label: "Draft",
-      title: "Permintaan Pembelian Barang Draft List",
-      apiname: "ppb/draft",
+      title: "Surat Jalan Proses Draft List",
+      apiname: "suratjalan/draft",
       isHidden: false
     },
     {
       id: "onApproval",
       label: "On Approval",
-      title: "Permintaan Pembelian Barang On Approval List",
-      apiname: "ppb/onApproval",
+      title: "Surat Jalan Proses On Approval List",
+      apiname: "suratjalan/onApproval",
       isHidden: true
     },
     {
       id: "done",
       label: "Done",
-      title: "Permintaan Pembelian Barang Done List",
-      apiname: "ppb/done",
+      title: "Surat Jalan Proses Done List",
+      apiname: "suratjalan/done",
       isHidden: true
     },
     {
       id: "rejected",
       label: "Rejected",
-      title: "Permintaan Pembelian Barang Rejected List",
-      apiname: "ppb/rejected",
+      title: "Surat Jalan Rejected List",
+      apiname: "suratjalan/rejected",
       isHidden: true
     }
   ];
@@ -59,26 +59,27 @@ export default function PermintaanPembelianBarang() {
   };
 
   const navigate = useNavigate();
-  const [ppb, setPpb] = useState([])
 
   const columns = [
-      {name: "No. PPB", uid: "no_ppb", sortable: true},
-      {name: "TANGGAL", uid: "tanggal", sortable: true},
-      {name: "PEMOHON", uid: "pemohon", sortable: true},
+      {name: "COMPANY", uid: "company", sortable: true},
+      {name: "MENYERAHKAN", uid: "menyerahkan", sortable: true},
+      {name: "TANGGAL MENYERAHKAN", uid: "menyerahkan_date", sortable: true},
       {name: "STATUS", uid: "status", sortable: true},
       {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
     ];
 
 
   const addBtn =()=>{
-    navigate("/ppb/new");
+    navigate("/suratjalan/new");
   }
 
   const addButton = () => {
     return (
+      <div>
       <Button color="primary" endContent={<PlusIcon />} onClick={addBtn} hidden={activeTabData.isHidden}>
         Add New
       </Button>
+      </div>
     );
   };
 
@@ -100,7 +101,7 @@ export default function PermintaanPembelianBarang() {
         confirmButtonText: "Yes, delete it!"
       }).then((result) => {
         if (result.isConfirmed) {
-          axiosClient.delete(`/ppb/${key}`).then(() => {
+          axiosClient.delete(`/suratjalan/${key}`).then(() => {
             Swal.fire({
               title: "Deleted!",
               text: "Your file has been deleted.",
@@ -136,8 +137,8 @@ export default function PermintaanPembelianBarang() {
             </Button>
           </DropdownTrigger>
           <DropdownMenu onAction={handleAction}>
-            <DropdownItem key={"/ppb/" + data.id + "/view"}>View</DropdownItem>
-            <DropdownItem key={"/ppb/" + data.id} hidden={activeTabData.isHidden}>Edit</DropdownItem>
+            <DropdownItem key={"/suratjalan/" + data.id + "/view"}>View</DropdownItem>
+            <DropdownItem key={"/suratjalan/" + data.id} hidden={activeTabData.isHidden}>Edit</DropdownItem>
             <DropdownItem key={data.id} hidden={activeTabData.isHidden}>Delete</DropdownItem>
           </DropdownMenu>
         </Dropdown>
