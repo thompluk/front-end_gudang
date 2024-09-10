@@ -13,41 +13,32 @@ import { VerticalDotsIcon } from "../../assets/VerticalDotIcon";
 import { PlusIcon } from "../../assets/PlusIcon";
 import Swal from 'sweetalert2'
 
-export default function Prinsipal() {
+export default function BuktiPengeluaranBarangUmum() {
 
   const [loading, setLoading] = useState(false)
   const [datas, setDatas] = useState([])
   const navigate = useNavigate();
   const columns = [
-    {name: "NAME", uid: "name", sortable: true},
-    {name: "TELEPHONE", uid: "telephone", sortable: true},
-    {name: "FAX", uid: "fax", sortable: true},
+    {name: "No. BPB", uid: "no_bpb", sortable: true},
+    {name: "DATE", uid: "date", sortable: true},
+    {name: "SALESMAN", uid: "salesman", sortable: true},
+    {name: "CUSTOMER", uid: "customer", sortable: true},
+    {name: "REQUEST BY", uid: "request_by", sortable: true},
+    {name: "STATUS", uid: "delivery_status", sortable: true},
     {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
   ];
 
   const addBtn =()=>{
-    navigate("/prinsipal/new");
+    navigate("/bpb/new");
   }
 
   const addButton = () => {
     return (
-      <Button color="primary" endContent={<PlusIcon />} onClick={addBtn}>
+      <Button color="primary" endContent={<PlusIcon />} onClick={addBtn} hidden>
         Add New
       </Button>
     );
   };
-
-  const Toast = Swal.mixin({
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    timer: 2000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.onmouseenter = Swal.stopTimer;
-      toast.onmouseleave = Swal.resumeTimer;
-    }
-  });  
 
   const handleAction = async (key) => {
     if (key.startsWith('/')) {
@@ -66,10 +57,11 @@ export default function Prinsipal() {
         confirmButtonText: "Yes, delete it!"
       }).then((result) => {
         if (result.isConfirmed) {
-          axiosClient.delete(`/prinsipal/${key}`).then(() => {
-            Toast.fire({
-              icon: "success",
-              title: "Delete is successfully"
+          axiosClient.delete(`/bpb/${key}`).then(() => {
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your file has been deleted.",
+              icon: "success"
             });
             getDatas()
           });
@@ -81,7 +73,7 @@ export default function Prinsipal() {
   const getDatas = () => {
     setLoading(true)
     axiosClient
-      .get('/allprinsipal')
+      .get('/allbpbumum')
       .then(({ data }) => {
         setLoading(false)
         setDatas(data.data)
@@ -102,9 +94,7 @@ export default function Prinsipal() {
             </Button>
           </DropdownTrigger>
           <DropdownMenu onAction={handleAction}>
-            <DropdownItem key={"/prinsipal/" + data.id + "/view"}>View</DropdownItem>
-            <DropdownItem key={"/prinsipal/" + data.id}>Edit</DropdownItem>
-            <DropdownItem key={data.id}>Delete</DropdownItem>
+            <DropdownItem key={"/bpbumum/" + data.id + "/view"}>View</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>
@@ -114,7 +104,7 @@ export default function Prinsipal() {
   return (
     <div className="flex-col justify-center bg-white p-4 rounded-large animated fadeInDown ">
       <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
-          <h1>Prinsipal List</h1>
+          <h1>Bukti Pengeluaran Barang Umum List</h1>
       </div>
       <TableCustom columns={columns} addButton={addButton} renderCellTable={renderCellTable} getDatas={getDatas} loading={loading} datas={datas}/>
     </div>

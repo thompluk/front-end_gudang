@@ -6,6 +6,7 @@ import { createRef, useState } from 'react'
 import axiosClient from '../../axios-client'
 import ApprovalPOView from './ApprovalPOView'
 import Swal from 'sweetalert2'
+import ApprovalBPBView from './ApprovalBPBView'
 
 
 export default function ApprovalDetail() {
@@ -169,6 +170,10 @@ export default function ApprovalDetail() {
           {param2 == 'po' && (
             <ApprovalPOView>
             </ApprovalPOView>
+          )}
+          {param2 == 'bpb' && (
+            <ApprovalBPBView>
+            </ApprovalBPBView>
           )}
         </div>
         <div className='flex justify-between p-4'>

@@ -173,21 +173,38 @@ export default function StockItemDetail() {
                       </Select>
                   </div>
               </div>
-            
-              <div  className=" p-2 xl:w-1/4 w-full">
-                  <Input
-                  id="stock_name"
-                  variant="bordered"
-                  className="bg-white "
-                  type="text"
-                  value={stockItemData.stock_name}
-                  label="Stock Name"
-                  isInvalid={message?.stock_name != null}
-                  errorMessage={message?.stock_name}
-                  isDisabled={disabledView || stockItemData.is_exist === 'ya'}
-                  onChange={(e) => setStockItemData({ ...stockItemData, stock_name: e.target.value })}
-              />
+
+              <div className='flex'>
+                <div  className=" p-2 xl:w-1/4 w-full">
+                    <Input
+                    id="stock_name"
+                    variant="bordered"
+                    className="bg-white "
+                    type="text"
+                    value={stockItemData.stock_name}
+                    label="Stock Name"
+                    isInvalid={message?.stock_name != null}
+                    errorMessage={message?.stock_name}
+                    isDisabled={disabledView || stockItemData.is_exist === 'ya'}
+                    onChange={(e) => setStockItemData({ ...stockItemData, stock_name: e.target.value })}
+                />
+                </div>
+                <div  className=" p-2 xl:w-1/4 w-full">
+                    <Input
+                    id="quantity"
+                    variant="bordered"
+                    className="bg-white "
+                    type="text"
+                    value={stockItemData.quantity}
+                    label="Quantity"
+                    isInvalid={message?.quantity != null}
+                    errorMessage={message?.quantity}
+                    isDisabled={disabledView || stockItemData.is_exist === 'ya'}
+                    onChange={(e) => setStockItemData({ ...stockItemData, quantity: e.target.value })}
+                />
+                </div>
               </div>
+            
 
               <br />
 
@@ -202,9 +219,9 @@ export default function StockItemDetail() {
                       <TableColumn className='w-1/10'>DESCRIPTION</TableColumn>
                       <TableColumn className='w-1/10'>NO EDP</TableColumn>
                       <TableColumn className='w-1/10'>NO S/N</TableColumn>
-                      <TableColumn className='w-1/10'>LEAVING DATE</TableColumn>
-                      <TableColumn className='w-1/20'>IN STOCK?</TableColumn>
                       <TableColumn className='w-1/10'>ARRIVAL DATE</TableColumn>
+                      <TableColumn className='w-1/20'>IN STOCK?</TableColumn>
+                      <TableColumn className='w-1/10'>LEAVING DATE</TableColumn>
                       <TableColumn className='w-1/10'>NO PO</TableColumn>
                       <TableColumn className='w-1/10'>REMARKS</TableColumn>
                       <TableColumn className='w-1/10'>RECEIVER</TableColumn>

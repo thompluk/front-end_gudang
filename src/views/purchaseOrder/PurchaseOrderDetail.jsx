@@ -819,6 +819,7 @@ export default function PurchaseOrderDetail() {
                                     variant='bordered' 
                                     value={item.item} 
                                     aria-label="Item Name"
+                                    readOnly
                                     // onChange={(e) => handleInputChangeRow(index, 'item', e.target.value)}
                                 />
                             </TableCell>

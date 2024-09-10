@@ -30,6 +30,8 @@ import StockItemInitial from "./views/stockItem/StockItemInitial.jsx"
 import StockMaterial from "./views/stockMaterial/StockMaterial.jsx"
 import BuktiPengeluaranBarang from "./views/buktiPengeluaranBarang/BuktiPengeluaranBarang.jsx"
 import BuktiPengeluaranBarangDetail from "./views/buktiPengeluaranBarang/BuktiPengeluaranBarangDetail.jsx"
+import BuktiPengeluaranBarangUmum from "./views/buktiPengeluaranBarangUmum/BuktiPengeluaranBarangUmum.jsx"
+import BuktiPengeluaranBarangDetailUmum from "./views/buktiPengeluaranBarangUmum/BuktiPengeluaranBarangUmumDetail.jsx"
 
 const router = createBrowserRouter( [
     {
@@ -180,6 +182,19 @@ const router = createBrowserRouter( [
             {
                 path: '/bpb/:param/:param2',
                 element: <BuktiPengeluaranBarangDetail/>
+            },
+
+            {
+                path: '/bpbumum',
+                element: <BuktiPengeluaranBarangUmum/>
+            },
+            {
+                path: '/bpbumum/:param',
+                element: <BuktiPengeluaranBarangDetailUmum/>
+            }, 
+            {
+                path: '/bpbumum/:param/:param2',
+                element: <BuktiPengeluaranBarangDetailUmum/>
             },
 
             {

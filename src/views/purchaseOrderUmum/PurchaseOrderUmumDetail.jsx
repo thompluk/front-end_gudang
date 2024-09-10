@@ -287,6 +287,21 @@ export default function PurchaseOrderUmumDetail() {
 
     const handlePost = () => {
       console.log(rows)
+
+      for (let i = 0; i < rows.length; i++) {
+        console.log(rows[i].tipe_item)
+        if(rows[i].tipe_item === undefined && rows[i].is_items_created === 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Mohon pilih tipe item terlebih dahulu",
+            // footer: '<a href="#">Why do I have this issue?</a>'
+          })
+
+          return;
+        }
+      }
+
       for (let i = 0; i < rows.length; i++) {
         if(rows[i].tipe_item === 'MATERIAL' && rows[i].is_items_created === 0) {
           console.log(rows[i].id, rows[i].tipe_item)

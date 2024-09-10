@@ -104,6 +104,9 @@ export default function DefaultLayout(){
                   <NavLink exact to="/bpb">
                     <CDBSidebarMenuItem>Bukti Pengeluaran Barang</CDBSidebarMenuItem>
                   </NavLink>
+                  <NavLink exact to="/bpbumum">
+                    <CDBSidebarMenuItem>Bukti Pengeluaran Barang Umum</CDBSidebarMenuItem>
+                  </NavLink>
                   <NavLink exact to="/approval">
                   <CDBSidebarMenuItem className="flex">
                     <div className="flex gap-2">

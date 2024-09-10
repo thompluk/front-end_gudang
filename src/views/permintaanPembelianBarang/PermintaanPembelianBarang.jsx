@@ -82,6 +82,18 @@ export default function PermintaanPembelianBarang() {
     );
   };
 
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    }
+  });  
+
   const handleAction = async (key) => {
 
     if (key.startsWith('/')) {
@@ -101,10 +113,9 @@ export default function PermintaanPembelianBarang() {
       }).then((result) => {
         if (result.isConfirmed) {
           axiosClient.delete(`/ppb/${key}`).then(() => {
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your file has been deleted.",
-              icon: "success"
+            Toast.fire({
+              icon: "success",
+              title: "Delete is successfully"
             });
             getDatas()
           });

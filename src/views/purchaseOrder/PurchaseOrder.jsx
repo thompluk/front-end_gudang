@@ -81,6 +81,18 @@ export default function PurchaseOrder() {
     );
   };
 
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    }
+  });  
+
   const handleAction = async (key) => {
 
     if (key.startsWith('/')) {
@@ -100,10 +112,9 @@ export default function PurchaseOrder() {
       }).then((result) => {
         if (result.isConfirmed) {
           axiosClient.delete(`/po/${key}`).then(() => {
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your file has been deleted.",
-              icon: "success"
+            Toast.fire({
+              icon: "success",
+              title: "Delete is successfully"
             });
             getDatas()
           });

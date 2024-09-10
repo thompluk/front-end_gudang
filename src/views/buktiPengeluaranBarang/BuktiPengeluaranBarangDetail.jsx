@@ -17,6 +17,8 @@ import {
   Select,
   SelectItem,
   Card,
+  RadioGroup,
+  Radio,
 } from '@nextui-org/react'
 import axiosClient from '../../axios-client'
 import {PlusIcon} from '../../assets/PlusIcon'
@@ -74,11 +76,11 @@ export default function BuktiPengeluaranBarangDetail() {
 
   const [bpbData, setBpbData] = useState({
     status: null,
+    delivery_status: null,
     salesman: null,
     date: null,
     no_po: null,
     delivery_by: null,
-    delivery_date: null,
     no_bpb: null,
     customer: null,
     customer_address: null,
@@ -96,24 +98,28 @@ export default function BuktiPengeluaranBarangDetail() {
 
   const [details, setDetails] = useState([
     {
+        is_partial_delivery: '0',
         id: null,
         item_id: null,
         item_name: null,
         no_edp: null,
         no_sn: null,
         quantity: null,
+        delivery_date: null,
         notes: null,
     }
   ]);
 
   const addData = () => {
     const newData = {
+        is_partial_delivery: '0',
         id: null,
         item_id: null,
         item_name: null,
         no_edp: null,
         no_sn: null,
         quantity: null,
+        delivery_date: null,
         notes: null,
     };
 
@@ -154,7 +160,6 @@ export default function BuktiPengeluaranBarangDetail() {
             date: data.data.date,
             no_po: data.data.no_po,
             delivery_by: data.data.delivery_by,
-            delivery_date: data.data.delivery_date,
             no_bpb: data.data.no_bpb,
             customer: data.data.customer,
             customer_address: data.data.customer_address,
@@ -227,6 +232,10 @@ export default function BuktiPengeluaranBarangDetail() {
     setDetails(details.map((row, i) => i === index ? { ...row, [field]: value } : row));
   };
 
+  const handleInputRadio = (index, field, value) => {
+    setDetails(details.map((row, i) => i === index ? { ...row, [field]: value, item_name : '', item_id : null, no_sn : '', no_edp : '', quantity : ''} : row));
+  };
+
   const handleInputChange = (field, value) => {
     setBpbData((prevData) => ({
       ...prevData, 
@@ -291,7 +300,6 @@ export default function BuktiPengeluaranBarangDetail() {
         salesman: bpbData.salesman,
         no_po: bpbData.no_po,
         delivery_by: bpbData.delivery_by,
-        delivery_date: bpbData.delivery_date,
         customer: bpbData.customer,
         customer_address: bpbData.customer_address,
         customer_pic_name: bpbData.customer_pic_name,
@@ -448,7 +456,8 @@ export default function BuktiPengeluaranBarangDetail() {
                     <Button className="bg-green-300" onClick={handlePost} hidden={!disabledView || bpbData.status !== 'Draft' && bpbData.status !== 'Returned'}>
                         Post
                     </Button>
-                    <div  className="xl:w-1/10 p-4" hidden={bpbData.status === null}>
+                    <div></div>
+                    <div  className="xl:w-2/10 p-4" hidden={bpbData.status === null}>
                         <p id="status" >
                         Status : {bpbData.status}
                         </p>
@@ -478,6 +487,7 @@ export default function BuktiPengeluaranBarangDetail() {
                                     isInvalid={message?.salesman != null}
                                     errorMessage={message?.salesman}
                                     onChange={e => setBpbData({ ...bpbData, salesman: e.target.value })}
+                                    isDisabled={disabledView}
                                     />
                                 </div>
                                 <div  className=" p-2 xl:w-3/4 w-full">
@@ -506,6 +516,7 @@ export default function BuktiPengeluaranBarangDetail() {
                                     isInvalid={message?.no_po != null}
                                     errorMessage={message?.no_po}
                                     onChange={e => setBpbData({ ...bpbData, no_po: e.target.value })}
+                                    isDisabled={disabledView}
                                     />
                                 </div>
                                 <div  className=" p-2 xl:w-3/4 w-full">
@@ -520,9 +531,10 @@ export default function BuktiPengeluaranBarangDetail() {
                                     isInvalid={message?.delivery_by != null}
                                     errorMessage={message?.delivery_by}
                                     onChange={(e) => setBpbData( {...bpbData, delivery_by: e.target.value} )}
+                                    isDisabled={disabledView}
                                     />
                                 </div>
-                                <div  className=" p-2 xl:w-3/4 w-full">
+                                {/* <div  className=" p-2 xl:w-3/4 w-full">
                                     <Input
                                         id="Delivery Date"
                                         // ref={dateRef}
@@ -534,8 +546,9 @@ export default function BuktiPengeluaranBarangDetail() {
                                         isInvalid={message?.delivery_date != null}
                                         errorMessage={message?.delivery_date}
                                         onChange={(e) => setBpbData( {...bpbData, delivery_date: e.target.value} )}
+                                        isDisabled={disabledView}
                                     />
-                                </div>
+                                </div> */}
                             </Card>
                         </div>
                         <div className='w-1/2 p-2'>
@@ -566,6 +579,7 @@ export default function BuktiPengeluaranBarangDetail() {
                                     isInvalid={message?.customer != null}
                                     errorMessage={message?.customer}
                                     onChange={(e) => setBpbData( {...bpbData, customer: e.target.value} )}
+                                    isDisabled={disabledView}
                                     />
                                 </div>
                                 <div  className=" p-2 xl:w-3/4 w-full">
@@ -580,6 +594,7 @@ export default function BuktiPengeluaranBarangDetail() {
                                     isInvalid={message?.customer_address != null}
                                     errorMessage={message?.customer_address}
                                     onChange={(e) => setBpbData( {...bpbData, customer_address: e.target.value} )}
+                                    isDisabled={disabledView}
                                     />
                                 </div>
                                 <div  className=" p-2 xl:w-3/4 w-full">
@@ -594,6 +609,7 @@ export default function BuktiPengeluaranBarangDetail() {
                                     isInvalid={message?.customer_pic_name != null}
                                     errorMessage={message?.customer_pic_name}
                                     onChange={(e) => setBpbData( {...bpbData, customer_pic_name: e.target.value} )}
+                                    isDisabled={disabledView}
                                     />
                                 </div>
                                 <div  className=" p-2 xl:w-3/4 w-full">
@@ -608,6 +624,7 @@ export default function BuktiPengeluaranBarangDetail() {
                                     isInvalid={message?.customer_pic_phone != null}
                                     errorMessage={message?.customer_pic_phone}
                                     onChange={(e) => setBpbData( {...bpbData, customer_pic_phone: e.target.value} )}
+                                    isDisabled={disabledView}
                                     />
                                 </div>
                             </Card>
@@ -615,15 +632,199 @@ export default function BuktiPengeluaranBarangDetail() {
                     </div>
 
                 </div>
+{/* 
+                <div  className=" p-2 xl:w-full w-full">
+                  <RadioGroup
+                      label="Apakah Merupakan Pengiriman Partial?"
+                      orientation="horizontal"
+                      value={bpbData.is_partial_delivery}  // Nilai yang sesuai dengan Radio
+                      onChange={(event) => setBpbData({ ...bpbData, is_partial_delivery: event.target.value })} // Update state saat value berubah
+                  >
+                      <Radio value="ya">Ya</Radio>
+                      <Radio value="tidak">Tidak</Radio>
+                  </RadioGroup>
+                </div> */}
                     
                 <br />
                 <Table aria-label="Example static collection table" className='p-2'>
+                <TableHeader>
+                    <TableColumn className='w-1/10'>PARTIAL</TableColumn>
+                    <TableColumn className='w-2/10'>ITEM NAME</TableColumn>
+                    <TableColumn className='w-15/100'>EDP</TableColumn>
+                    <TableColumn className='w-15/100'>S/N</TableColumn>
+                    <TableColumn className='w-1/10'>QUANTITY</TableColumn>
+                    <TableColumn className='w-1/13'>DEL. DATE</TableColumn>
+                    <TableColumn className='w-2/10'>NOTE</TableColumn>
+                    <TableColumn className='w-1/20' hideHeader={disabledView}>ACTION</TableColumn>
+                </TableHeader>
+                <TableBody emptyContent={"No Data found"} items={details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
+                    {details.map((item,index) => (
+                        <TableRow key={index}>
+                            <TableCell>
+                              <RadioGroup
+                                  aria-label="Apakah Merupakan Pengiriman Partial?"
+                                  orientation="horizontal"
+                                  value={item.is_partial_delivery}  // Nilai yang sesuai dengan Radio
+                                  onChange={(e) => handleInputRadio(index, 'is_partial_delivery', e.target.value)} 
+                                  isDisabled = {disabledView}                             
+                                  >
+                                  <Radio value="1">Ya</Radio>
+                                  <Radio value="0">Tidak</Radio>
+                              </RadioGroup>
+                            </TableCell>
+                            <TableCell>
+                              <div hidden={item.is_partial_delivery === '1'}>
+                                <Input
+                                    startContent={<SearchIcon onClick={()=>handleOpenModalItems(index)} className="cursor-pointer"/>}
+                                    style={{ fontSize: '12px' }}
+                                    isDisabled = {disabledView}
+                                    type="text" 
+                                    variant='bordered' 
+                                    value={item.item_name} 
+                                    aria-label="Item Name"
+                                    readOnly
+                                    // onChange={(e) => handleInputChangeRow(index, 'item', e.target.value)}
+                                />
+                              </div>
+                              <div hidden={item.is_partial_delivery === '0'}>
+                                <Input
+                                    style={{ fontSize: '12px' }}
+                                    isDisabled = {disabledView}
+                                    type="text" 
+                                    variant='bordered' 
+                                    value={item.item_name} 
+                                    aria-label="Item Name"
+                                    onChange={(e) => handleInputChangeRow(index, 'item_name', e.target.value)}
+                                />
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div hidden={item.is_partial_delivery === '1'}>
+                                <Input 
+                                    aria-label="No EDP"
+                                    style={{ fontSize: '12px' }}
+                                    isDisabled = {disabledView}
+                                    type="text" 
+                                    variant='bordered' 
+                                    value={item.no_edp} 
+                                    readOnly
+                                />
+                              </div>
+                              <div hidden={item.is_partial_delivery === '0'}>
+                                <Input 
+                                    aria-label="No EDP"
+                                    style={{ fontSize: '12px' }}
+                                    isDisabled = {disabledView}
+                                    type="text" 
+                                    variant='bordered' 
+                                    value={item.no_edp} 
+                                    onChange={(e) => handleInputChangeRow(index, 'no_edp', e.target.value)}
+                                />
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div hidden={item.is_partial_delivery === '1'}>
+                                <Input
+                                    aria-label="No SN"
+                                    style={{ fontSize: '12px' }}
+                                    isDisabled = {disabledView}
+                                    type="text" 
+                                    variant='bordered' 
+                                    value={item.no_sn} 
+                                    readOnly
+                                />
+                              </div>
+                              <div hidden={item.is_partial_delivery === '0'}>
+                                <Input
+                                    aria-label="No SN"
+                                    style={{ fontSize: '12px' }}
+                                    isDisabled = {disabledView}
+                                    type="text" 
+                                    variant='bordered' 
+                                    value={item.no_sn} 
+                                    onChange={(e) => handleInputChangeRow(index, 'no_sn', e.target.value)}
+                                />
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div hidden={item.is_partial_delivery === '1'}>
+                                <Input
+                                    aria-label="Quantity"
+                                    style={{ fontSize: '12px' }}
+                                    isDisabled = {disabledView}
+                                    type="text" 
+                                    variant='bordered' 
+                                    value={item.quantity} 
+                                    readOnly
+                                />
+                              </div>
+                              <div hidden={item.is_partial_delivery === '0'}>
+                                <Input
+                                    aria-label="Quantity"
+                                    style={{ fontSize: '12px' }}
+                                    isDisabled = {disabledView}
+                                    type="text" 
+                                    variant='bordered' 
+                                    value={item.quantity} 
+                                    onChange={(e) => handleInputChangeRow(index, 'quantity', e.target.value)}
+                                />
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                                <Input
+                                    aria-label="delivery_date"
+                                    style={{ fontSize: '12px' }}
+                                    isDisabled = {disabledView}
+                                    type="date" 
+                                    variant='bordered' 
+                                    value={item.delivery_date}
+                                    onChange={(e) => handleInputChangeRow(index, 'delivery_date', e.target.value)}
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Textarea
+                                    aria-label="Note"
+                                    style={{ fontSize: '12px' }}
+                                    type="text" 
+                                    variant='bordered' 
+                                    value={item.notes}
+                                    onChange={(e) => handleInputChangeRow(index, 'notes', e.target.value)}
+                                    isDisabled={disabledView}
+                                />
+                            </TableCell>
+                            <TableCell hidden={disabledView}>
+                                <Button className='bg-red-300' isIconOnly>
+                                    <img
+                                        src={DeleteIcon}
+                                        alt="Delete Icon"
+                                        className="w-6 h-6 hover:cursor-pointer"
+                                        onClick={() => handleDelete(index)}
+                                    />
+                                </Button>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+                
+                </Table>
+                <Button
+                  hidden={disabledView}
+                  color="primary"
+                  endContent={<PlusIcon className="w-5 h-5" />}
+                  className="p-2 w-2 h-12 rounded-full flex items-center justify-center bg-blue-500 hover:bg-blue-600"
+                  onClick={addData}
+                >
+                </Button>
+                <hr />
+                {/* <br />
+                <div hidden={bpbData.is_partial_delivery !== '1'}>
+                <h5>Partial Delivery Item Table</h5>
+                <Table aria-label="Example static collection table" className='p-2' >
                 <TableHeader>
                     <TableColumn className='w-3/10'>ITEM NAME</TableColumn>
                     <TableColumn className='w-2/10'>EDP</TableColumn>
                     <TableColumn className='w-2/10'>S/N</TableColumn>
                     <TableColumn className='w-1/10'>QUANTITY</TableColumn>
-                    {/* <TableColumn className='w-1/13'>DEL. DATE</TableColumn> */}
                     <TableColumn className='w-2/10'>NOTE</TableColumn>
                     <TableColumn className='w-1/20' hideHeader={disabledView}>ACTION</TableColumn>
                 </TableHeader>
@@ -684,6 +885,7 @@ export default function BuktiPengeluaranBarangDetail() {
                                     variant='bordered' 
                                     value={item.notes}
                                     onChange={(e) => handleInputChangeRow(index, 'notes', e.target.value)}
+                                    isDisabled={disabledView}
                                 />
                             </TableCell>
                             <TableCell hidden={disabledView}>
@@ -702,15 +904,15 @@ export default function BuktiPengeluaranBarangDetail() {
                 
                 </Table>
                 <Button
-                  hidden={disabledView}
+                  hidden={disabledView || bpbData.is_partial_delivery !== 'ya'}
                   color="primary"
                   endContent={<PlusIcon className="w-5 h-5" />}
                   className="p-2 w-2 h-12 rounded-full flex items-center justify-center bg-blue-500 hover:bg-blue-600"
                   onClick={addData}
                 >
                 </Button>
-
                 <hr />
+                </div> */}
                 <div className=" w-full flex-wrap md:flex-nowrap pt-4 pb-2">
                   <div className='flex'>
                     <div  className=" p-2 xl:w-1/4 w-full">
