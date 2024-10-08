@@ -354,7 +354,7 @@ export default function BuktiPengeluaranBarangDetailUmum() {
                                     readOnly
                                     />
                                 </div>
-                                <div  className=" p-2 xl:w-3/4 w-full">
+                                {/* <div  className=" p-2 xl:w-3/4 w-full">
                                     <Input
                                         id="Delivery Date"
                                         // ref={dateRef}
@@ -368,7 +368,7 @@ export default function BuktiPengeluaranBarangDetailUmum() {
                                         onChange={(e) => setBpbData( {...bpbData, delivery_date: e.target.value} )}
                                         readOnly
                                     />
-                                </div>
+                                </div> */}
                             </Card>
                         </div>
                         <div className='w-1/2 p-2'>

@@ -132,6 +132,9 @@ export default function BuktiPengeluaranBarangDetail() {
     navigate('/bpb')
   ]
 
+  const handlePrint = () => {
+    navigate('/printBPB/' + param);
+  }
 
   useEffect(() => {
 
@@ -445,7 +448,7 @@ export default function BuktiPengeluaranBarangDetail() {
           <h1 hidden={param == 'new' || param2 == 'view'}>Edit Bukti Pengeluaran Barang</h1>
           <h1 hidden={param2 != 'view'}>View Bukti Pengeluaran Barang</h1>
           <Button className="bg-red-300" onClick={btnBack}>
-            Back
+            Back 
           </Button>
         </div>
           <div className="pt-8">
@@ -455,6 +458,9 @@ export default function BuktiPengeluaranBarangDetail() {
                     </Button>
                     <Button className="bg-green-300" onClick={handlePost} hidden={!disabledView || bpbData.status !== 'Draft' && bpbData.status !== 'Returned'}>
                         Post
+                    </Button>
+                    <Button className="bg-green-300" onClick={handlePrint} hidden={bpbData.status !== 'Done'}>
+                      Print
                     </Button>
                     <div></div>
                     <div  className="xl:w-2/10 p-4" hidden={bpbData.status === null}>

@@ -32,6 +32,10 @@ import BuktiPengeluaranBarang from "./views/buktiPengeluaranBarang/BuktiPengelua
 import BuktiPengeluaranBarangDetail from "./views/buktiPengeluaranBarang/BuktiPengeluaranBarangDetail.jsx"
 import BuktiPengeluaranBarangUmum from "./views/buktiPengeluaranBarangUmum/BuktiPengeluaranBarangUmum.jsx"
 import BuktiPengeluaranBarangDetailUmum from "./views/buktiPengeluaranBarangUmum/BuktiPengeluaranBarangUmumDetail.jsx"
+import PrintPO from "./views/print/PrintPO.jsx"
+import PrintPPB from "./views/print/PrintPPB.jsx"
+import PrintBPB from "./views/print/PrintBPB.jsx"
+import Profile from "./views/profile/Profile.jsx"
 
 const router = createBrowserRouter( [
     {
@@ -118,6 +122,7 @@ const router = createBrowserRouter( [
                 path: '/po/:param/:param2',
                 element: <PurchaseOrderDetail/>
             },
+            
 
             {
                 path: '/poumum',
@@ -208,6 +213,27 @@ const router = createBrowserRouter( [
             {
                 path: '/approval/:param/:param2',
                 element: <ApprovalDetail/>
+            },
+
+            //print
+            {
+                path: '/printPPB/:param/',
+                element: <PrintPPB/>
+            },
+            {
+                path: '/printPO/:param/',
+                element: <PrintPO/>
+            },
+            {
+                path: '/printBPB/:param/',
+                element: <PrintBPB/>
+            },
+            //
+
+            //profile
+            {
+                path: '/profile',
+                element: <Profile/>
             },
         ]
     },

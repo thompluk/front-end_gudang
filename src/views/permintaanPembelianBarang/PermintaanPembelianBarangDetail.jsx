@@ -95,6 +95,10 @@ export default function PermintaanPembelianBarangDetail() {
     navigate('/ppb')
   ]
 
+  const handlePrint = () => {
+    navigate('/printPPB/' + param);
+  }
+
 
   useEffect(() => {
 
@@ -171,18 +175,18 @@ export default function PermintaanPembelianBarangDetail() {
       })
   }
 
-  const [rows, setRows] = useState(details);
+  // const [rows, setRows] = useState(details);
 
-    useEffect(() => {
-        setRows(details);
-    }, [details]);
+  //   useEffect(() => {
+  //       setRows(details);
+  //   }, [details]);
 
     // const handleInputChange = (id, field, value) => {
     //     setRows(rows.map(row => row.id === id ? { ...row, [field]: value } : row));
     // };
 
     const handleInputChange = (index, field, value) => {
-      setRows(rows.map((row, i) => i === index ? { ...row, [field]: value } : row));
+      setDetails(details.map((row, i) => i === index ? { ...row, [field]: value } : row));
   };
   const handleDelete = (index) => {
 
@@ -210,7 +214,7 @@ export default function PermintaanPembelianBarangDetail() {
   };
 
     const handleSaveAll = (ppb_id) => {
-      axiosClient.post('/ppbsaveAll/'+ppb_id, rows)
+      axiosClient.post('/ppbsaveAll/'+ppb_id, details)
             .then(response => {
                 // Handle successful save
                 console.log('Data saved successfully');
@@ -373,6 +377,9 @@ export default function PermintaanPembelianBarangDetail() {
                   <Button className="bg-green-300" onClick={handlePost} hidden={!disabledView || ppbData.status !== 'Draft' && ppbData.status !== 'Returned'}>
                     Post
                   </Button>
+                  <Button className="bg-green-300" onClick={handlePrint} hidden={ppbData.status !== 'Done'}>
+                    Print
+                  </Button>
               </div>
 
               {loading && (
@@ -430,8 +437,8 @@ export default function PermintaanPembelianBarangDetail() {
                     <TableColumn className='w-1/5'>PROJECT & CUSTOMER</TableColumn>
                     <TableColumn className='w-1/20' hideHeader={disabledView}>ACTION</TableColumn>
                 </TableHeader>
-                <TableBody emptyContent={"No Data found"} items={rows} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
-                    {rows.map((item,index) => (
+                <TableBody emptyContent={"No Data found"} items={details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
+                    {details.map((item,index) => (
                         <TableRow key={index}>
                             <TableCell>
                                 <Input 

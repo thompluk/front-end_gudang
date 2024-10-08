@@ -100,6 +100,42 @@ body {
   animation-name: fadeInDown;
 }
 
+#print table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#print table{
+  border: solid black;
+  border-width: 1px;
+}
+
+#print th{
+  border: solid black;
+  border-width: 1px;
+  padding: 10px;
+  vertical-align: text-top;
+}
+
+#print td{
+  border-width: 1px;
+  padding: 10px;
+  border-top-style:dashed;
+  border-bottom-style: dashed;
+  vertical-align: text-top;
+}
+
+#print p{
+  padding: 0px;
+  margin: 0;
+}
+
+#print hr{
+  margin: 0;
+}
+
+
+
 @keyframes fadeInDown {
   0% {
     opacity: 0;

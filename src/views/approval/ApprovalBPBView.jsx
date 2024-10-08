@@ -305,21 +305,6 @@ export default function ApprovalBPBView() {
                                     readOnly
                                     />
                                 </div>
-                                <div  className=" p-2 xl:w-3/4 w-full">
-                                    <Input
-                                        id="Delivery Date"
-                                        // ref={dateRef}
-                                        variant="bordered"
-                                        className="bg-white "
-                                        type="date"
-                                        value={bpbData.delivery_date}
-                                        label="Delivery Date"
-                                        isInvalid={message?.delivery_date != null}
-                                        errorMessage={message?.delivery_date}
-                                        onChange={(e) => setBpbData( {...bpbData, delivery_date: e.target.value} )}
-                                        readOnly
-                                    />
-                                </div>
                             </Card>
                         </div>
                         <div className='w-1/2 p-2'>

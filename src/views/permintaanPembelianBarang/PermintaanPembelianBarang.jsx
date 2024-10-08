@@ -167,7 +167,7 @@ export default function PermintaanPembelianBarang() {
           <TableCustom columns={columns} addButton={addButton} renderCellTable={renderCellTable} getDatas={getDatas} loading={loading} datas={datas}/>
         </Tab>
       )}
-    </Tabs>
+      </Tabs>
     </div>
   );
 }

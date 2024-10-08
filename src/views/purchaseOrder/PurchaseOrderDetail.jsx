@@ -354,7 +354,9 @@ export default function PurchaseOrderDetail() {
 
   // setDetails({ ...details, item: data.nama_barang, ppb_detail_id: (data.id).toString(), no_ppb: data.no_ppb });
   const handleDelete = (index) => {
-
+    console.log(index);
+    console.log(details[index]);
+    console.log (details);
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -369,8 +371,9 @@ export default function PurchaseOrderDetail() {
           // Jika id tidak null, panggil fungsi btnDeleteDetail
             deleteDetail(details[index].id);
             updateforDelete();
+            console.log('masuk');
           }
-      
+        
         const updatedDetails = details.filter((_, i) => i !== index);
         setDetails(updatedDetails);
 
@@ -606,6 +609,10 @@ export default function PurchaseOrderDetail() {
       setIsModalOpenItems(false)
     }
 
+    const handlePrint = () => {
+      navigate('/printPO/' + param);
+    }
+
   return (
     <div className="bg-white p-4 rounded-large animated fadeInDown">
       <div className="flex-col items-center">
@@ -624,6 +631,9 @@ export default function PurchaseOrderDetail() {
                   </Button>
                   <Button className="bg-green-300" onClick={handlePost} hidden={!disabledView || poData.status !== 'Draft' && poData.status !== 'Returned'}>
                     Post
+                  </Button>
+                  <Button className="bg-green-300" onClick={handlePrint} hidden={poData.status !== 'Done'}>
+                    Print
                   </Button>
               </div>
 
