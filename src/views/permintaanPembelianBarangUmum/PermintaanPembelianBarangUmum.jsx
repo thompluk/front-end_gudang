@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import TableCustom from "../../custom/Table.jsx";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../../axios-client.js";
+import {Tabs, Tab, Card, CardBody, CardHeader} from "@nextui-org/react";
 import { 
   DropdownTrigger,
   Dropdown,
@@ -13,23 +14,26 @@ import { VerticalDotsIcon } from "../../assets/VerticalDotIcon";
 import { PlusIcon } from "../../assets/PlusIcon";
 import Swal from 'sweetalert2'
 
-export default function PurchaseOrderUmum() {
+export default function PermintaanPembelianBarangUmum() {
 
   const [loading, setLoading] = useState(false)
   const [datas, setDatas] = useState([])
+  const [activeTabData, setActiveTabData] = useState([]);
+
   const navigate = useNavigate();
+  const [ppb, setPpb] = useState([])
+
   const columns = [
-    {name: "No. Po", uid: "no_po", sortable: true},
-    {name: "TANGGAL", uid: "tanggal", sortable: true},
-    {name: "PEMOHON", uid: "prepared_by", sortable: true},
-    {name: "VENDOR", uid: "vendor", sortable: true},
-    {name: "STATUS", uid: "status", sortable: true},
-    {name: "ARRIVAL STATUS", uid: "arrival_status", sortable: true},
-    {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
-  ];
+      {name: "No. PPB", uid: "no_ppb", sortable: true},
+      {name: "TANGGAL", uid: "tanggal", sortable: true},
+      {name: "PEMOHON", uid: "pemohon", sortable: true},
+      {name: "STATUS", uid: "status", sortable: true},
+      {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
+    ];
+
 
   const addBtn =()=>{
-    navigate("/po/new");
+    navigate("/ppb/new");
   }
 
   const addButton = () => {
@@ -40,7 +44,20 @@ export default function PurchaseOrderUmum() {
     );
   };
 
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    }
+  });  
+
   const handleAction = async (key) => {
+
     if (key.startsWith('/')) {
       // Navigasi ke path
       navigate(key);
@@ -57,11 +74,10 @@ export default function PurchaseOrderUmum() {
         confirmButtonText: "Yes, delete it!"
       }).then((result) => {
         if (result.isConfirmed) {
-          axiosClient.delete(`/po/${key}`).then(() => {
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your file has been deleted.",
-              icon: "success"
+          axiosClient.delete(`/ppbumum`).then(() => {
+            Toast.fire({
+              icon: "success",
+              title: "Delete is successfully"
             });
             getDatas()
           });
@@ -71,20 +87,19 @@ export default function PurchaseOrderUmum() {
   };
 
   const getDatas = () => {
-    setLoading(true)
-    axiosClient
-      .get('/allpoumum')
-      .then(({ data }) => {
-        setLoading(false)
-        setDatas(data.data)
-      })
-      .catch(() => {
-        setLoading(false)
-      })
-  }
+      setLoading(true)
+      axiosClient
+        .get('/allppbumum')
+        .then(({ data }) => {
+          setLoading(false)
+          setDatas(data.data)
+        })
+        .catch(() => {
+          setLoading(false)
+        })
+    }
 
   const renderCellTable = (data) => {
-
     return (
       <div className="relative flex justify-end items-center gap-2">
         <Dropdown>
@@ -94,7 +109,7 @@ export default function PurchaseOrderUmum() {
             </Button>
           </DropdownTrigger>
           <DropdownMenu onAction={handleAction}>
-            <DropdownItem key={"/poumum/" + data.id + "/view"}>View</DropdownItem>
+            <DropdownItem key={"/ppbumum/" + data.id + "/view"}>View</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>
@@ -103,10 +118,10 @@ export default function PurchaseOrderUmum() {
 
   return (
     <div className="flex-col justify-center bg-white p-4 rounded-large animated fadeInDown ">
-      <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
-          <h1>Purchase Order Umum List</h1>
-      </div>
-      <TableCustom columns={columns} addButton={addButton} renderCellTable={renderCellTable} getDatas={getDatas} loading={loading} datas={datas}/>
+        <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
+            <h1>Permintaan Pembelian Barang Umum List</h1>
+        </div>
+        <TableCustom columns={columns} addButton={addButton} renderCellTable={renderCellTable} getDatas={getDatas} loading={loading} datas={datas}/>
     </div>
   );
 }

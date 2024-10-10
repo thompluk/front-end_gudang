@@ -13,23 +13,24 @@ import { VerticalDotsIcon } from "../../assets/VerticalDotIcon";
 import { PlusIcon } from "../../assets/PlusIcon";
 import Swal from 'sweetalert2'
 
-export default function PurchaseOrderUmum() {
+export default function BpbDelivery() {
 
   const [loading, setLoading] = useState(false)
   const [datas, setDatas] = useState([])
   const navigate = useNavigate();
   const columns = [
-    {name: "No. Po", uid: "no_po", sortable: true},
-    {name: "TANGGAL", uid: "tanggal", sortable: true},
-    {name: "PEMOHON", uid: "prepared_by", sortable: true},
-    {name: "VENDOR", uid: "vendor", sortable: true},
+    {name: "No. BPB", uid: "no_bpb", sortable: true},
+    {name: "DATE", uid: "date", sortable: true},
+    {name: "SALESMAN", uid: "salesman", sortable: true},
+    {name: "CUSTOMER", uid: "customer", sortable: true},
+    {name: "REQUEST BY", uid: "request_by", sortable: true},
     {name: "STATUS", uid: "status", sortable: true},
-    {name: "ARRIVAL STATUS", uid: "arrival_status", sortable: true},
+    {name: "DELIVERY STATUS", uid: "delivery_status", sortable: true},
     {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
   ];
 
   const addBtn =()=>{
-    navigate("/po/new");
+    navigate("/bpb/new");
   }
 
   const addButton = () => {
@@ -57,7 +58,7 @@ export default function PurchaseOrderUmum() {
         confirmButtonText: "Yes, delete it!"
       }).then((result) => {
         if (result.isConfirmed) {
-          axiosClient.delete(`/po/${key}`).then(() => {
+          axiosClient.delete(`/bpb/${key}`).then(() => {
             Swal.fire({
               title: "Deleted!",
               text: "Your file has been deleted.",
@@ -73,7 +74,7 @@ export default function PurchaseOrderUmum() {
   const getDatas = () => {
     setLoading(true)
     axiosClient
-      .get('/allpoumum')
+      .get('/allbpbdelivery')
       .then(({ data }) => {
         setLoading(false)
         setDatas(data.data)
@@ -94,7 +95,7 @@ export default function PurchaseOrderUmum() {
             </Button>
           </DropdownTrigger>
           <DropdownMenu onAction={handleAction}>
-            <DropdownItem key={"/poumum/" + data.id + "/view"}>View</DropdownItem>
+            <DropdownItem key={"/bpbdelivery/" + data.id + "/view"}>View</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>
@@ -104,7 +105,7 @@ export default function PurchaseOrderUmum() {
   return (
     <div className="flex-col justify-center bg-white p-4 rounded-large animated fadeInDown ">
       <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
-          <h1>Purchase Order Umum List</h1>
+          <h1>BPB Delivery List</h1>
       </div>
       <TableCustom columns={columns} addButton={addButton} renderCellTable={renderCellTable} getDatas={getDatas} loading={loading} datas={datas}/>
     </div>

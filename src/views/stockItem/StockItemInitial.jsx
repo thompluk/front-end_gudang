@@ -49,7 +49,7 @@ export default function StockItemInitial() {
 
 const checkLength = () => {
     if(details.length == 0) {
-        navigate('/poumum');
+        navigate('/podelivery');
     }
 }
 
@@ -57,7 +57,7 @@ const arrived = () => {
     axiosClient
     .post('/po/arrived/' + param)
     .then(({}) => {
-      navigate('/poumum');
+      navigate('/podelivery');
       Toast.fire({
         icon: "success",
         title: "Arrival is successfully"
@@ -101,7 +101,7 @@ const getStockItem = () => {
             const rawDetails = data.data; // Ambil data mentah
             if(rawDetails.length == 0) {
               arrived();
-              navigate('/poumum');
+              navigate('/podelivery');
             }
             // Proses data mentah
             const groupedDetails = rawDetails.map(raw => 
@@ -135,7 +135,7 @@ const getStockItem = () => {
     return tabs;
   };
 
-  const btnBack = () => [navigate('/poumum/'+ param + '/view')]
+  const btnBack = () => [navigate('/podelivery/'+ param + '/view')]
 
   return (
     <div>

@@ -21,7 +21,6 @@ import {
 import axiosClient from '../../axios-client'
 import {PlusIcon} from '../../assets/PlusIcon'
 import CheckMark from '../../assets/check-mark.png'
-import CrossMark from '../../assets/cross.png'
 
 import Swal from 'sweetalert2'
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
@@ -30,7 +29,7 @@ import { SearchIcon } from '../../assets/SearchIcon'
 import numberToWords from 'number-to-words';
 // import { IconButton } from "@material-tailwind/react";
 
-export default function BuktiPengeluaranBarangDetailUmum() {
+export default function BpbDeliveryDetail() {
   const navigate = useNavigate()
   const [indexNow, setIndexNow] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -217,14 +216,14 @@ export default function BuktiPengeluaranBarangDetailUmum() {
       };
 
     const btnBack = () => [
-        navigate('/bpbumum')
+        navigate('/bpbdelivery')
       ]
 
   return (
     <div className="bg-white p-4 rounded-large animated fadeInDown border">
       <div className="flex-col items-center">
         <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
-          <h1> Bukti Pengeluaran Barang Umum</h1>
+          <h1> BPB Delivery</h1>
           <Button className="bg-red-300" onClick={btnBack}>
             Back
           </Button>
@@ -418,7 +417,7 @@ export default function BuktiPengeluaranBarangDetailUmum() {
                     <TableColumn className='w-1/20'>QUANTITY</TableColumn>
                     <TableColumn className='w-1/13'>DEL. DATE</TableColumn>
                     <TableColumn className='w-2/10'>NOTE</TableColumn>
-                    <TableColumn className='w-1/10'>DEL. Status</TableColumn>
+                    <TableColumn className='w-1/10'>DEL. ACTION</TableColumn>
                 </TableHeader>
                 <TableBody emptyContent={"No Data found"} items={details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
                     {details.map((item,index) => (
@@ -446,11 +445,14 @@ export default function BuktiPengeluaranBarangDetailUmum() {
                             </TableCell>
                             <TableCell>
                                 <div hidden={item.is_delivered == '1'} className='justify-center'>
-                                  <img src={CrossMark} alt="check mark" className="w-12 h-12" />
+                                    <Button className='bg-blue-300' onPress={() => handleDeliver(item.id)}>
+                                        Deliver
+                                    </Button>  
                                 </div>
                                 <div hidden={item.is_delivered == '0'} className='justify-center'>
                                     <img src={CheckMark} alt="check mark" className="w-12 h-12" />
                                 </div>
+                                
                             </TableCell>
                         </TableRow>
                     ))}

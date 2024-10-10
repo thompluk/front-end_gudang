@@ -13,7 +13,7 @@ import { VerticalDotsIcon } from "../../assets/VerticalDotIcon";
 import { PlusIcon } from "../../assets/PlusIcon";
 import Swal from 'sweetalert2'
 
-export default function PurchaseOrderUmum() {
+export default function PoDelivery() {
 
   const [loading, setLoading] = useState(false)
   const [datas, setDatas] = useState([])
@@ -73,7 +73,7 @@ export default function PurchaseOrderUmum() {
   const getDatas = () => {
     setLoading(true)
     axiosClient
-      .get('/allpoumum')
+      .get('/allpodelivery')
       .then(({ data }) => {
         setLoading(false)
         setDatas(data.data)
@@ -94,7 +94,7 @@ export default function PurchaseOrderUmum() {
             </Button>
           </DropdownTrigger>
           <DropdownMenu onAction={handleAction}>
-            <DropdownItem key={"/poumum/" + data.id + "/view"}>View</DropdownItem>
+            <DropdownItem key={"/podelivery/" + data.id + "/view"}>View</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>
@@ -104,7 +104,7 @@ export default function PurchaseOrderUmum() {
   return (
     <div className="flex-col justify-center bg-white p-4 rounded-large animated fadeInDown ">
       <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
-          <h1>Purchase Order Umum List</h1>
+          <h1>PO List</h1>
       </div>
       <TableCustom columns={columns} addButton={addButton} renderCellTable={renderCellTable} getDatas={getDatas} loading={loading} datas={datas}/>
     </div>

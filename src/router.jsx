@@ -36,6 +36,12 @@ import PrintPO from "./views/print/PrintPO.jsx"
 import PrintPPB from "./views/print/PrintPPB.jsx"
 import PrintBPB from "./views/print/PrintBPB.jsx"
 import Profile from "./views/profile/Profile.jsx"
+import PermintaanPembelianBarangUmum from "./views/permintaanPembelianBarangUmum/PermintaanPembelianBarangUmum.jsx"
+import PermintaanPembelianBarangUmumDetail from "./views/permintaanPembelianBarangUmum/PermintaanPembelianBarangUmumDetail.jsx"
+import BpbDelivery from "./views/bpbDelivery/BpbDelivery.jsx"
+import BpbDeliveryDetail from "./views/bpbDelivery/BpbDeliveryDetail.jsx"
+import PoDelivery from "./views/poDelivery/PoDelivery.jsx"
+import PoDeliveryDetail from "./views/poDelivery/PoDeliveryDetail.jsx"
 
 const router = createBrowserRouter( [
     {
@@ -111,6 +117,19 @@ const router = createBrowserRouter( [
             },
 
             {
+                path: '/ppbumum',
+                element: <PermintaanPembelianBarangUmum/>
+            },
+            {
+                path: '/ppbumum/:param',
+                element: <PermintaanPembelianBarangUmumDetail/>
+            }, 
+            {
+                path: '/ppbumum/:param/:param2',
+                element: <PermintaanPembelianBarangUmumDetail/>
+            },
+
+            {
                 path: '/po',
                 element: <PurchaseOrder/>
             },
@@ -123,6 +142,18 @@ const router = createBrowserRouter( [
                 element: <PurchaseOrderDetail/>
             },
             
+            {
+                path: '/podelivery',
+                element: <PoDelivery/>
+            },
+            {
+                path: '/podelivery/:param',
+                element: <PoDeliveryDetail/>
+            }, 
+            {
+                path: '/podelivery/:param/:param2',
+                element: <PoDeliveryDetail/>
+            },
 
             {
                 path: '/poumum',
@@ -187,6 +218,19 @@ const router = createBrowserRouter( [
             {
                 path: '/bpb/:param/:param2',
                 element: <BuktiPengeluaranBarangDetail/>
+            },
+
+            {
+                path: '/bpbdelivery',
+                element: <BpbDelivery/>
+            },
+            {
+                path: '/bpbdelivery/:param',
+                element: <BpbDeliveryDetail/>
+            }, 
+            {
+                path: '/bpbdelivery/:param/:param2',
+                element: <BpbDeliveryDetail/>
             },
 
             {

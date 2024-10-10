@@ -27,7 +27,7 @@ import { SearchIcon } from '../../assets/SearchIcon'
 import numberToWords from 'number-to-words';
 // import { IconButton } from "@material-tailwind/react";
 
-export default function PurchaseOrderUmumDetail() {
+export default function PoDeliveryDetail() {
   const [user,  setUser] = useState([]); 
   const navigate = useNavigate()
   const [amountnow, setAmount] = useState(null)
@@ -380,9 +380,7 @@ export default function PurchaseOrderUmumDetail() {
     <div className="bg-white p-4 rounded-large animated fadeInDown">
       <div className="flex-col items-center">
         <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
-          <h1 hidden={param != 'new'}>Create Purchase Order Barang</h1>
-          <h1 hidden={param == 'new' || param2 == 'view'}>Edit Purchase Order Barang</h1>
-          <h1 hidden={param2 != 'view'}>View Purchase Order Barang</h1>
+            <h1>PO Delivery</h1>
           <Button className="bg-red-300" onClick={btnBack}>
             Back
           </Button>
@@ -867,6 +865,61 @@ export default function PurchaseOrderUmumDetail() {
                             /> 
                         </div>
                     </div>
+                    <div  className=" p-2 xl:w-1/12 w-full">
+                        <Button className="bg-green-300" onClick={() => handleOpenModalItems()} hidden={user.role !== 'INVENTORY' || poData.arrival_status === 'Arrived'}>
+                            Arrived
+                        </Button>
+                    </div>
+                    <Modal isOpen={isModalItems} onOpenChange={handleCloseModalItems} className='min-w-[65vw]'>
+                      <ModalContent>
+                        {(onClose) => (
+                          <>
+                            <ModalHeader className="flex flex-col gap-1">Pilih Tipe dari Item</ModalHeader>
+                            <ModalBody>
+                                <Table>
+                                  <TableHeader>
+                                    <TableColumn className='w-2/10'>ITEM</TableColumn>
+                                    <TableColumn className='w-2/10'>DESCRIPTION</TableColumn>
+                                    <TableColumn className='w-1/10'>QTY</TableColumn>
+                                    <TableColumn className='w-1/10'>ITEM UNIT</TableColumn>
+                                    <TableColumn className='w-3/10'>ACTION</TableColumn>
+                                  </TableHeader>
+                                  <TableBody emptyContent={"No Data found"} items={rows} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
+                                  {rows.map((item,index) => (
+                                    <TableRow key={index}>
+                                      <TableCell hidden={item.is_items_created}>{item.item}</TableCell>
+                                      <TableCell hidden={item.is_items_created}>{item.description}</TableCell> 
+                                      <TableCell hidden={item.is_items_created}>{item.quantity}</TableCell>
+                                      <TableCell hidden={item.is_items_created}>{item.item_unit}</TableCell>
+                                      <TableCell hidden={item.is_items_created}>
+                                        <Select
+                                            aria-label="TIPE"
+                                            variant='bordered'
+                                            placeholder="Select"
+                                            className="w-full"
+                                            value={item.tipe_item}
+                                            onChange={(e) => handleInputChangeRow(index, 'tipe_item', e.target.value)}
+                                        >
+                                            <SelectItem key="ITEM">Item (Barang / Mesin)</SelectItem>
+                                            <SelectItem key="MATERIAL">Material</SelectItem>
+                                        </Select>
+                                      </TableCell>
+                                    </TableRow>
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                                <div className='flex justify-end gap-2 p-4'>
+                                  <Button className="bg-green-300 w-1" onClick={() => handleArrived()}>
+                                    Post
+                                  </Button> 
+                                </div>
+                                
+                            </ModalBody>
+                          </>
+                        )}
+                      </ModalContent>
+                    </Modal>
+                    
                   </div>         
 
                 </div>

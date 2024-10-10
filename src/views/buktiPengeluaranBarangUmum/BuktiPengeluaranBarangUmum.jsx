@@ -24,7 +24,8 @@ export default function BuktiPengeluaranBarangUmum() {
     {name: "SALESMAN", uid: "salesman", sortable: true},
     {name: "CUSTOMER", uid: "customer", sortable: true},
     {name: "REQUEST BY", uid: "request_by", sortable: true},
-    {name: "STATUS", uid: "delivery_status", sortable: true},
+    {name: "STATUS", uid: "status", sortable: true},
+    {name: "DELIVERY STATUS", uid: "delivery_status", sortable: true},
     {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
   ];
 
