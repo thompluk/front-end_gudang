@@ -217,13 +217,13 @@ export default function DefaultLayout(){
                       <CDBSidebarMenuItem>Bukti Pengeluaran Barang</CDBSidebarMenuItem>
                     </NavLink>
                     <NavLink exact to="/suratjalan">
-                      <CDBSidebarMenuItem>Surat Jalan</CDBSidebarMenuItem>
+                      <CDBSidebarMenuItem>Surat Jalan Proses</CDBSidebarMenuItem>
                     </NavLink>
                   </div>
 
                   <CDBSidebarMenuItem icon="box" onClick={toggleExpand4}>
                     <div className="flex">
-                      <div className="flex gap-2">Delivery 
+                      <div className="flex gap-2">Warehouse 
                         <img 
                           src={RedDot}
                           alt="RedDot"
@@ -237,7 +237,7 @@ export default function DefaultLayout(){
                   <div className="pl-4 animated fadeInDown" style={{ display: isExpanded4 ? "block" : "none"}} >
                     <NavLink exact to="/podelivery">
                       <CDBSidebarMenuItem>
-                        <div className="flex gap-2">PO Delivery 
+                        <div className="flex gap-2">Outstanding PO 
                           <img 
                             src={RedDot}
                             alt="RedDot"
@@ -249,7 +249,7 @@ export default function DefaultLayout(){
                     </NavLink>
                     <NavLink exact to="/bpbdelivery">
                       <CDBSidebarMenuItem>
-                        <div className="flex gap-2">BPB Delivery 
+                        <div className="flex gap-2">Outstanding BPB 
                           <img 
                             src={RedDot}
                             alt="RedDot"

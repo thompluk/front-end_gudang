@@ -13,127 +13,33 @@ export default function StockItemInitial() {
   const navigate = useNavigate()
   const { param,param2 } = useParams()
   const [loading, setLoading] = useState(false)
-  const [arrivalStatus, setArrivalStatus] = useState([])
 
   const [details, setDetails] = useState([[]]);
-//   const [stocks, setStocks] = useState([]);
 
-  // const history = useHistory();
   useEffect(() => {
     
     getStockItem()
     // getStocks()
   }, [])
 
-  useEffect(() => {
-    
-    ariivalStatusCheck()
-
-  }, [arrivalStatus])
-
-
-
-// const getStocks = () => {
-//     axiosClient
-//         .get('/po/arrivalData/' + param)
-//         .then(({ data }) => {
-//             // Pastikan data.data adalah array
-//             setStocks(data.data);
-
-//             // setLoading(false);
-//         })
-//         .catch(() => {
-//             // setLoading(false);
-//         });
-// }
-
-const checkLength = () => {
-    if(details.length == 0) {
-        navigate('/podelivery');
-    }
-}
-
-const arrived = () => {
-    axiosClient
-    .post('/po/arrived/' + param)
-    .then(({}) => {
-      navigate('/podelivery');
-      Toast.fire({
-        icon: "success",
-        title: "Arrival is successfully"
-      }); 
-    })
-    .catch(err => {
-      const response = err.response
-      if (response && response.status === 400) {
-        setMessage(response.data.message);
-        setErrors(true);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: response.data.message,
-          // footer: '<a href="#">Why do I have this issue?</a>'
-      });
-      }
-    })
-  }
-
-const ariivalStatusCheck = () => {
-    if(arrivalStatus.length == details.length) {
-        arrived();
-    }
-}
-
-
-const arrivalStatusAdd = () => {
-    console.log('arrival masuk')
-    setArrivalStatus(prevStatus => [...prevStatus, true]);
-}
 
 const getStockItem = () => {
 
     setLoading(true);
 
     axiosClient
-        .get('/po/arrivalData/' + param)
+        .get('/po/arrivalData/' + param2)
         .then(({ data }) => {
             // Pastikan data.data adalah array
             const rawDetails = data.data; // Ambil data mentah
-            if(rawDetails.length == 0) {
-              arrived();
-              navigate('/podelivery');
-            }
-            // Proses data mentah
-            const groupedDetails = rawDetails.map(raw => 
-            Array(raw.quantity).fill({
-                ...raw,
-                id: null, // Pastikan id tetap null
-            })
-            );
-
-            // Update state dengan array dari array
-            setDetails(groupedDetails);
-            console.log(groupedDetails);
+            console.log(rawDetails);
+            setDetails(rawDetails);
             setLoading(false);
         })
         .catch(() => {
             setLoading(false);
         });
   }
-  
-  const renderStockItemArrival = () => {
-    // console.log(details[0].detail_length)
-    let tabs = []
-    for (let i = 0; i < details.length; i++) {
-        console.log('masuk')
-        tabs[i] = (
-            <div className="relative flex justify-center items-center gap-2">
-              <StockItemArrival details={details[i]} arrivalStatusAdd={arrivalStatusAdd}/>
-            </div>
-        );
-    }
-    return tabs;
-  };
 
   const btnBack = () => [navigate('/podelivery/'+ param + '/view')]
 
@@ -153,18 +59,12 @@ const getStockItem = () => {
               Back
             </Button>
           </div>
-          <div>
-              {/* <button onClick={arrivalStatusAdd}>Add Arrival Status</button> */}
-              <ul>
-                  {arrivalStatus.map((status, index) => (
-                      <li key={index}>Status {index + 1}: {status ? 'Arrived' : 'Pending'}</li>
-                  ))}
-              </ul>
-          </div>
           <form className='pt-8'>
               
               <div className=" w-full flex-wrap md:flex-nowrap">
-                  {renderStockItemArrival()}
+                  <div className="relative flex justify-center items-center gap-2">
+                    <StockItemArrival details={details}/>
+                  </div>
               </div>
           </form>
         </div>

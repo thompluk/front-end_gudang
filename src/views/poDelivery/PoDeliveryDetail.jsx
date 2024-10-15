@@ -25,6 +25,7 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure}
 import TableSelect from '../../custom/TableSelect'
 import { SearchIcon } from '../../assets/SearchIcon'
 import numberToWords from 'number-to-words';
+import CheckMark from '../../assets/check-mark.png'
 // import { IconButton } from "@material-tailwind/react";
 
 export default function PoDeliveryDetail() {
@@ -45,31 +46,20 @@ export default function PoDeliveryDetail() {
   const [isModalVendor, setIsModalOpenVendor] = useState(false);
   const [isModalShipTo, setIsModalOpenShipTo] = useState(false);
   const [isModalItems, setIsModalOpenItems] = useState(false);
+  const [selectedID, setSelectedID] = useState(null);
+  const [selectedTipe, setSelectedTipe] = useState(null);
 
-  const handleOpenModalVerifiedBy = () => setIsModalOpenVerifiedBy(true);
-  const handleCloseModalVerifiedBy = () => setIsModalOpenVerifiedBy(false);
-
-  const handleOpenModalApprovedBy = () => setIsModalOpenApprovedBy(true);
-  const handleCloseModalApprovedBy = () => setIsModalOpenApprovedBy(false);
-  
-  const handleOpenModalVendor = () => setIsModalOpenVendor(true);
-  const handleCloseModalVendor = () => setIsModalOpenVendor(false);
-
-  const handleOpenModalShipTo = () => setIsModalOpenShipTo(true);
-  const handleCloseModalShipTo = () => setIsModalOpenShipTo(false);
-
-  // const handleOpenModalItems = () => setIsModalOpenItems(true);
-  // const handleCloseModalItems = () => setIsModalOpenItems(false);
-
-  const handleOpenModalItems = () =>{
+  const handleOpenModalItems = (id) =>{
     setIsModalOpenItems(true)
-    setIndexNow(null)
+    setSelectedID(id)
+    setSelectedTipe(null)
     getDetails();
   }
 
   const handleCloseModalItems = () =>{
     setIsModalOpenItems(false)
-    setIndexNow(null)
+    setSelectedID(null)
+    setSelectedTipe(null)
   }
 
   const [poData, setPoData] = useState({
@@ -144,7 +134,7 @@ export default function PoDeliveryDetail() {
 
 
   const btnBack = () => [
-    navigate('/poumum')
+    navigate('/podelivery')
   ]
 
 
@@ -253,18 +243,11 @@ export default function PoDeliveryDetail() {
       axiosClient
       .post('/po/arrived/' + param)
       .then(({}) => {
-        Toast.fire({
-          icon: "success",
-          title: "Arrival is successfully"
-        }); 
-        navigate('/poumum')
+        getPo();
+        getDetails();
       })
       .catch(err => {
-        const response = err.response
-        if (response && response.status === 400) {
-          setMessage(response.data.message);
-          setErrors(true);
-        }
+        
       })
     }
 
@@ -286,44 +269,35 @@ export default function PoDeliveryDetail() {
     };
 
     const handlePost = () => {
-      console.log(rows)
+      console.log(selectedTipe)
 
-      for (let i = 0; i < rows.length; i++) {
-        console.log(rows[i].tipe_item)
-        if(rows[i].tipe_item === undefined && rows[i].is_items_created === 0) {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Mohon pilih tipe item terlebih dahulu",
-            // footer: '<a href="#">Why do I have this issue?</a>'
-          })
+      if(selectedTipe === null) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Mohon pilih tipe item terlebih dahulu",
+          // footer: '<a href="#">Why do I have this issue?</a>'
+        })
 
-          return;
-        }
+        return;
       }
 
-      for (let i = 0; i < rows.length; i++) {
-        if(rows[i].tipe_item === 'MATERIAL' && rows[i].is_items_created === 0) {
-          console.log(rows[i].id, rows[i].tipe_item)
-          axiosClient
-          .post('/stockmaterialinit/' + rows[i].id)
-          .then(({}) => {
-            // Toast.fire({
-            //   icon: "success",
-            //   title: "Arrival is successfully"
-            // }); 
-          })
-          .catch(err => {
-            const response = err.response
-            if (response && response.status === 400) {
-              setMessage(response.data.message);
-              setErrors(true);
-            }
-          })
-        }
+      if(selectedTipe === 'MATERIAL') {
+        axiosClient
+        .post('/stockmaterialinit/' + selectedID)
+        .then(({}) => {
+          arrived();
+          // Toast.fire({
+          //   icon: "success",
+          //   title: "Arrival is successfully"
+          // }); 
+        })
+        .catch(err => {
+        })
+        return;
       }
 
-      navigate('/stockiteminitial/' + param)
+      navigate('/stockiteminitial/'+param+ '/' + selectedID)
     }
     
 
@@ -342,39 +316,6 @@ export default function PoDeliveryDetail() {
   
     const apiname = "userSelect";
 
-    const handleVerifiedBy = (data) => {
-
-      setPoData({ ...poData, verified_by: data.name, verified_by_id: (data.id).toString() });
-      setIsModalOpenVerifiedBy(false)
-    }
-
-    const handleApprovedBy = (data) => {
-      setPoData({ ...poData, approved_by: data.name, approved_by_id: (data.id).toString()  });
-      setIsModalOpenApprovedBy(false)
-    }
-
-    const handleVendor = (data) => {
-      console.log(data)
-      setPoData({ ...poData, vendor: data.name, vendor_id: (data.id).toString() });
-      setIsModalOpenVendor(false)
-    }
-
-    const handleShipTo = (data) => {
-
-      setPoData({ ...poData, ship_to: data.name, ship_to_id: (data.id).toString() });
-      setIsModalOpenShipTo(false)
-    }
-
-    const handleItems = (data) => {
-      console.log(indexNow)
-      setRows(rows.map((row, i) => i === indexNow ? { ...row, item: data.nama_barang, ppb_detail_id: (data.id).toString(), no_ppb: data.no_ppb } : row));
-      setIsModalOpenItems(false)
-      console.log(rows)
-    }
-
-    const handleInputChangeRow = (index, field, value) => {
-      setDetails(details.map((row, i) => i === index ? { ...row, [field]: value } : row));
-    };
 
   return (
     <div className="bg-white p-4 rounded-large animated fadeInDown">
@@ -532,121 +473,39 @@ export default function PoDeliveryDetail() {
                     <TableColumn className='w-15/100'>ITEM</TableColumn>
                     <TableColumn className='w-15/100'>DESCRIPTION</TableColumn>
                     <TableColumn className='w-1/13'>QTY</TableColumn>
-                    <TableColumn className='w-1/10' hidden={user.role == 'INVENTORY'}>UNIT PRICE</TableColumn>
-                    <TableColumn className='w-1/13' hidden={user.role == 'INVENTORY'}>DISCOUNT %</TableColumn>
-                    <TableColumn className='w-1/10' hidden={user.role == 'INVENTORY'}>AMOUNT</TableColumn>
                     <TableColumn className='w-12/100'>REMARKS</TableColumn>
                     <TableColumn className='w-1/10'>ITEM UNIT</TableColumn>
+                    <TableColumn className='w-1/10'>ARR. ACTION</TableColumn>
                 </TableHeader>
                 <TableBody emptyContent={"No Data found"} items={rows} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
                     {rows.map((item,index) => (
                         <TableRow key={index}>
                             <TableCell>
-                                <Input
-                                    startContent={<SearchIcon onClick={()=>handleOpenModalItems(index)} className="cursor-pointer"/>}
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.item} 
-                                    aria-label="Item Name"
-                                    // onChange={(e) => handleInputChangeRow(index, 'item', e.target.value)}
-                                />
+                                {item.item}
+                            </TableCell>
+                            <TableCell>
+                              {item.description}
+                            </TableCell>
+                            <TableCell>
+                              {item.quantity} 
+                            </TableCell>
+                            <TableCell>
+                                {item.remarks}
+                            </TableCell>
+                            <TableCell>
+                                {item.item_unit}
+                            </TableCell>
+                            <TableCell>
+                                <div hidden={item.is_items_created == '1'} className='justify-center'>
+                                  <Button className="bg-green-300" onClick={() => handleOpenModalItems(item.id)}>
+                                      Arrived
+                                  </Button>
+                                </div>
+                                <div hidden={item.is_items_created == '0'} className='justify-center'>
+                                    <img src={CheckMark} alt="check mark" className="w-12 h-12" />
+                                </div>
                                 
                             </TableCell>
-                            <TableCell>
-                                <Textarea 
-                                    aria-label="Description"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.description} 
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Input
-                                    aria-label="Quantity"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.quantity} 
-                                />
-                            </TableCell>
-                            <TableCell hidden={user.role == 'INVENTORY'}>
-                                <Input
-                                    aria-label="Unit Price"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.unit_price} 
-                                />
-                            </TableCell>
-                            <TableCell hidden={user.role == 'INVENTORY'}>
-                                <Input
-                                    aria-label="Discount"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView} 
-                                    type="text"
-                                    variant='bordered' 
-                                    value={item.discount} 
-                                />
-                            </TableCell>
-                            <TableCell hidden={user.role == 'INVENTORY'}>
-                                <Input
-                                    aria-label="Amount"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {true} 
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.amount}
-                                    hidden={user.role == 'INVENTORY'}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Textarea
-                                    aria-label="Remarks"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView} 
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.remarks} 
-                                />
-                            </TableCell>
-                            <TableCell>
-                                {/* <Input
-                                    isDisabled = {disabledView} 
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.item_unit} 
-                                    onChange={(e) => handleInputChangeRow(index, 'item_unit', e.target.value)}
-                                /> */}
-
-                                <Select
-                                  aria-label="Item Unit"
-                                  variant='bordered'
-                                  items={item_units_selects}
-                                  placeholder="Select"
-                                  className="max-w-xs"
-                                  value={item.item_unit}
-                                  onChange={(e) => handleInputChangeRow(index, 'item_unit', e.target.value)}
-                                  isDisabled = {disabledView} 
-                                  defaultSelectedKeys={[item.item_unit]}
-                                >
-                                  {item_units_selects.map((item_units_select) => (
-                                    <SelectItem
-                                      key={item_units_select.key}
-                                      value={item_units_select.key} // Use 'key' as 'value'
-                                      className="text-left"
-                                    >
-                                      {item_units_select.label}
-                                    </SelectItem>
-                                  ))}
-                                </Select>
-                            </TableCell>
-                            
                         </TableRow>
                     ))}
                 </TableBody>
@@ -865,55 +724,33 @@ export default function PoDeliveryDetail() {
                             /> 
                         </div>
                     </div>
-                    <div  className=" p-2 xl:w-1/12 w-full">
+                    {/* <div  className=" p-2 xl:w-1/12 w-full">
                         <Button className="bg-green-300" onClick={() => handleOpenModalItems()} hidden={user.role !== 'INVENTORY' || poData.arrival_status === 'Arrived'}>
                             Arrived
                         </Button>
-                    </div>
-                    <Modal isOpen={isModalItems} onOpenChange={handleCloseModalItems} className='min-w-[65vw]'>
+                    </div> */}
+                    <Modal isOpen={isModalItems} onOpenChange={handleCloseModalItems}>
                       <ModalContent>
                         {(onClose) => (
                           <>
                             <ModalHeader className="flex flex-col gap-1">Pilih Tipe dari Item</ModalHeader>
                             <ModalBody>
-                                <Table>
-                                  <TableHeader>
-                                    <TableColumn className='w-2/10'>ITEM</TableColumn>
-                                    <TableColumn className='w-2/10'>DESCRIPTION</TableColumn>
-                                    <TableColumn className='w-1/10'>QTY</TableColumn>
-                                    <TableColumn className='w-1/10'>ITEM UNIT</TableColumn>
-                                    <TableColumn className='w-3/10'>ACTION</TableColumn>
-                                  </TableHeader>
-                                  <TableBody emptyContent={"No Data found"} items={rows} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
-                                  {rows.map((item,index) => (
-                                    <TableRow key={index}>
-                                      <TableCell hidden={item.is_items_created}>{item.item}</TableCell>
-                                      <TableCell hidden={item.is_items_created}>{item.description}</TableCell> 
-                                      <TableCell hidden={item.is_items_created}>{item.quantity}</TableCell>
-                                      <TableCell hidden={item.is_items_created}>{item.item_unit}</TableCell>
-                                      <TableCell hidden={item.is_items_created}>
-                                        <Select
-                                            aria-label="TIPE"
-                                            variant='bordered'
-                                            placeholder="Select"
-                                            className="w-full"
-                                            value={item.tipe_item}
-                                            onChange={(e) => handleInputChangeRow(index, 'tipe_item', e.target.value)}
-                                        >
-                                            <SelectItem key="ITEM">Item (Barang / Mesin)</SelectItem>
-                                            <SelectItem key="MATERIAL">Material</SelectItem>
-                                        </Select>
-                                      </TableCell>
-                                    </TableRow>
-                                    ))}
-                                  </TableBody>
-                                </Table>
+                                <Select
+                                    aria-label="TIPE"
+                                    variant='bordered'
+                                    placeholder="Select"
+                                    className="w-full"
+                                    value={selectedTipe}
+                                    onChange={(e) => setSelectedTipe(e.target.value)}
+                                >
+                                    <SelectItem key="ITEM">Item (Barang / Mesin)</SelectItem>
+                                    <SelectItem key="MATERIAL">Material</SelectItem>
+                                </Select>
                                 <div className='flex justify-end gap-2 p-4'>
                                   <Button className="bg-green-300 w-1" onClick={() => handleArrived()}>
                                     Post
                                   </Button> 
                                 </div>
-                                
                             </ModalBody>
                           </>
                         )}

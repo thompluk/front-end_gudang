@@ -28,7 +28,7 @@ import TableSelect from '../../custom/TableSelect.jsx'
 import Swal from 'sweetalert2'
 // import { Input } from 'mdb-react-ui-kit'
 
-const StockItemArrival = ( {details, arrivalStatusAdd}) => {
+const StockItemArrival = ( {details}) => {
   const [message, setMessage] = useState(null)
   const [errorMessages, setErrorMessages] = useState([]);
   const [errors, setErrors] = useState(false);
@@ -41,7 +41,6 @@ const StockItemArrival = ( {details, arrivalStatusAdd}) => {
   const [prinsipal_selects, setPrinsipalSelects] = useState([])
   const [isModalStock, setIsModalOpenStock] = useState(false);
   const [detail, setDetails] = useState([])
-  const [isPost, setIsPost] = useState(false)
 
   const handleOpenModalStock = () => setIsModalOpenStock(true);
   const handleCloseModalStock = () => setIsModalOpenStock(false);
@@ -56,25 +55,6 @@ const StockItemArrival = ( {details, arrivalStatusAdd}) => {
     quantity: null,
   })
 
-//   const [details, setDetails] = useState([
-//     {
-//       id: null,
-//       item_name: null,
-//       no_edp:null,
-//       no_sn:null,
-//       no_ppb:null,
-//       no_po: null,
-//       description: null,
-//       unit_price: null,
-//       remarks: null,
-//       item_unit: null,
-//       arrival_date: null,
-//       receiver: null,
-//       receiver_id: null,
-//     }
-//   ]);
-
-  // const history = useHistory();
   useEffect(() => {
     
     // getStockItem()
@@ -82,39 +62,6 @@ const StockItemArrival = ( {details, arrivalStatusAdd}) => {
     getPrinsipalSelect()
     
   }, [])
-
-//   useEffect(() => {
-//     if (Array.isArray(details)) {
-//       setDetails(details);
-//     } else {
-//       console.error("Expected details to be an array");
-//       console.log(details);
-//     //   setDetails([]);
-//     }
-//   }, [details]);
-
-
-// const getStockItem = () => {
-
-//     setLoading2(true);
-
-//     axiosClient
-//     .get('/po/arrivalData/' + param)
-//     .then(({ data }) => {
-//       const modifiedDetails = data.data.flatMap(item => 
-//         Array(item.quantity).fill({
-//           ...item,
-//           id: null,  // Pastikan id tetap null
-//         })
-//       );
-//       setDetails(modifiedDetails);
-//       console.log(modifiedDetails);
-//       setLoading2(false);
-//     })
-//     .catch(() => {
-//       setLoading2(false);
-//     });
-//   }
 
   const getPrinsipalSelect = () => {
     // setLoading(true)
@@ -150,8 +97,6 @@ const StockItemArrival = ( {details, arrivalStatusAdd}) => {
     {name: "QUANTITY", uid: "quantity", sortable: true},
     {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
   ];
-
-//   const btnBack = () => [navigate('/poumum/'+ param + '/view')]
 
   const Toast = Swal.mixin({
     toast: true,
@@ -191,8 +136,8 @@ const StockItemArrival = ( {details, arrivalStatusAdd}) => {
                 icon: "success",
                 title: "Create is successfully"
                 }); 
-                arrivalStatusAdd();
-                setIsPost(true);
+              arrived()
+              navigate('/podelivery/'+ param + '/view')
           })
           .catch(err => {
               // Handle error
@@ -208,19 +153,6 @@ const StockItemArrival = ( {details, arrivalStatusAdd}) => {
                     //     text: response.data.message,
                     // });
                 }
-                // axiosClient
-                // .delete('/stockitem/' + stock_id)
-                // .then(({}) => {
-                //     // getDetails();
-                // })
-                // .catch(err => {
-                //     const response = err.response
-                //     if (response && response.status === 400) {
-                //     setMessage(response.data.message);
-                //     setErrors(true);
-                //     console.log(errors) ;
-                //     }
-                // })
 
           });
   };
@@ -244,8 +176,8 @@ const StockItemArrival = ( {details, arrivalStatusAdd}) => {
               icon: "success",
               title: "Create is successfully"
               }); 
-            arrivalStatusAdd();
-            setIsPost(true);
+            arrived()
+            navigate('/podelivery/'+ param + '/view')
         })
         .catch(err => {
             const response = err.response
@@ -268,9 +200,16 @@ const StockItemArrival = ( {details, arrivalStatusAdd}) => {
     
   }
 
-  const handlePost = () => {
+  const arrived = () => {
+    axiosClient
+    .post('/po/arrived/' + param)
+    .then(({}) => {
+    })
+    .catch(err => {
+    })
+  }
 
-    // navigate('/stockiteminitial/' + param)
+  const handlePost = () => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -286,22 +225,15 @@ const StockItemArrival = ( {details, arrivalStatusAdd}) => {
     });
   };
 
-//   const btnarrivalStatusAdd = () => {
-//     arrivalStatusAdd();
-//     setIsPost(true);
-//   }
 
   return (
-    <div className="bg-white p-4 rounded-large animated fadeInDown border" hidden={isPost}>
+    <div className="bg-white p-4 rounded-large animated fadeInDown border">
       <div className="flex-col items-center">
         <div className="flex items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
           {/* <h1>Stock Item Arrival</h1> */}
           <Button className="bg-green-300" onClick={handlePost}>
             Post
           </Button>
-          {/* <Button className="bg-green-300" onClick={()=>btnarrivalStatusAdd()}>
-            Cek
-          </Button> */}
         </div>
         <form className='pt-8'>
           {loading && (

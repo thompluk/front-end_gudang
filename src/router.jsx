@@ -185,7 +185,7 @@ const router = createBrowserRouter( [
                 element: <StockItemArrival/>
             },
             {
-                path: '/stockiteminitial/:param',
+                path: '/stockiteminitial/:param/:param2',
                 element: <StockItemInitial/>
             },
 

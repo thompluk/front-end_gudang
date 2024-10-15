@@ -566,6 +566,7 @@ export default function PurchaseOrderDetail() {
       {key: "kg", label: "kg"},
       {key: "g", label: "g"},
       {key: "L", label: "L"},
+      {key: "M", label: "M"},
       {key: "box", label: "box"},
       {key: "pack", label: "pack"},
       {key: "pair", label: "pair"},
