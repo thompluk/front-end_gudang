@@ -37,14 +37,14 @@ export default function SuratJalanDetail() {
   const { param,param2 } = useParams()
   const [message, setMessage] = useState(null)
   const [disabledView, setDisabledView ] = useState(false)
-  const [isModalVerifiedBy, setIsModalOpenVerifiedBy] = useState(false);
+  const [isModalMengetahui, setIsModalOpenVerifiedBy] = useState(false);
   const [isModalApprovedBy, setIsModalOpenApprovedBy] = useState(false);
   const [isModalCompany, setIsModalOpenCompany] = useState(false);
   const [isModalItems, setIsModalOpenItems] = useState(false);
   const [payloadItems, setPayloadItems] = useState([]);
 
-  const handleOpenModalVerifiedBy = () => setIsModalOpenVerifiedBy(true);
-  const handleCloseModalVerifiedBy = () => setIsModalOpenVerifiedBy(false);
+  const handleOpenModalMengetahui = () => setIsModalOpenVerifiedBy(true);
+  const handleCloseModalMengetahui = () => setIsModalOpenVerifiedBy(false);
 
   const handleOpenModalApprovedBy = () => setIsModalOpenApprovedBy(true);
   const handleCloseModalApprovedBy = () => setIsModalOpenApprovedBy(false);
@@ -67,7 +67,7 @@ export default function SuratJalanDetail() {
 
   const [suratjalanData, setSuratJalanData] = useState({
     status: '',
-    status_pengiriman: '',
+    no_surat_jalan: '',
     company_id: '',
     company: '',
     company_address: '',
@@ -81,21 +81,19 @@ export default function SuratJalanDetail() {
     mengetahui: '',
     mengetahui_status: '',
     mengetahui_date: '',
-    menerima: '',
-    menerima_date: '',
-    remarks: '',
+    remarks: null,
   })
 
   const [details, setDetails] = useState([
     {
       id: null,
       surat_jalan_id: null,
-      stock_item_id: null,
+      stock_material_id: null,
       // no_edp:null,
       // no_sn:null,
       nama_barang:null,
       quantity:null,
-      is_dikembalikan:null,
+      // is_dikembalikan:null,
       keterangan:null,
     }
   ]);
@@ -104,12 +102,12 @@ export default function SuratJalanDetail() {
     const newData = {
       id: null,
       surat_jalan_id: null,
-      stock_item_id: null,
+      stock_material_id: null,
       // no_edp:null,
       // no_sn:null,
       nama_barang:null,
       quantity:null,
-      is_dikembalikan:null,
+      // is_dikembalikan:null,
       keterangan:null,
     };
 
@@ -141,15 +139,16 @@ export default function SuratJalanDetail() {
     axiosClient
       .get('/suratjalan/' + param)
       .then(({ data }) => {
+        console.log(data.data)
         setSuratJalanData({
             status: data.data.status,
-            status_pengiriman: data.data.status_pengiriman,
+            no_surat_jalan: data.data.no_surat_jalan,
             company_id: data.data.company_id,
             company: data.data.company,
-            company_address: data.data2.address,
-            company_telephone: data.data2.telephone,
-            company_fax: data.data2.fax,
-            company_email: data.data2.email,
+            company_address: data.data.company_address,
+            company_telephone: data.data.company_telephone,
+            company_fax: data.data.company_fax,
+            company_email: data.data.company_email,
             menyerahkan_id: data.data.menyerahkan_id,
             menyerahkan: data.data.menyerahkan,
             menyerahkan_date: data.data.menyerahkan_date,
@@ -157,10 +156,8 @@ export default function SuratJalanDetail() {
             mengetahui: data.data.mengetahui,
             mengetahui_status: data.data.mengetahui_status,
             mengetahui_date: data.data.mengetahui_date,
-            menerima: data.data.menerima,
-            menerima_date: data.data.menerima_date,
             remarks: data.data.remarks,
-        })
+        });
         setLoading(false)
       })
       .catch(() => {
@@ -202,9 +199,9 @@ export default function SuratJalanDetail() {
 
   useEffect(() => {
     const newPayloadItems = {
-      stock_item_ids: details
-        .filter(row => row.stock_item_id !== null) // Hanya masukkan yang tidak null
-        .map(row => row.stock_item_id) // Ambil nilai ppb_detail_id
+      stock_material_ids: details
+        .filter(row => row.stock_material_id !== null) // Hanya masukkan yang tidak null
+        .map(row => row.stock_material_id) // Ambil nilai ppb_detail_id
     };
     setPayloadItems(newPayloadItems);
   }, [details]);
@@ -393,9 +390,9 @@ export default function SuratJalanDetail() {
       {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
     ];
 
-    const handleVerifiedBy = (data) => {
+    const handleMengetahui = (data) => {
 
-      setSuratJalanData({ ...suratjalanData, verified_by: data.name, verified_by_id: (data.id).toString() });
+      setSuratJalanData({ ...suratjalanData, mengetahui: data.name, mengetahui_id: (data.id).toString() });
       setIsModalOpenVerifiedBy(false)
     }
 
@@ -417,7 +414,7 @@ export default function SuratJalanDetail() {
     }
 
     const handleItems = (data) => {
-      setDetails(details.map((row, i) => i === indexNow ? { ...row, nama_barang: data.stock_name, stock_item_id: (data.id).toString() } : row));
+      setDetails(details.map((row, i) => i === indexNow ? { ...row, nama_barang: data.stock_name, stock_material_id: (data.id).toString() } : row));
       setIsModalOpenItems(false)
     }
 
@@ -453,40 +450,28 @@ export default function SuratJalanDetail() {
               {!loading && (
               <div>
                 <div className="flex w-full flex-wrap md:flex-nowrap pt-4 pb-2">
-                  <div  className=" p-2 xl:w-2/5 w-full"></div>
-                  <div  className="xl:w-2/4 w-full"></div>
-                  <div  className="xl:w-1/10 w-full p-4" hidden={suratjalanData.status === ''}>
+                  <div  className=" p-2 xl:w-1/5 w-full">
+                    <Input
+                      id="no_po"
+                      // ref={no_ppbRef}
+                      variant="bordered"
+                      className="bg-white "
+                      type="text"
+                      defaultValue={suratjalanData.no_surat_jalan}
+                      label="No. Surat Jalan"
+                      isInvalid={message?.no_surat_jalan != null}
+                      errorMessage={message?.no_surat_jalan}
+                      isDisabled={!disabledView}
+                      isReadOnly={true} 
+                    />
+                  </div>
+                  <div  className=" p-2 xl:w-3/5 w-full"></div>
+                  <div  className="xl:w-1/5 w-full p-4" hidden={suratjalanData.status === ''}>
                     <p id="status" >
                       Status : {suratjalanData.status}
                     </p>
                   </div>
-                  {/* <div  className="flex p-2 xl:w-1/2 w-full">
-                    <div className='pe-2 w-1/6'hidden={disabledView}>
-                        <Button onPress={handleOpenModalCompany} className='border-gray-500 w-full h-14'><SearchIcon/></Button>
-                    </div>
-                    Company : {suratjalanData.company}
-                    <br></br>
-                    Address : {suratjalanData.company_address}
-                    <br></br>
-                    Telephone : {suratjalanData.company_telephone}
-                    <br></br>
-                    Fax : {suratjalanData.company_fax}
-                    <br></br>
-                    Email : {suratjalanData.company_email}
-                    <Modal isOpen={isModalCompany} onOpenChange={handleCloseModalCompany} size='4xl'>
-                        <ModalContent>
-                          {(onClose) => (
-                            <>
-                              <ModalHeader className="flex flex-col gap-1">Select Vendor</ModalHeader>
-                              <ModalBody>
-                                <TableSelect columns={columnsCompanies} apiname={'companiesSelect'} handleAction={handleCompany}>
-                                </TableSelect>
-                              </ModalBody>
-                            </>
-                          )}
-                        </ModalContent>
-                      </Modal>
-                  </div> */}
+                  
                   <div className="flex flex-col p-4 xl:w-full w-full bg-white shadow-lg rounded-lg">
                     <div className="flex items-center mb-4">
                         {!disabledView && (
@@ -539,7 +524,7 @@ export default function SuratJalanDetail() {
                     <TableColumn className='w-1/5'>PART NO.</TableColumn>
                     <TableColumn className='w-1/5'>NAMA BARANG</TableColumn>
                     <TableColumn className='w-1/5'>QTY</TableColumn>
-                    <TableColumn className='w-1/5'>DIKEMBALIKAN?</TableColumn>
+                    {/* <TableColumn className='w-1/5'>DIKEMBALIKAN?</TableColumn> */}
                     <TableColumn className='w-1/5'>KETERANGAN</TableColumn>
                     <TableColumn className='w-1/20' hideHeader={disabledView}>ACTION</TableColumn>
                 </TableHeader>
@@ -553,7 +538,7 @@ export default function SuratJalanDetail() {
                                     isDisabled = {disabledView}
                                     type="text" 
                                     variant='bordered' 
-                                    value={item.stock_item_id} 
+                                    value={item.stock_material_id} 
                                     aria-label="Stock Item ID"
                                     // onChange={(e) => handleInputChangeRow(index, 'item', e.target.value)}
                                 />
@@ -594,7 +579,7 @@ export default function SuratJalanDetail() {
                                     onChange={(e) => handleInputChangeRow(index, 'quantity', e.target.value)}
                                 />
                             </TableCell>
-                            <TableCell>
+                            {/* <TableCell>
                                 <RadioGroup
                                     aria-label="apakah dikembalikan"
                                     orientation="horizontal"
@@ -604,7 +589,7 @@ export default function SuratJalanDetail() {
                                     <Radio value="1">Ya</Radio>
                                     <Radio value="0">Tidak</Radio>
                                 </RadioGroup>
-                            </TableCell>
+                            </TableCell> */}
                             <TableCell>
                                 <Textarea
                                     aria-label="Keterangan"
@@ -675,28 +660,28 @@ export default function SuratJalanDetail() {
                   <div className='flex'>
                     <div  className="flex p-2 xl:w-1/4 w-full">
                       <div className='pe-2'hidden={disabledView}>
-                        <Button onPress={handleOpenModalVerifiedBy} className='border-gray-500 w-1/20 h-14'><SearchIcon/></Button>
+                        <Button onPress={handleOpenModalMengetahui} className='border-gray-500 w-1/20 h-14'><SearchIcon/></Button>
                       </div>
                       <Input
-                        id="verified_by"
+                        id="mengetahui"
                         variant="bordered"
                         className="bg-white w-full"
                         type="text"
-                        defaultValue={suratjalanData.verified_by|| ''}
-                        value={suratjalanData.verified_by|| ''}
+                        defaultValue={suratjalanData.mengetahui|| ''}
+                        value={suratjalanData.mengetahui|| ''}
                         label="Mengetahui (Purchasing)"
-                        isInvalid={message?.verified_by != null}
-                        errorMessage={message?.verified_by}
+                        isInvalid={message?.mengetahui != null}
+                        errorMessage={message?.mengetahui}
                         isDisabled={disabledView}
                         isReadOnly={true}
                       />                    
-                      <Modal isOpen={isModalVerifiedBy} onOpenChange={handleCloseModalVerifiedBy} size='4xl'>
+                      <Modal isOpen={isModalMengetahui} onOpenChange={handleCloseModalMengetahui} size='4xl'>
                         <ModalContent>
                           {(onClose) => (
                             <>
                               <ModalHeader className="flex flex-col gap-1">Select Verified By</ModalHeader>
                               <ModalBody>
-                                <TableSelect columns={columnsUsers} apiname={'userSelect'} handleAction={handleVerifiedBy}>
+                                <TableSelect columns={columnsUsers} apiname={'userSelect'} handleAction={handleMengetahui}>
                                 </TableSelect>
                               </ModalBody>
                             </>
@@ -706,65 +691,16 @@ export default function SuratJalanDetail() {
                     </div>
                     <div className='flex p-4 w-1/4' hidden={suratjalanData.status === 'Draft' || suratjalanData.status === ''}>
                           <p id="status" >
-                            Status : {suratjalanData.verified_by_status}
+                            Status : {suratjalanData.mengetahui_status}
                           </p>
-                          <p id="date" hidden={suratjalanData.verified_by_date == null}>
-                            / Date : {suratjalanData.verified_by_date}
+                          <p id="date" hidden={suratjalanData.mengetahui_date == null}>
+                            / Date : {suratjalanData.mengetahui_date}
                           </p>
                     </div>
                   </div>
-
-                  <div className='flex'>
-                    <div  className="flex p-2 xl:w-1/4 w-full">
-                      {/* <div className='pe-2'hidden={disabledView}>
-                        <Button onPress={handleOpenModalApprovedBy} className='border-gray-500 w-1/20 h-14'><SearchIcon/></Button>
-                      </div> */}
-                      <Input
-                        id="approved_by"
-                        variant="bordered"
-                        className="bg-white w-full"
-                        type="text"
-                        defaultValue={suratjalanData.approved_by|| ''}
-                        value={suratjalanData.approved_by|| ''}
-                        label="Yang Menerima (Subcont/Vendor)"
-                        isInvalid={message?.approved_by != null}
-                        errorMessage={message?.approved_by}
-                        isDisabled={disabledView}
-                        // isReadOnly={true}
-                      />
-                      <Modal isOpen={isModalApprovedBy} onOpenChange={handleCloseModalApprovedBy} size='4xl'>
-                        <ModalContent>
-                          {(onClose) => (
-                            <>
-                              <ModalHeader className="flex flex-col gap-1">Select Approved By</ModalHeader>
-                              <ModalBody>
-                                <TableSelect columns={columnsUsers} apiname={'userSelect'} handleAction={handleApprovedBy}>
-                                </TableSelect>
-                              </ModalBody>
-                            </>
-                          )}
-                        </ModalContent>
-                      </Modal>
-                    </div>
-                    <div className='flex p-2 w-1/4'>
-                        <Input
-                            id="approved_by"
-                            variant="bordered"
-                            className="bg-white w-full"
-                            type="date"
-                            defaultValue={suratjalanData.approved_by|| ''}
-                            value={suratjalanData.approved_by|| ''}
-                            label="Tanggal"
-                            isInvalid={message?.approved_by != null}
-                            errorMessage={message?.approved_by}
-                            isDisabled={disabledView}
-                            // isReadOnly={true}
-                        />
-                    </div>
-                  </div>
-                  
-                  <hr hidden = {suratjalanData.remarks == null || param =='new'}></hr>
-                  <div className='flex' hidden = {suratjalanData.remarks == null || param =='new'}>
+                  {/* <Button>{suratjalanData.status}</Button> */}
+                  <hr hidden = {suratjalanData.remarks === null || param ==='new'}></hr>
+                  <div className='flex' hidden = {suratjalanData.remarks === null || param ==='new'}>
                     <div  className=" p-2 xl:w-2/4 w-full">
                       <Textarea
                       id="remarks"

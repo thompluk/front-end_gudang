@@ -401,7 +401,8 @@ export default function PermintaanPembelianBarangDetail() {
                     label="Tanggal"
                     isInvalid={message?.tanggal != null}
                     errorMessage={message?.tanggal}
-                    isDisabled={true}
+                    isReadOnly={true}
+                    isDisabled = {!disabledView}
                   />
                   </div>
 
@@ -416,7 +417,8 @@ export default function PermintaanPembelianBarangDetail() {
                       label="No. PPB"
                       isInvalid={message?.no_ppb != null}
                       errorMessage={message?.no_ppb}
-                      isDisabled={true}
+                      isReadOnly={true}
+                      isDisabled = {!disabledView}
                     />
                   </div>
                   <div  className="xl:w-2/4 w-full"></div>
@@ -427,121 +429,125 @@ export default function PermintaanPembelianBarangDetail() {
                   </div>
 
                 </div>
-                <Table aria-label="Example static collection table" className='p-2'>
-                <TableHeader>
-                    <TableColumn className='w-1/5'>NAMA BARANG</TableColumn>
-                    <TableColumn className='w-1/10'>KODE</TableColumn>
-                    <TableColumn className='w-1/5'>SPESIFIKASI</TableColumn>
-                    <TableColumn className='w-1/10'>QTY</TableColumn>
-                    <TableColumn className='w-1/10'>EXPECTED ETA</TableColumn>
-                    <TableColumn className='w-1/5'>PROJECT & CUSTOMER</TableColumn>
-                    <TableColumn className='w-1/20' hideHeader={disabledView}>ACTION</TableColumn>
-                </TableHeader>
-                <TableBody emptyContent={"No Data found"} items={details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
-                    {details.map((item,index) => (
-                        <TableRow key={index}>
-                            <TableCell>
-                                <Input 
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.nama_barang} 
-                                    onChange={(e) => handleInputChange(index, 'nama_barang', e.target.value)}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Input 
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.kode} 
-                                    onChange={(e) => handleInputChange(index, 'kode', e.target.value)}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Input
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.spesifikasi} 
-                                    onChange={(e) => handleInputChange(index, 'spesifikasi', e.target.value)}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Input
-                                    isDisabled = {disabledView}
-                                    type="number" 
-                                    variant='bordered' 
-                                    value={item.quantity} 
-                                    onChange={(e) => handleInputChange(index, 'quantity', e.target.value)}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Input
-                                    isDisabled = {disabledView} 
-                                    type="date"
-                                    variant='bordered' 
-                                    value={item.expected_eta} 
-                                    onChange={(e) => handleInputChange(index, 'expected_eta', e.target.value)}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Textarea
-                                    isDisabled = {disabledView} 
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.project_and_customer} 
-                                    onChange={(e) => handleInputChange(index, 'project_and_customer', e.target.value)}
-                                />
-                            </TableCell>
-                            <TableCell hidden={disabledView}>
-                                <Button className='bg-red-300' isIconOnly>
-                                    <img
-                                        src={DeleteIcon}
-                                        alt="Delete Icon"
-                                        className="w-6 h-6 hover:cursor-pointer"
-                                        onClick={() => handleDelete(index)}
-                                    />
-                                </Button>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-                {/* <TableBody emptyContent={"No Data found"} items={details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
-                  {(item) => (
-                    <TableRow key={item.id}>                      
-                      <TableCell>
-                        <Input variant='bordered' defaultValue={item.nama_barang}></Input>
-                    </TableCell>
-                    <TableCell>
-                        <Input variant='bordered' defaultValue={item.kode}></Input>
-                    </TableCell>
-                    <TableCell>
-                        <Input variant='bordered' defaultValue={item.spesifikasi}></Input>
-                    </TableCell>
-                    <TableCell>
-                        <Input variant='bordered' defaultValue={item.quantity}></Input>
-                    </TableCell>
-                    <TableCell>
-                        <Input variant='bordered' defaultValue={item.expected_eta}></Input>
-                    </TableCell>
-                    <TableCell>
-                        <Textarea variant='bordered' defaultValue={item.project_and_customer}></Textarea>
-                    </TableCell>
-                    <TableCell>
-                      <Button className='bg-red-300' onClick={() => btnDeleteDetail(item.id)}>
-                        <img
-                          src={DeleteIcon}
-                          alt="Delete Icon"
-                          className="w-6 h-6"
-                        />
-                      </Button>
-                    </TableCell>
-                      
-                    </TableRow>
-                  )}
-                </TableBody> */}
-                </Table>
+                <div hidden={disabledView}>
+                  <Table aria-label="Example static collection table" className='p-2'>
+                  <TableHeader>
+                      <TableColumn className='w-1/5'>NAMA BARANG</TableColumn>
+                      <TableColumn className='w-1/10'>KODE</TableColumn>
+                      <TableColumn className='w-1/5'>SPESIFIKASI</TableColumn>
+                      <TableColumn className='w-1/10'>QTY</TableColumn>
+                      <TableColumn className='w-1/10'>EXPECTED ETA</TableColumn>
+                      <TableColumn className='w-1/5'>PROJECT & CUSTOMER</TableColumn>
+                      <TableColumn className='w-1/20' hideHeader={disabledView}>ACTION</TableColumn>
+                  </TableHeader>
+                  <TableBody emptyContent={"No Data found"} items={details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
+                      {details.map((item,index) => (
+                          <TableRow key={index}>
+                              <TableCell>
+                                  <Input 
+                                      isDisabled = {disabledView}
+                                      type="text" 
+                                      variant='bordered' 
+                                      value={item.nama_barang} 
+                                      onChange={(e) => handleInputChange(index, 'nama_barang', e.target.value)}
+                                  />
+                              </TableCell>
+                              <TableCell>
+                                  <Input 
+                                      isDisabled = {disabledView}
+                                      type="text" 
+                                      variant='bordered' 
+                                      value={item.kode} 
+                                      onChange={(e) => handleInputChange(index, 'kode', e.target.value)}
+                                  />
+                              </TableCell>
+                              <TableCell>
+                                  <Input
+                                      isDisabled = {disabledView}
+                                      type="text" 
+                                      variant='bordered' 
+                                      value={item.spesifikasi} 
+                                      onChange={(e) => handleInputChange(index, 'spesifikasi', e.target.value)}
+                                  />
+                              </TableCell>
+                              <TableCell>
+                                  <Input
+                                      isDisabled = {disabledView}
+                                      type="number" 
+                                      variant='bordered' 
+                                      value={item.quantity} 
+                                      onChange={(e) => handleInputChange(index, 'quantity', e.target.value)}
+                                  />
+                              </TableCell>
+                              <TableCell>
+                                  <Input
+                                      isDisabled = {disabledView} 
+                                      type="date"
+                                      variant='bordered' 
+                                      value={item.expected_eta} 
+                                      onChange={(e) => handleInputChange(index, 'expected_eta', e.target.value)}
+                                  />
+                              </TableCell>
+                              <TableCell>
+                                  <Textarea
+                                      isDisabled = {disabledView} 
+                                      type="text" 
+                                      variant='bordered' 
+                                      value={item.project_and_customer} 
+                                      onChange={(e) => handleInputChange(index, 'project_and_customer', e.target.value)}
+                                  />
+                              </TableCell>
+                              <TableCell hidden={disabledView}>
+                                  <Button className='bg-red-300' isIconOnly>
+                                      <img
+                                          src={DeleteIcon}
+                                          alt="Delete Icon"
+                                          className="w-6 h-6 hover:cursor-pointer"
+                                          onClick={() => handleDelete(index)}
+                                      />
+                                  </Button>
+                              </TableCell>
+                          </TableRow>
+                      ))}
+                  </TableBody>
+                  </Table>
+                </div>
+                <div hidden={!disabledView}>
+                  <Table aria-label="Example static collection table" className='p-2' >
+                  <TableHeader>
+                      <TableColumn className='w-1/5'>NAMA BARANG</TableColumn>
+                      <TableColumn className='w-1/10'>KODE</TableColumn>
+                      <TableColumn className='w-1/5'>SPESIFIKASI</TableColumn>
+                      <TableColumn className='w-1/10'>QTY</TableColumn>
+                      <TableColumn className='w-1/10'>EXPECTED ETA</TableColumn>
+                      <TableColumn className='w-1/5'>PROJECT & CUSTOMER</TableColumn>
+                  </TableHeader>
+                  <TableBody emptyContent={"No Data found"} items={details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
+                      {details.map((item,index) => (
+                          <TableRow key={index}>
+                              <TableCell>
+                                  {item.nama_barang}
+                              </TableCell>
+                              <TableCell>
+                                  {item.kode}
+                              </TableCell>
+                              <TableCell>
+                                  {item.spesifikasi}
+                              </TableCell>
+                              <TableCell>
+                                  {item.quantity}
+                              </TableCell>
+                              <TableCell>
+                                  {item.expected_eta}
+                              </TableCell>
+                              <TableCell>
+                                  {item.project_and_customer}
+                              </TableCell>
+                          </TableRow>
+                      ))}
+                  </TableBody>
+                  </Table>
+                </div>
                 <Button
                   hidden={disabledView}
                   color="primary"
@@ -564,7 +570,8 @@ export default function PermintaanPembelianBarangDetail() {
                       label="Pemohon"
                       isInvalid={message?.pemohon != null}
                       errorMessage={message?.pemohon}
-                      isDisabled={true}
+                      isReadOnly={true}
+                      isDisabled = {!disabledView}
                     />
                     </div>
                   </div>
@@ -584,7 +591,6 @@ export default function PermintaanPembelianBarangDetail() {
                         label="Mengetahui"
                         isInvalid={message?.mengetahui != null}
                         errorMessage={message?.mengetahui}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       />                    
                       <Modal isOpen={isModalMengetahui} onOpenChange={handleCloseModalMengetahui} size='4xl'>
@@ -623,7 +629,6 @@ export default function PermintaanPembelianBarangDetail() {
                         label="Menyetujui"
                         isInvalid={message?.menyetujui != null}
                         errorMessage={message?.menyetujui}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       />
                       <Modal isOpen={isModalMenyetujui} onOpenChange={handleCloseModalMenyetujui} size='4xl'>
@@ -659,7 +664,7 @@ export default function PermintaanPembelianBarangDetail() {
                         label="Purchasing"
                         isInvalid={message?.purchasing != null}
                         errorMessage={message?.purchasing}
-                        isDisabled={true}
+                        isReadOnly={true}
                       />
                     </div>
                     <div className='p-4 w-1/4'>
@@ -679,7 +684,7 @@ export default function PermintaanPembelianBarangDetail() {
                       type="text"
                       defaultValue={ppbData.remarks}
                       label="Remarks"
-                      isDisabled= {true}
+                      isReadOnly= {true}
                     />
                     </div>
                   </div>         

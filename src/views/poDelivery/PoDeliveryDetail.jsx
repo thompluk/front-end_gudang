@@ -16,6 +16,8 @@ import {
   DatePicker,
   Select,
   SelectItem,
+  RadioGroup,
+  Radio,
 } from '@nextui-org/react'
 import axiosClient from '../../axios-client'
 import {PlusIcon} from '../../assets/PlusIcon'
@@ -48,6 +50,13 @@ export default function PoDeliveryDetail() {
   const [isModalItems, setIsModalOpenItems] = useState(false);
   const [selectedID, setSelectedID] = useState(null);
   const [selectedTipe, setSelectedTipe] = useState(null);
+  const [isStockExist, setIsStockExist] = useState('tidak');
+  const [selectedStock, setSelectedStock] = useState(null);
+  const [selectedStockId, setSelectedStockId] = useState(null);
+  const [isModalStock, setIsModalOpenStock] = useState(false);
+
+  const handleOpenModalStock = () => setIsModalOpenStock(true);
+  const handleCloseModalStock = () => setIsModalOpenStock(false);;
 
   const handleOpenModalItems = (id) =>{
     setIsModalOpenItems(true)
@@ -60,6 +69,9 @@ export default function PoDeliveryDetail() {
     setIsModalOpenItems(false)
     setSelectedID(null)
     setSelectedTipe(null)
+    setSelectedStock(null)
+    setSelectedStockId(null)
+    setIsStockExist('tidak')
   }
 
   const [poData, setPoData] = useState({
@@ -283,14 +295,23 @@ export default function PoDeliveryDetail() {
       }
 
       if(selectedTipe === 'MATERIAL') {
+        if (isStockExist === 'ya' && selectedStockId === null) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Mohon pilih stok terlebih dahulu bila Stock Material sudah ada",
+            // footer: '<a href="#">Why do I have this issue?</a>'
+          })
+          return;
+        }
+        const payload = {
+          is_stock_exist: isStockExist,
+          stock_id: selectedStockId,
+        }
         axiosClient
-        .post('/stockmaterialinit/' + selectedID)
+        .post('/stockmaterialinit/' + selectedID, payload)
         .then(({}) => {
           arrived();
-          // Toast.fire({
-          //   icon: "success",
-          //   title: "Arrival is successfully"
-          // }); 
         })
         .catch(err => {
         })
@@ -316,6 +337,21 @@ export default function PoDeliveryDetail() {
   
     const apiname = "userSelect";
 
+    const columnsStockMaterial = [
+      {name: "STOCK NAME", uid: "stock_name", sortable: true},
+      {name: "DESCRIPTION", uid: "description", sortable: true},
+      {name: "QTY", uid: "quantity", sortable: true},
+      {name: "ITEM UNIT", uid: "item_unit", sortable: true},
+      {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
+    ];
+
+    const handleStock = (data) => {
+      console.log(data)
+
+      setSelectedStock(data.stock_name)
+      setSelectedStockId(data.id)
+      setIsModalOpenStock(false)
+    }
 
   return (
     <div className="bg-white p-4 rounded-large animated fadeInDown">
@@ -347,7 +383,7 @@ export default function PoDeliveryDetail() {
                       label="PO Date"
                       isInvalid={message?.tanggal != null}
                       errorMessage={message?.tanggal}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                   </div>
 
@@ -362,7 +398,7 @@ export default function PoDeliveryDetail() {
                       label="No. PO"
                       isInvalid={message?.no_po != null}
                       errorMessage={message?.no_po}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                   </div>
                   <div  className="xl:w-2/6 w-full"></div>
@@ -383,7 +419,6 @@ export default function PoDeliveryDetail() {
                         label="Vendor"
                         isInvalid={message?.vendor != null}
                         errorMessage={message?.vendor}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       />  
                     
@@ -401,7 +436,6 @@ export default function PoDeliveryDetail() {
                         label="Ship To"
                         isInvalid={message?.ship_to != null}
                         errorMessage={message?.ship_to}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       /> 
                     
@@ -417,7 +451,7 @@ export default function PoDeliveryDetail() {
                       label="Terms"
                       isInvalid={message?.terms != null}
                       errorMessage={message?.terms}
-                      isDisabled={disabledView}
+                      isReadOnly={true}
                       onChange={(e) => setPoData({ ...poData, terms: e.target.value })}
                     />
                   </div>
@@ -432,7 +466,7 @@ export default function PoDeliveryDetail() {
                       label="Ship Via"
                       isInvalid={message?.ship_via != null}
                       errorMessage={message?.ship_via}
-                      isDisabled={disabledView}
+                      isReadOnly={true}
                       onChange={(e) => setPoData({ ...poData, ship_via: e.target.value })}
                     />
                   </div>
@@ -447,7 +481,7 @@ export default function PoDeliveryDetail() {
                       label="Expected Date"
                       isInvalid={message?.expected_date != null}
                       errorMessage={message?.expected_date}
-                      isDisabled={disabledView}
+                      isReadOnly={true}
                       onChange={(e) => setPoData({ ...poData, expected_date: e.target.value })}
                     />
                   </div>
@@ -462,7 +496,7 @@ export default function PoDeliveryDetail() {
                       label="Currency"
                       isInvalid={message?.currency != null}
                       errorMessage={message?.currency}
-                      isDisabled={disabledView}
+                      isReadOnly={true}
                       onChange={(e) => setPoData({ ...poData, currency: e.target.value })}
                     />
                   </div>
@@ -526,7 +560,7 @@ export default function PoDeliveryDetail() {
                       label="Say"
                       isInvalid={message?.say != null}
                       errorMessage={message?.say}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                     </div>
                     <div  className=" p-2 w-full">
@@ -541,7 +575,7 @@ export default function PoDeliveryDetail() {
                       isInvalid={message?.description != null}
                       errorMessage={message?.description}
                       onChange={(e) => setPoData({ ...poData, description: e.target.value })}
-                      isDisabled={disabledView}
+                      isReadOnly={true}
                     />
                     </div>
                   </div>
@@ -557,7 +591,7 @@ export default function PoDeliveryDetail() {
                       label="Sub Total"
                       isInvalid={message?.sub_total != null}
                       errorMessage={message?.sub_total}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                     </div>
                     <div  className=" p-2 w-full">
@@ -571,7 +605,7 @@ export default function PoDeliveryDetail() {
                       label="Discount"
                       isInvalid={message?.discount != null}
                       errorMessage={message?.discount}
-                      isDisabled = {disabledView}
+                      isReadOnly = {true}
                     />
                     </div>
                     <div  className=" p-2 w-full">
@@ -585,7 +619,7 @@ export default function PoDeliveryDetail() {
                       label="Freight Cost"
                       isInvalid={message?.freight_cost != null}
                       errorMessage={message?.freight_cost}
-                      isDisabled = {disabledView}
+                      isReadOnly = {true}
                     />
                     </div>
                     <div  className=" p-2 w-full">
@@ -599,7 +633,7 @@ export default function PoDeliveryDetail() {
                       label="PPN 11%"
                       isInvalid={message?.ppn != null}
                       errorMessage={message?.ppn}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                     </div>
                     <div  className=" p-2 w-full">
@@ -613,7 +647,7 @@ export default function PoDeliveryDetail() {
                       label="Total Order"
                       isInvalid={message?.total_order != null}
                       errorMessage={message?.total_order}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                     </div>
                   </div>
@@ -632,7 +666,7 @@ export default function PoDeliveryDetail() {
                       label="Prepared By"
                       isInvalid={message?.prepared_by != null}
                       errorMessage={message?.prepared_by}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                     </div>
                   </div>
@@ -650,7 +684,6 @@ export default function PoDeliveryDetail() {
                         label="Verified By"
                         isInvalid={message?.verified_by != null}
                         errorMessage={message?.verified_by}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       />    
                     </div>
@@ -676,7 +709,6 @@ export default function PoDeliveryDetail() {
                         label="Approved By"
                         isInvalid={message?.approved_by != null}
                         errorMessage={message?.approved_by}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       />
                     </div>
@@ -704,7 +736,7 @@ export default function PoDeliveryDetail() {
                             label="Arrival Date"
                             isInvalid={message?.arrival_date != null}
                             errorMessage={message?.arrival_date}
-                            isDisabled={disabledView}
+                            isDisabled={true}
                             onChange={(e) => setPoData({ ...poData, arrival_date: e.target.value })}
                             />
                         </div>
@@ -719,7 +751,7 @@ export default function PoDeliveryDetail() {
                             label="Receiver"
                             isInvalid={message?.receiver != null}
                             errorMessage={message?.receiver}
-                            isDisabled={disabledView}
+                            isDisabled={true}
                             onChange={(e) => setPoData({ ...poData, receiver: e.target.value })}
                             /> 
                         </div>
@@ -746,6 +778,47 @@ export default function PoDeliveryDetail() {
                                     <SelectItem key="ITEM">Item (Barang / Mesin)</SelectItem>
                                     <SelectItem key="MATERIAL">Material</SelectItem>
                                 </Select>
+
+                                <div  className=" p-2 xl:w-full w-full" hidden={selectedTipe !== 'MATERIAL' }>
+                                  <RadioGroup
+                                      label="Apakah Stock Material sudah ada?"
+                                      orientation="horizontal"
+                                      value={isStockExist}  // Nilai yang sesuai dengan Radio
+                                      onChange={(event) => setIsStockExist(event.target.value)} // Update state saat value berubah
+                                  >
+                                      <Radio value="ya">Ya</Radio>
+                                      <Radio value="tidak">Tidak</Radio>
+                                  </RadioGroup>
+                                </div>
+                                
+                                <div  className="flex p-2 w-full" hidden={selectedTipe !== 'MATERIAL' || isStockExist !== 'ya'}>
+                                    <div className='pe-2'>
+                                        <Button onPress={handleOpenModalStock} className='border-gray-500 w-full h-14'><SearchIcon/></Button>
+                                    </div>
+                                    <Input
+                                        id="stock_id"
+                                        variant="bordered"
+                                        className="bg-white "
+                                        type="text"
+                                        value={selectedStock}
+                                        label="Stock"
+                                        onChange={(e) => setStockItemData({ ...stockItemData, stock_id: e.target.value })}
+                                        readOnly
+                                    />
+                                        <Modal isOpen={isModalStock} onOpenChange={handleCloseModalStock} size='4xl'>
+                                        <ModalContent>
+                                          {(onClose) => (
+                                            <>
+                                              <ModalHeader className="flex flex-col gap-1">Select Stock Item</ModalHeader>
+                                              <ModalBody>
+                                                <TableSelect columns={columnsStockMaterial} apiname={'stockmaterialselect'} handleAction={handleStock}>
+                                                </TableSelect>
+                                              </ModalBody>
+                                            </>
+                                          )}
+                                        </ModalContent>
+                                      </Modal>
+                                </div>
                                 <div className='flex justify-end gap-2 p-4'>
                                   <Button className="bg-green-300 w-1" onClick={() => handleArrived()}>
                                     Post

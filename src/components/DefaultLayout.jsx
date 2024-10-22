@@ -174,6 +174,9 @@ export default function DefaultLayout(){
                     <NavLink exact to="/bpbumum">
                       <CDBSidebarMenuItem>Bukti Pengeluaran Barang Umum</CDBSidebarMenuItem>
                     </NavLink>
+                    <NavLink exact to="/suratjalanumum">
+                      <CDBSidebarMenuItem>Surat Jalan Umum</CDBSidebarMenuItem>
+                    </NavLink>
                   </div>
 
                   <CDBSidebarMenuItem icon="database" onClick={toggleExpand1}>
@@ -258,6 +261,9 @@ export default function DefaultLayout(){
                           />
                         </div> 
                       </CDBSidebarMenuItem>
+                      <NavLink exact to="/pengembalianBarang">
+                        <CDBSidebarMenuItem>Pengembalian Barang</CDBSidebarMenuItem>
+                      </NavLink>
                     </NavLink>
                   </div>
 

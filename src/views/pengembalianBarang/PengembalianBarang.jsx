@@ -14,7 +14,7 @@ import { VerticalDotsIcon } from "../../assets/VerticalDotIcon";
 import { PlusIcon } from "../../assets/PlusIcon";
 import Swal from 'sweetalert2'
 
-export default function SuratJalan() {
+export default function PengembalianBarang() {
 
   const [loading, setLoading] = useState(false)
   const [datas, setDatas] = useState([])
@@ -24,31 +24,31 @@ export default function SuratJalan() {
     {
       id: "draft",
       label: "Draft",
-      title: "Surat Jalan Proses Draft List",
-      apiname: "suratjalan/draft",
+      title: "Pengembalian Barang Draft List",
+      apiname: "pengembalianbarang/draft",
       isHidden: false
     },
-    {
-      id: "onApproval",
-      label: "On Approval",
-      title: "Surat Jalan Proses On Approval List",
-      apiname: "suratjalan/onApproval",
-      isHidden: true
-    },
+    // {
+    //   id: "onApproval",
+    //   label: "On Approval",
+    //   title: "Pengembalian Barang On Approval List",
+    //   apiname: "pengembalianbarang/onApproval",
+    //   isHidden: true
+    // },
     {
       id: "done",
       label: "Done",
-      title: "Surat Jalan Proses Done List",
-      apiname: "suratjalan/done",
+      title: "Pengembalian Barang Done List",
+      apiname: "pengembalianbarang/done",
       isHidden: true
     },
-    {
-      id: "rejected",
-      label: "Rejected",
-      title: "Surat Jalan Prosses Rejected List",
-      apiname: "suratjalan/rejected",
-      isHidden: true
-    }
+    // {
+    //   id: "rejected",
+    //   label: "Rejected",
+    //   title: "Pengembalian Barang Rejected List",
+    //   apiname: "pengembalianbarang/rejected",
+    //   isHidden: true
+    // }
   ];
 
   const handleTabChange = (id) => {
@@ -62,16 +62,15 @@ export default function SuratJalan() {
 
   const columns = [
       {name: "NO SURAT JALAN", uid: "no_surat_jalan", sortable: true},
-      {name: "COMPANY", uid: "company", sortable: true},
-      {name: "MENYERAHKAN", uid: "menyerahkan", sortable: true},
-      {name: "TANGGAL MENYERAHKAN", uid: "menyerahkan_date", sortable: true},
+      {name: "PENERIMA", uid: "penerima", sortable: true},
+      {name: "TANGGAL MENERIMA", uid: "penerima_date", sortable: true},
       {name: "STATUS", uid: "status", sortable: true},
       {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
     ];
 
 
   const addBtn =()=>{
-    navigate("/suratjalan/new");
+    navigate("/pengembalianBarang/new");
   }
 
   const addButton = () => {
@@ -114,7 +113,7 @@ export default function SuratJalan() {
         confirmButtonText: "Yes, delete it!"
       }).then((result) => {
         if (result.isConfirmed) {
-          axiosClient.delete(`/suratjalan/${key}`).then(() => {
+          axiosClient.delete(`/pengembalianbarang/${key}`).then(() => {
             Toast.fire({
               icon: "success",
               title: "Delete is successfully"
@@ -149,8 +148,8 @@ export default function SuratJalan() {
             </Button>
           </DropdownTrigger>
           <DropdownMenu onAction={handleAction}>
-            <DropdownItem key={"/suratjalan/" + data.id + "/view"}>View</DropdownItem>
-            <DropdownItem key={"/suratjalan/" + data.id} hidden={activeTabData.isHidden}>Edit</DropdownItem>
+            <DropdownItem key={"/pengembalianBarang/" + data.id + "/view"}>View</DropdownItem>
+            <DropdownItem key={"/pengembalianBarang/" + data.id} hidden={activeTabData.isHidden}>Edit</DropdownItem>
             <DropdownItem key={data.id} hidden={activeTabData.isHidden}>Delete</DropdownItem>
           </DropdownMenu>
         </Dropdown>

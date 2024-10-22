@@ -304,7 +304,7 @@ export default function ApprovalPOView() {
                       label="PO Date"
                       isInvalid={message?.tanggal != null}
                       errorMessage={message?.tanggal}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                   </div>
 
@@ -319,7 +319,7 @@ export default function ApprovalPOView() {
                       label="No. PO"
                       isInvalid={message?.no_po != null}
                       errorMessage={message?.no_po}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                   </div>
                   <div  className="xl:w-2/4 w-full"></div>
@@ -340,7 +340,6 @@ export default function ApprovalPOView() {
                         label="Vendor"
                         isInvalid={message?.vendor != null}
                         errorMessage={message?.vendor}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       />  
                   </div>
@@ -356,7 +355,6 @@ export default function ApprovalPOView() {
                         label="Ship To"
                         isInvalid={message?.ship_to != null}
                         errorMessage={message?.ship_to}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       /> 
                   </div>
@@ -371,8 +369,7 @@ export default function ApprovalPOView() {
                       label="Terms"
                       isInvalid={message?.terms != null}
                       errorMessage={message?.terms}
-                      isDisabled={disabledView}
-                      onChange={(e) => setPoData({ ...poData, terms: e.target.value })}
+                      isReadOnly={true}
                     />
                   </div>
                   <div  className=" p-2 xl:w-1/4 w-full">
@@ -386,8 +383,7 @@ export default function ApprovalPOView() {
                       label="Ship Via"
                       isInvalid={message?.ship_via != null}
                       errorMessage={message?.ship_via}
-                      isDisabled={disabledView}
-                      onChange={(e) => setPoData({ ...poData, ship_via: e.target.value })}
+                      isReadOnly={true}
                     />
                   </div>
                   <div  className=" p-2 xl:w-1/4 w-full">
@@ -401,8 +397,7 @@ export default function ApprovalPOView() {
                       label="Expected Date"
                       isInvalid={message?.expected_date != null}
                       errorMessage={message?.expected_date}
-                      isDisabled={disabledView}
-                      onChange={(e) => setPoData({ ...poData, expected_date: e.target.value })}
+                      isReadOnly={true}
                     />
                   </div>
                   <div  className=" p-2 xl:w-1/4 w-full">
@@ -416,8 +411,7 @@ export default function ApprovalPOView() {
                       label="Currency"
                       isInvalid={message?.currency != null}
                       errorMessage={message?.currency}
-                      isDisabled={disabledView}
-                      onChange={(e) => setPoData({ ...poData, currency: e.target.value })}
+                      isReadOnly={true}
                     />
                   </div>
                 </div>
@@ -436,109 +430,30 @@ export default function ApprovalPOView() {
                 <TableBody emptyContent={"No Data found"} items={rows} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
                     {rows.map((item,index) => (
                         <TableRow key={index}>
-                            <TableCell>
-                                <Input
-                                    startContent={<SearchIcon onClick={()=>handleOpenModalItems(index)} className="cursor-pointer"/>}
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.item} 
-                                    aria-label="Item Name"
-                                    // onChange={(e) => handleInputChangeRow(index, 'item', e.target.value)}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Textarea 
-                                    aria-label="Description"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.description} 
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Input
-                                    aria-label="Quantity"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.quantity} 
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Input
-                                    aria-label="Unit Price"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.unit_price} 
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Input
-                                    aria-label="Discount"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView} 
-                                    type="text"
-                                    variant='bordered' 
-                                    value={item.discount} 
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Input
-                                    aria-label="Amount"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {true} 
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.amount}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Textarea
-                                    aria-label="Remarks"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView} 
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.remarks} 
-                                />
-                            </TableCell>
-                            <TableCell>
-                                {/* <Input
-                                    isDisabled = {disabledView} 
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.item_unit} 
-                                    onChange={(e) => handleInputChangeRow(index, 'item_unit', e.target.value)}
-                                /> */}
-
-                                <Select
-                                  aria-label="Item Unit"
-                                  variant='bordered'
-                                  items={item_units_selects}
-                                  placeholder="Select"
-                                  className="max-w-xs"
-                                  value={item.item_unit}
-                                  onChange={(e) => handleInputChangeRow(index, 'item_unit', e.target.value)}
-                                  isDisabled = {disabledView}
-                                  defaultSelectedKeys={[item.item_unit]}
-                                >
-                                  {item_units_selects.map((item_units_select) => (
-                                    <SelectItem
-                                      key={item_units_select.key}
-                                      value={item_units_select.key} // Use 'key' as 'value'
-                                      className="text-left"
-                                    >
-                                      {item_units_select.label}
-                                    </SelectItem>
-                                  ))}
-                                </Select>
-                            </TableCell>
+                          <TableCell>
+                              {item.item}
+                          </TableCell>
+                          <TableCell>
+                              {item.description}
+                          </TableCell>
+                          <TableCell>
+                              {item.quantity}
+                          </TableCell>
+                          <TableCell>
+                              {item.unit_price} 
+                          </TableCell>
+                          <TableCell>
+                              {item.discount}
+                          </TableCell>
+                          <TableCell>
+                              {item.amount}
+                          </TableCell>
+                          <TableCell>
+                              {item.remarks}
+                          </TableCell>
+                          <TableCell>
+                              {item.item_unit}
+                          </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
@@ -558,7 +473,7 @@ export default function ApprovalPOView() {
                       label="Say"
                       isInvalid={message?.say != null}
                       errorMessage={message?.say}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                     </div>
                     <div  className=" p-2 w-full">
@@ -572,8 +487,7 @@ export default function ApprovalPOView() {
                       label="Description"
                       isInvalid={message?.description != null}
                       errorMessage={message?.description}
-                      onChange={(e) => setPoData({ ...poData, description: e.target.value })}
-                      isDisabled={disabledView}
+                      isReadOnly={true}
                     />
                     </div>
                   </div>
@@ -589,7 +503,7 @@ export default function ApprovalPOView() {
                       label="Sub Total"
                       isInvalid={message?.sub_total != null}
                       errorMessage={message?.sub_total}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                     </div>
                     <div  className=" p-2 w-full">
@@ -603,7 +517,7 @@ export default function ApprovalPOView() {
                       label="Discount"
                       isInvalid={message?.discount != null}
                       errorMessage={message?.discount}
-                      isDisabled = {disabledView}
+                      isReadOnly={true}
                     />
                     </div>
                     <div  className=" p-2 w-full">
@@ -617,7 +531,7 @@ export default function ApprovalPOView() {
                       label="Freight Cost"
                       isInvalid={message?.freight_cost != null}
                       errorMessage={message?.freight_cost}
-                      isDisabled = {disabledView}
+                      isReadOnly={true}
                     />
                     </div>
                     <div  className=" p-2 w-full">
@@ -631,7 +545,7 @@ export default function ApprovalPOView() {
                       label="PPN 11%"
                       isInvalid={message?.ppn != null}
                       errorMessage={message?.ppn}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                     </div>
                     <div  className=" p-2 w-full">
@@ -645,7 +559,7 @@ export default function ApprovalPOView() {
                       label="Total Order"
                       isInvalid={message?.total_order != null}
                       errorMessage={message?.total_order}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                     </div>
                   </div>
@@ -664,7 +578,7 @@ export default function ApprovalPOView() {
                       label="Prepared By"
                       isInvalid={message?.prepared_by != null}
                       errorMessage={message?.prepared_by}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                     </div>
                   </div>
@@ -681,7 +595,6 @@ export default function ApprovalPOView() {
                         label="Verified By"
                         isInvalid={message?.verified_by != null}
                         errorMessage={message?.verified_by}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       />       
                     </div>
@@ -707,7 +620,6 @@ export default function ApprovalPOView() {
                         label="Approved By"
                         isInvalid={message?.approved_by != null}
                         errorMessage={message?.approved_by}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       />
                     </div>
@@ -731,7 +643,7 @@ export default function ApprovalPOView() {
                       type="text"
                       defaultValue={poData.remarks}
                       label="Remarks"
-                      isDisabled= {true}
+                      isReadOnly={true}
                     />
                     </div>
                   </div>         

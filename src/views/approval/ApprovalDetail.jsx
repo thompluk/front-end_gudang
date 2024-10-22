@@ -7,6 +7,7 @@ import axiosClient from '../../axios-client'
 import ApprovalPOView from './ApprovalPOView'
 import Swal from 'sweetalert2'
 import ApprovalBPBView from './ApprovalBPBView'
+import ApprovalSuratJalanView from './ApprovalSuratJalanView'
 
 
 export default function ApprovalDetail() {
@@ -174,6 +175,10 @@ export default function ApprovalDetail() {
           {param2 == 'bpb' && (
             <ApprovalBPBView>
             </ApprovalBPBView>
+          )}
+          {param2 == 'Surat Jalan' && (
+            <ApprovalSuratJalanView>
+            </ApprovalSuratJalanView>
           )}
         </div>
         <div className='flex justify-between p-4'>

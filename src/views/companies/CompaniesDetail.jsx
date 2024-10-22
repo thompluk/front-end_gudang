@@ -171,7 +171,7 @@ export default function CompaniesDetail() {
                 label="Name"
                 isInvalid={message?.name != null}
                 errorMessage={message?.name}
-                isDisabled={disabledView}
+                isReadOnly={disabledView}
                 
               />
               </div>
@@ -187,7 +187,7 @@ export default function CompaniesDetail() {
                 label="Address"
                 isInvalid={message?.address != null}
                 errorMessage={message?.address}
-                isDisabled={disabledView}
+                isReadOnly={disabledView}
                 
               />
               </div>
@@ -203,7 +203,7 @@ export default function CompaniesDetail() {
                   label="Telephone"
                   isInvalid={message?.telephone != null}
                   errorMessage={message?.telephone}
-                  isDisabled={disabledView}
+                  isReadOnly={disabledView}
                 />
               </div>
 
@@ -218,7 +218,7 @@ export default function CompaniesDetail() {
                   label="Fax"
                   isInvalid={message?.fax != null}
                   errorMessage={message?.fax}
-                  isDisabled={disabledView}
+                  isReadOnly={disabledView}
                 />
               </div>
 
@@ -233,7 +233,7 @@ export default function CompaniesDetail() {
                   label="Email"
                   isInvalid={message?.email != null}
                   errorMessage={message?.email}
-                  isDisabled={disabledView}
+                  isReadOnly={disabledView}
                 />
               </div>
 

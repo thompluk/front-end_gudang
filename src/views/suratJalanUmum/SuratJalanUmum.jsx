@@ -13,23 +13,22 @@ import { VerticalDotsIcon } from "../../assets/VerticalDotIcon";
 import { PlusIcon } from "../../assets/PlusIcon";
 import Swal from 'sweetalert2'
 
-export default function BpbDelivery() {
+export default function SuratJalanUmum() {
 
   const [loading, setLoading] = useState(false)
   const [datas, setDatas] = useState([])
   const navigate = useNavigate();
   const columns = [
-    {name: "No. BPB", uid: "no_bpb", sortable: true},
-    {name: "DATE", uid: "date", sortable: true},
-    {name: "SALESMAN", uid: "salesman", sortable: true},
-    {name: "CUSTOMER", uid: "customer", sortable: true},
-    {name: "REQUEST BY", uid: "request_by", sortable: true},
+    {name: "NO SURAT JALAN", uid: "no_surat_jalan", sortable: true},
+    {name: "COMPANY", uid: "company", sortable: true},
+    {name: "MENYERAHKAN", uid: "menyerahkan", sortable: true},
+    {name: "TANGGAL MENYERAHKAN", uid: "menyerahkan_date", sortable: true},
     {name: "STATUS", uid: "status", sortable: true},
     {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
   ];
 
   const addBtn =()=>{
-    navigate("/bpb/new");
+    navigate("/suratjalan/new");
   }
 
   const addButton = () => {
@@ -57,7 +56,7 @@ export default function BpbDelivery() {
         confirmButtonText: "Yes, delete it!"
       }).then((result) => {
         if (result.isConfirmed) {
-          axiosClient.delete(`/bpb/${key}`).then(() => {
+          axiosClient.delete(`/po/${key}`).then(() => {
             Swal.fire({
               title: "Deleted!",
               text: "Your file has been deleted.",
@@ -73,7 +72,7 @@ export default function BpbDelivery() {
   const getDatas = () => {
     setLoading(true)
     axiosClient
-      .get('/allbpbdelivery')
+      .get('/allsuratjalanumum')
       .then(({ data }) => {
         setLoading(false)
         setDatas(data.data)
@@ -94,7 +93,7 @@ export default function BpbDelivery() {
             </Button>
           </DropdownTrigger>
           <DropdownMenu onAction={handleAction}>
-            <DropdownItem key={"/bpbdelivery/" + data.id + "/view"}>View</DropdownItem>
+            <DropdownItem key={"/suratjalanumum/" + data.id + "/view"}>View</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>
@@ -104,7 +103,7 @@ export default function BpbDelivery() {
   return (
     <div className="flex-col justify-center bg-white p-4 rounded-large animated fadeInDown ">
       <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
-          <h1>BPB Delivery List</h1>
+          <h1>Surat Jalan Umum List</h1>
       </div>
       <TableCustom columns={columns} addButton={addButton} renderCellTable={renderCellTable} getDatas={getDatas} loading={loading} datas={datas}/>
     </div>

@@ -17,6 +17,8 @@ import {
   Select,
   SelectItem,
   Card,
+  RadioGroup,
+  Radio,
 } from '@nextui-org/react'
 import axiosClient from '../../axios-client'
 import {PlusIcon} from '../../assets/PlusIcon'
@@ -27,11 +29,12 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure}
 import TableSelect from '../../custom/TableSelect'
 import { SearchIcon } from '../../assets/SearchIcon'
 import numberToWords from 'number-to-words';
+import TableSelectWithFIlter from '../../custom/TableSelectWithFIlter'
 // import { IconButton } from "@material-tailwind/react";
 
 export default function BpbDeliveryDetail() {
   const navigate = useNavigate()
-  const [indexNow, setIndexNow] = useState(null)
+  const [idNow, setIdNow] = useState(null)
   const [loading, setLoading] = useState(false)
   const [loading2, setLoading2] = useState(false)
   const { param,param2 } = useParams()
@@ -40,6 +43,19 @@ export default function BpbDeliveryDetail() {
   const [isModalApprovedBy, setIsModalOpenApprovedBy] = useState(false);
   const [isModalItems, setIsModalOpenItems] = useState(false);
   const [payloadItems, setPayloadItems] = useState([]);
+  const [filter, setFilter] = useState(null);
+
+  const handleOpenModalItems = (id, filter) =>{
+    setIsModalOpenItems(true)
+    setIdNow(id)
+    setFilter(filter)
+  }
+
+  const handleCloseModalItems = (id) =>{
+    setIsModalOpenItems(false)
+    setIdNow(null)
+    setFilter(null)
+  }
 
   const [bpbData, setBpbData] = useState({
     status: null,
@@ -66,6 +82,17 @@ export default function BpbDeliveryDetail() {
   const [details, setDetails] = useState([
     {
         id: null,
+        stock_id: null,
+        stock_name: null,
+        quantity: null,
+        notes: null,
+    }
+  ]);
+
+  const [details_details, setDetailsDetails] = useState([
+    {
+        id: null,
+        bpb_detail_id:null,
         item_id: null,
         item_name: null,
         no_edp: null,
@@ -75,8 +102,13 @@ export default function BpbDeliveryDetail() {
     }
   ]);
 
-
-
+  const columnsItems = [
+    {name: "ID", uid: "id", sortable: true},
+    {name: "ITEM NAME", uid: "item_name", sortable: true},
+    {name: "NO EDP", uid: "no_edp", sortable: true},
+    {name: "NO SN", uid: "no_sn", sortable: true},
+    {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
+  ];
 
   useEffect(() => {
 
@@ -85,6 +117,7 @@ export default function BpbDeliveryDetail() {
     }
     if (param != 'new') {
       getDetails();
+      getDetailsDetails();
       getBpb();
     }
     if (param2 == 'view') {
@@ -106,6 +139,8 @@ export default function BpbDeliveryDetail() {
             date: data.data.date,
             no_po: data.data.no_po,
             delivery_by: data.data.delivery_by,
+            delivery_date: data.data.delivery_date,
+            is_partial_delivery: data.data.is_partial_delivery.toString(),
             no_bpb: data.data.no_bpb,
             customer: data.data.customer,
             customer_address: data.data.customer_address,
@@ -142,6 +177,21 @@ export default function BpbDeliveryDetail() {
       })
   }
 
+  const getDetailsDetails = () => {
+
+    setLoading2(true);
+
+    axiosClient
+      .get('/bpbdetaildetaillist/'+ param)
+      .then(({ data }) => {
+        setDetailsDetails(data.data);
+        setLoading2(false);
+      })
+      .catch(() => {
+        setLoading2(false);
+      })
+  }
+
 
   // const [rows, setRows] = useState(details);
 
@@ -151,12 +201,12 @@ export default function BpbDeliveryDetail() {
 
   useEffect(() => {
     const newPayloadItems = {
-      item_ids: details
+      item_ids: details_details
         .filter(row => row.item_id != null) // Hanya masukkan yang tidak null
         .map(row => row.item_id) // Ambil nilai ppb_detail_id
     };
     setPayloadItems(newPayloadItems);
-  }, [details]);
+  }, [details_details]);
 
   const handleInputChangeRow = (index, field, value) => {
     setDetails(details.map((row, i) => i === index ? { ...row, [field]: value } : row));
@@ -215,9 +265,199 @@ export default function BpbDeliveryDetail() {
         });
       };
 
-    const btnBack = () => [
+    const btnBack = () => {
         navigate('/bpbdelivery')
-      ]
+    }
+
+    const handleItems = (data) => {
+      console.log(data, idNow)
+      setDetailsDetails(details_details.map((row) => 
+        row.id === idNow 
+          ? { ...row, item_name: data.item_name, item_id: data.id.toString(), no_edp: data.no_edp, no_sn: data.no_sn }
+          : row
+      ));     
+      setIsModalOpenItems(false)
+    }
+    
+    const onSubmit = ev => {
+      ev.preventDefault()
+
+      const payload = {
+        salesman: bpbData.salesman,
+        no_po: bpbData.no_po,
+        delivery_by: bpbData.delivery_by,
+        delivery_date: bpbData.delivery_date,
+        is_partial_delivery: bpbData.is_partial_delivery,
+        customer: bpbData.customer,
+        customer_address: bpbData.customer_address,
+        customer_pic_name: bpbData.customer_pic_name,
+        customer_pic_phone: bpbData.customer_pic_phone,
+        approved_by: bpbData.approved_by,
+        approved_by_id: bpbData.approved_by_id,
+      }
+      if (param == 'new') {
+        axiosClient
+          .post('/bpb', payload)
+          .then(({data}) => {
+            console.log(data.data.id)
+            handleSaveAll(data.data.id)
+            Toast.fire({
+              icon: "success",
+              title: "Create is successfully"
+            });  
+            navigate('/bpb')
+          })
+          .catch(err => {
+            const response = err.response
+            if (response && response.status === 400) {
+              setMessage(response.data.message);
+              setErrors(true);
+            }
+          })
+      }
+      else{
+        axiosClient
+          .put('/bpb/update/' + param, payload)
+          .then(({}) => {
+            console.log(param)
+            handleSaveAll(param)
+            Toast.fire({
+              icon: "success",
+              title: "Update is successfully"
+            });  
+            navigate('/bpb')
+          })
+          .catch(err => {
+            const response = err.response
+            if (response && response.status === 400) {
+              setMessage(response.data.message);
+              setErrors(true);
+            }
+          })
+      }
+      
+    }
+
+    const handleSaveAll = () => {
+      axiosClient.post('/bpbdetaildetailsaveAll/'+param, details_details)
+            .then(response => {
+              // Handle successful save
+              console.log('Data saved successfully');
+              Toast.fire({
+                icon: "success",
+                title: "Update is successfully"
+              });  
+            })
+            .catch(error => {
+              const response = err.response
+              if (response && response.status === 400) {
+                setMessage(response.data.message);
+                setErrors(true);
+              }
+                // Handle error
+              console.error('There was an error saving the data!', error);
+            });
+    };
+
+    const detailTable = () => {
+      return (
+        <div>
+          {details.map((detail,index) => (
+            <div key={index} className='pt-4'>
+              <div className='p-2 rounded-large border'>
+                <div className='flex'>
+                  <Input
+                    style={{ fontSize: '12px' }}
+                    type="text" 
+                    value={detail.stock_name} 
+                    label="Stock Name"
+                    readOnly
+                    className='w-1/5 p-2'
+                  />
+                  <Input
+                    style={{ fontSize: '12px' }}
+                    type="number" 
+                    value={detail.quantity} 
+                    label="Quantity"
+                    readOnly
+                    className='w-1/5 p-2'
+                  />
+                  <Textarea
+                    style={{ fontSize: '12px' }}
+                    type="text" 
+                    value={detail.notes} 
+                    label="Note"
+                    readOnly
+                    className='w-1/4 p-2'
+                  />
+                </div>
+                <div>
+                  <Table aria-label="Example static collection table" className='p-2'>
+                    <TableHeader>
+                        <TableColumn className='w-2/10'>ITEM NAME</TableColumn>
+                        <TableColumn className='w-15/100'>EDP</TableColumn>
+                        <TableColumn className='w-15/100'>S/N</TableColumn>
+                        <TableColumn className='w-2/10'>NOTE</TableColumn>
+                    </TableHeader>
+                    <TableBody emptyContent={"No Data found"} items={details_details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
+                        {details_details
+                        .filter(item => item.bpb_detail_id === detail.id)
+                        .map((item,id) => (
+                            <TableRow key={id}>
+                                <TableCell>
+                                    <Input
+                                        startContent={<SearchIcon onClick={()=>handleOpenModalItems(item.id, detail.stock_id)} className="cursor-pointer"/>}
+                                        style={{ fontSize: '12px' }}
+                                        type="text" 
+                                        variant='bordered' 
+                                        value={item.item_name} 
+                                        aria-label="Item Name"
+                                        readOnly
+                                        // onChange={(e) => handleInputChangeRow(index, 'item', e.target.value)}
+                                    />
+                                </TableCell>
+                                <TableCell>
+                                    <Input 
+                                        aria-label="No EDP"
+                                        style={{ fontSize: '12px' }}
+                                        type="text" 
+                                        variant='bordered' 
+                                        value={item.no_edp} 
+                                        readOnly
+                                    />
+                                </TableCell>
+                                <TableCell>
+                                    <Input
+                                        aria-label="No SN"
+                                        style={{ fontSize: '12px' }}
+                                        type="text" 
+                                        variant='bordered' 
+                                        value={item.no_sn} 
+                                        readOnly
+                                    />
+                                </TableCell>
+                                <TableCell>
+                                    <Textarea
+                                        aria-label="Note"
+                                        style={{ fontSize: '12px' }}
+                                        type="text" 
+                                        variant='bordered' 
+                                        value={item.notes}
+                                        onChange={(e) => handleInputChangeRow(index, 'notes', e.target.value)}
+                                    />
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                    
+                  </Table>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    };
 
   return (
     <div className="bg-white p-4 rounded-large animated fadeInDown border">
@@ -229,11 +469,14 @@ export default function BpbDeliveryDetail() {
           </Button>
         </div>
           <div className="pt-8">
-              <div className="flex w-full flex-wrap md:flex-nowrap p-2 justify-between" >
+          <div className="flex w-full flex-wrap md:flex-nowrap p-2 justify-between" >
+                    <Button className="bg-green-300" onClick={handleSaveAll}>
+                        Save
+                    </Button>
                     <div></div>
-                    <div  className="xl:w-2/10 p-4" hidden={bpbData.delivery_status === null}>
+                    <div  className="xl:w-2/10 p-4" hidden={bpbData.status === null}>
                         <p id="status" >
-                        Status : {bpbData.delivery_status}
+                        Status : {bpbData.status}
                         </p>
                     </div>
               </div>
@@ -307,6 +550,37 @@ export default function BpbDeliveryDetail() {
                                     onChange={(e) => setBpbData( {...bpbData, delivery_by: e.target.value} )}
                                     readOnly
                                     />
+                                </div>
+                                <div  className=" p-2 xl:w-3/4 w-full">
+                                    <Input
+                                        id="Delivery Date"
+                                        // ref={dateRef}
+                                        variant="bordered"
+                                        className="bg-white "
+                                        type="date"
+                                        value={bpbData.delivery_date}
+                                        label="Delivery Date"
+                                        isInvalid={message?.delivery_date != null}
+                                        errorMessage={message?.delivery_date}
+                                        onChange={(e) => setBpbData( {...bpbData, delivery_date: e.target.value} )}
+                                        isReadOnly={true}
+                                    />
+                                </div>
+                                <div className=" pt-2 pb-2 ps-4 xl:w-3/4 w-full">
+                                  <RadioGroup
+                                      id="Is Partial Delivery"
+                                      variant="bordered"
+                                      className='bg-white'
+                                      label="Is Partial Delivery?"
+                                      aria-label="Apakah Merupakan Pengiriman Partial?"
+                                      orientation="horizontal"
+                                      value={bpbData.is_partial_delivery}  // Nilai yang sesuai dengan Radio
+                                      onChange={(e) => setBpbData({...bpbData, is_partial_delivery: e.target.value})}
+                                      isDisabled = {true}                             
+                                      >
+                                      <Radio value="1">Ya</Radio>
+                                      <Radio value="0">Tidak</Radio>
+                                  </RadioGroup>
                                 </div>
                                 {/* <div  className=" p-2 xl:w-3/4 w-full">
                                     <Input
@@ -408,59 +682,99 @@ export default function BpbDeliveryDetail() {
                 </div>
                     
                 <br />
-                <Table aria-label="Example static collection table" className='p-2'>
+                {/* <Table aria-label="Example static collection table" className='p-2'>
                 <TableHeader>
-                    <TableColumn className='w-1/20'>PARTIAL?</TableColumn>
                     <TableColumn className='w-2/10'>ITEM NAME</TableColumn>
                     <TableColumn className='w-15/100'>EDP</TableColumn>
                     <TableColumn className='w-15/100'>S/N</TableColumn>
-                    <TableColumn className='w-1/20'>QUANTITY</TableColumn>
-                    <TableColumn className='w-1/13'>DEL. DATE</TableColumn>
                     <TableColumn className='w-2/10'>NOTE</TableColumn>
-                    <TableColumn className='w-1/10'>DEL. ACTION</TableColumn>
                 </TableHeader>
                 <TableBody emptyContent={"No Data found"} items={details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
                     {details.map((item,index) => (
                         <TableRow key={index}>
                             <TableCell>
-                                {item.is_partial_delivery == '1' ? "Yes" : "No"}
+                                <Input
+                                    startContent={<SearchIcon onClick={()=>handleOpenModalItems(index)} className="cursor-pointer"/>}
+                                    style={{ fontSize: '12px' }}
+                                    type="text" 
+                                    variant='bordered' 
+                                    value={item.item_name} 
+                                    aria-label="Item Name"
+                                    readOnly
+                                    // onChange={(e) => handleInputChangeRow(index, 'item', e.target.value)}
+                                />
                             </TableCell>
                             <TableCell>
-                                {item.item_name}
+                                <Input 
+                                    aria-label="No EDP"
+                                    style={{ fontSize: '12px' }}
+                                    type="text" 
+                                    variant='bordered' 
+                                    value={item.no_edp} 
+                                    readOnly
+                                />
                             </TableCell>
                             <TableCell>
-                                {item.no_edp} 
+                                <Input
+                                    aria-label="No SN"
+                                    style={{ fontSize: '12px' }}
+                                    type="text" 
+                                    variant='bordered' 
+                                    value={item.no_sn} 
+                                    readOnly
+                                />
                             </TableCell>
                             <TableCell>
-                                {item.no_sn} 
-                            </TableCell>
-                            <TableCell>
-                                {item.quantity} 
-                            </TableCell>
-                            <TableCell>
-                                {item.delivery_date} 
-                            </TableCell>
-                            <TableCell>
-                                {item.notes}
-                            </TableCell>
-                            <TableCell>
-                                <div hidden={item.is_delivered == '1'} className='justify-center'>
-                                    <Button className='bg-blue-300' onPress={() => handleDeliver(item.id)}>
-                                        Deliver
-                                    </Button>  
-                                </div>
-                                <div hidden={item.is_delivered == '0'} className='justify-center'>
-                                    <img src={CheckMark} alt="check mark" className="w-12 h-12" />
-                                </div>
-                                
+                                <Textarea
+                                    aria-label="Note"
+                                    style={{ fontSize: '12px' }}
+                                    type="text" 
+                                    variant='bordered' 
+                                    value={item.notes}
+                                    onChange={(e) => handleInputChangeRow(index, 'notes', e.target.value)}
+                                />
                             </TableCell>
                         </TableRow>
+                        // <TableRow key={index}>
+                        //     <TableCell>
+                        //         {item.is_partial_delivery == '1' ? "Yes" : "No"}
+                        //     </TableCell>
+                        //     <TableCell>
+                        //         {item.item_name}
+                        //     </TableCell>
+                        //     <TableCell>
+                        //         {item.no_edp} 
+                        //     </TableCell>
+                        //     <TableCell>
+                        //         {item.no_sn} 
+                        //     </TableCell>
+                        //     <TableCell>
+                        //         {item.quantity} 
+                        //     </TableCell>
+                        //     <TableCell>
+                        //         {item.delivery_date} 
+                        //     </TableCell>
+                        //     <TableCell>
+                        //         {item.notes}
+                        //     </TableCell>
+                        //     <TableCell>
+                        //         <div hidden={item.is_delivered == '1'} className='justify-center'>
+                        //             <Button className='bg-blue-300' onPress={() => handleDeliver(item.id)}>
+                        //                 Deliver
+                        //             </Button>  
+                        //         </div>
+                        //         <div hidden={item.is_delivered == '0'} className='justify-center'>
+                        //             <img src={CheckMark} alt="check mark" className="w-12 h-12" />
+                        //         </div>
+                                
+                        //     </TableCell>
+                        // </TableRow>
                     ))}
                 </TableBody>
                 
-                </Table>
-
-                <hr />
+                </Table> */}
+                {detailTable()}
+                {/* <hr /> */}
                 <div className=" w-full flex-wrap md:flex-nowrap pt-4 pb-2">
                   <div className='flex'>
                     <div  className=" p-2 xl:w-1/4 w-full">
@@ -526,6 +840,19 @@ export default function BpbDeliveryDetail() {
           </div>
         
       </div>
+      <Modal isOpen={isModalItems} onOpenChange={handleCloseModalItems} size='4xl'>
+            <ModalContent>
+            {(onClose) => (
+                <>
+                <ModalHeader className="flex flex-col gap-1">Select Items</ModalHeader>
+                <ModalBody>
+                    <TableSelectWithFIlter columns={columnsItems} apiname={'itemselect'} payload={payloadItems} filter={filter} handleAction={(data) => handleItems(data)}>
+                    </TableSelectWithFIlter>
+                </ModalBody>
+                </>
+            )}
+            </ModalContent>
+        </Modal>
     </div>
   )
 }

@@ -657,7 +657,8 @@ export default function PurchaseOrderDetail() {
                       label="PO Date"
                       isInvalid={message?.tanggal != null}
                       errorMessage={message?.tanggal}
-                      isDisabled={true}
+                      isDisabled={!disabledView}
+                      isReadOnly={true}
                     />
                   </div>
 
@@ -672,7 +673,8 @@ export default function PurchaseOrderDetail() {
                       label="No. PO"
                       isInvalid={message?.no_po != null}
                       errorMessage={message?.no_po}
-                      isDisabled={true}
+                      isDisabled={!disabledView}
+                      isReadOnly={true} 
                     />
                   </div>
                   <div  className="xl:w-2/4 w-full"></div>
@@ -695,7 +697,6 @@ export default function PurchaseOrderDetail() {
                         label="Vendor"
                         isInvalid={message?.vendor != null}
                         errorMessage={message?.vendor}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       />  
                     <Modal isOpen={isModalVendor} onOpenChange={handleCloseModalVendor} size='4xl'>
@@ -727,7 +728,6 @@ export default function PurchaseOrderDetail() {
                         label="Ship To"
                         isInvalid={message?.ship_to != null}
                         errorMessage={message?.ship_to}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       /> 
                     <Modal isOpen={isModalShipTo} onOpenChange={handleCloseModalShipTo} size='4xl'>
@@ -755,7 +755,7 @@ export default function PurchaseOrderDetail() {
                       label="Terms"
                       isInvalid={message?.terms != null}
                       errorMessage={message?.terms}
-                      isDisabled={disabledView}
+                      isReadOnly={disabledView}
                       onChange={(e) => setPoData({ ...poData, terms: e.target.value })}
                     />
                   </div>
@@ -770,7 +770,7 @@ export default function PurchaseOrderDetail() {
                       label="Ship Via"
                       isInvalid={message?.ship_via != null}
                       errorMessage={message?.ship_via}
-                      isDisabled={disabledView}
+                      isReadOnly={disabledView}
                       onChange={(e) => setPoData({ ...poData, ship_via: e.target.value })}
                     />
                   </div>
@@ -785,7 +785,7 @@ export default function PurchaseOrderDetail() {
                       label="Expected Date"
                       isInvalid={message?.expected_date != null}
                       errorMessage={message?.expected_date}
-                      isDisabled={disabledView}
+                      isReadOnly={disabledView}
                       onChange={(e) => setPoData({ ...poData, expected_date: e.target.value })}
                     />
                   </div>
@@ -800,154 +800,203 @@ export default function PurchaseOrderDetail() {
                       label="Currency"
                       isInvalid={message?.currency != null}
                       errorMessage={message?.currency}
-                      isDisabled={disabledView}
+                      isReadOnly={disabledView}
                       onChange={(e) => setPoData({ ...poData, currency: e.target.value })}
                     />
                   </div>
                 </div>
                 <br />
-                <Table aria-label="Example static collection table" className='p-2'>
-                <TableHeader>
-                    <TableColumn className='w-15/100'>ITEM</TableColumn>
-                    <TableColumn className='w-15/100'>DESCRIPTION</TableColumn>
-                    <TableColumn className='w-1/13'>QTY</TableColumn>
-                    <TableColumn className='w-1/10'>UNIT PRICE</TableColumn>
-                    <TableColumn className='w-1/13'>DISCOUNT %</TableColumn>
-                    <TableColumn className='w-1/10'>AMOUNT</TableColumn>
-                    <TableColumn className='w-12/100'>REMARKS</TableColumn>
-                    <TableColumn className='w-1/10'>ITEM UNIT</TableColumn>
-                    <TableColumn className='w-1/20' hideHeader={disabledView}>ACTION</TableColumn>
-                </TableHeader>
-                <TableBody emptyContent={"No Data found"} items={details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
-                    {details.map((item,index) => (
-                        <TableRow key={index}>
-                            <TableCell>
-                                <Input
-                                    startContent={<SearchIcon onClick={()=>handleOpenModalItems(index)} className="cursor-pointer"/>}
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.item} 
-                                    aria-label="Item Name"
-                                    readOnly
-                                    // onChange={(e) => handleInputChangeRow(index, 'item', e.target.value)}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Textarea 
-                                    aria-label="Description"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.description} 
-                                    onChange={(e) => handleInputChangeRow(index, 'description', e.target.value)}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Input
-                                    aria-label="Quantity"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.quantity} 
-                                    onChange={(e) => handleInputChangeRow(index, 'quantity', e.target.value)}
-                                    onBlur={() => handleOnBlur(index)}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Input
-                                    aria-label="Unit Price"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.unit_price} 
-                                    onChange={(e) => handleInputChangeRow(index, 'unit_price', e.target.value)}
-                                    onBlur={() => handleOnBlur(index)}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Input
-                                    aria-label="Discount"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView} 
-                                    type="text"
-                                    variant='bordered' 
-                                    value={item.discount} 
-                                    onChange={(e) => handleInputChangeRow(index, 'discount', e.target.value)}
-                                    onBlur={() => handleOnBlur(index)}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Input
-                                    aria-label="Amount"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {true} 
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.amount}
-                                    onChange={(e) => handleInputChangeRow(index, 'amount', e.target.value)}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Textarea
-                                    aria-label="Remarks"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView} 
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.remarks} 
-                                    onChange={(e) => handleInputChangeRow(index, 'remarks', e.target.value)}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                {/* <Input
-                                    isDisabled = {disabledView} 
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.item_unit} 
-                                    onChange={(e) => handleInputChangeRow(index, 'item_unit', e.target.value)}
-                                /> */}
+                <div hidden={disabledView}>
+                  <Table aria-label="Example static collection table" className='p-2'>
+                  <TableHeader>
+                      <TableColumn className='w-15/100'>ITEM</TableColumn>
+                      <TableColumn className='w-15/100'>DESCRIPTION</TableColumn>
+                      <TableColumn className='w-1/13'>QTY</TableColumn>
+                      <TableColumn className='w-1/10'>UNIT PRICE</TableColumn>
+                      <TableColumn className='w-1/13'>DISCOUNT %</TableColumn>
+                      <TableColumn className='w-1/10'>AMOUNT</TableColumn>
+                      <TableColumn className='w-12/100'>REMARKS</TableColumn>
+                      <TableColumn className='w-1/10'>ITEM UNIT</TableColumn>
+                      <TableColumn className='w-1/20' hideHeader={disabledView}>ACTION</TableColumn>
+                  </TableHeader>
+                  <TableBody emptyContent={"No Data found"} items={details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
+                      {details.map((item,index) => (
+                          <TableRow key={index}>
+                              <TableCell>
+                                  <Input
+                                      startContent={<SearchIcon onClick={()=>handleOpenModalItems(index)} className="cursor-pointer"/>}
+                                      style={{ fontSize: '12px' }}
+                                      isDisabled = {disabledView}
+                                      type="text" 
+                                      variant='bordered' 
+                                      value={item.item} 
+                                      aria-label="Item Name"
+                                      readOnly
+                                      // onChange={(e) => handleInputChangeRow(index, 'item', e.target.value)}
+                                  />
+                              </TableCell>
+                              <TableCell>
+                                  <Textarea 
+                                      aria-label="Description"
+                                      style={{ fontSize: '12px' }}
+                                      isDisabled = {disabledView}
+                                      type="text" 
+                                      variant='bordered' 
+                                      value={item.description} 
+                                      onChange={(e) => handleInputChangeRow(index, 'description', e.target.value)}
+                                  />
+                              </TableCell>
+                              <TableCell>
+                                  <Input
+                                      aria-label="Quantity"
+                                      style={{ fontSize: '12px' }}
+                                      isDisabled = {disabledView}
+                                      type="text" 
+                                      variant='bordered' 
+                                      value={item.quantity} 
+                                      onChange={(e) => handleInputChangeRow(index, 'quantity', e.target.value)}
+                                      onBlur={() => handleOnBlur(index)}
+                                  />
+                              </TableCell>
+                              <TableCell>
+                                  <Input
+                                      aria-label="Unit Price"
+                                      style={{ fontSize: '12px' }}
+                                      isDisabled = {disabledView}
+                                      type="text" 
+                                      variant='bordered' 
+                                      value={item.unit_price} 
+                                      onChange={(e) => handleInputChangeRow(index, 'unit_price', e.target.value)}
+                                      onBlur={() => handleOnBlur(index)}
+                                  />
+                              </TableCell>
+                              <TableCell>
+                                  <Input
+                                      aria-label="Discount"
+                                      style={{ fontSize: '12px' }}
+                                      isDisabled = {disabledView} 
+                                      type="text"
+                                      variant='bordered' 
+                                      value={item.discount} 
+                                      onChange={(e) => handleInputChangeRow(index, 'discount', e.target.value)}
+                                      onBlur={() => handleOnBlur(index)}
+                                  />
+                              </TableCell>
+                              <TableCell>
+                                  <Input
+                                      aria-label="Amount"
+                                      style={{ fontSize: '12px' }}
+                                      isDisabled = {true} 
+                                      type="text" 
+                                      variant='bordered' 
+                                      value={item.amount}
+                                      onChange={(e) => handleInputChangeRow(index, 'amount', e.target.value)}
+                                  />
+                              </TableCell>
+                              <TableCell>
+                                  <Textarea
+                                      aria-label="Remarks"
+                                      style={{ fontSize: '12px' }}
+                                      isDisabled = {disabledView} 
+                                      type="text" 
+                                      variant='bordered' 
+                                      value={item.remarks} 
+                                      onChange={(e) => handleInputChangeRow(index, 'remarks', e.target.value)}
+                                  />
+                              </TableCell>
+                              <TableCell>
+                                  {/* <Input
+                                      isDisabled = {disabledView} 
+                                      type="text" 
+                                      variant='bordered' 
+                                      value={item.item_unit} 
+                                      onChange={(e) => handleInputChangeRow(index, 'item_unit', e.target.value)}
+                                  /> */}
 
-                                <Select
-                                  aria-label="Item Unit"
-                                  variant='bordered'
-                                  items={item_units_selects}
-                                  placeholder="Select"
-                                  className="max-w-xs"
-                                  value={item.item_unit}
-                                  onChange={(e) => handleInputChangeRow(index, 'item_unit', e.target.value)}
-                                  isDisabled = {disabledView} 
-                                  defaultSelectedKeys={[item.item_unit]}
-                                >
-                                  {item_units_selects.map((item_units_select) => (
-                                    <SelectItem
-                                      key={item_units_select.key}
-                                      value={item_units_select.key} // Use 'key' as 'value'
-                                    >
-                                      {item_units_select.label}
-                                    </SelectItem>
-                                  ))}
-                                </Select>
-                            </TableCell>
-                            <TableCell hidden={disabledView}>
-                                <Button className='bg-red-300' isIconOnly>
-                                    <img
-                                        src={DeleteIcon}
-                                        alt="Delete Icon"
-                                        className="w-6 h-6 hover:cursor-pointer"
-                                        onClick={() => handleDelete(index)}
-                                    />
-                                </Button>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-                
-                </Table>
+                                  <Select
+                                    aria-label="Item Unit"
+                                    variant='bordered'
+                                    items={item_units_selects}
+                                    placeholder="Select"
+                                    className="max-w-xs"
+                                    value={item.item_unit}
+                                    onChange={(e) => handleInputChangeRow(index, 'item_unit', e.target.value)}
+                                    isDisabled = {disabledView} 
+                                    defaultSelectedKeys={[item.item_unit]}
+                                  >
+                                    {item_units_selects.map((item_units_select) => (
+                                      <SelectItem
+                                        key={item_units_select.key}
+                                        value={item_units_select.key} // Use 'key' as 'value'
+                                      >
+                                        {item_units_select.label}
+                                      </SelectItem>
+                                    ))}
+                                  </Select>
+                              </TableCell>
+                              <TableCell hidden={disabledView}>
+                                  <Button className='bg-red-300' isIconOnly>
+                                      <img
+                                          src={DeleteIcon}
+                                          alt="Delete Icon"
+                                          className="w-6 h-6 hover:cursor-pointer"
+                                          onClick={() => handleDelete(index)}
+                                      />
+                                  </Button>
+                              </TableCell>
+                          </TableRow>
+                      ))}
+                  </TableBody>
+                  
+                  </Table>
+                </div>
+                <div hidden={!disabledView}>
+                  <Table aria-label="Example static collection table" className='p-2'>
+                  <TableHeader>
+                      <TableColumn className='w-15/100'>ITEM</TableColumn>
+                      <TableColumn className='w-15/100'>DESCRIPTION</TableColumn>
+                      <TableColumn className='w-1/13'>QTY</TableColumn>
+                      <TableColumn className='w-1/10'>UNIT PRICE</TableColumn>
+                      <TableColumn className='w-1/13'>DISCOUNT %</TableColumn>
+                      <TableColumn className='w-1/10'>AMOUNT</TableColumn>
+                      <TableColumn className='w-12/100'>REMARKS</TableColumn>
+                      <TableColumn className='w-1/10'>ITEM UNIT</TableColumn>
+                  </TableHeader>
+                  <TableBody emptyContent={"No Data found"} items={details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
+                      {details.map((item,index) => (
+                          <TableRow key={index}>
+                              <TableCell>
+                                  {item.item}
+                              </TableCell>
+                              <TableCell>
+                                  {item.description}
+                              </TableCell>
+                              <TableCell>
+                                  {item.quantity}
+                              </TableCell>
+                              <TableCell>
+                                  {item.unit_price}
+                              </TableCell>
+                              <TableCell>
+                                  {item.discount}
+                              </TableCell>
+                              <TableCell>
+                                  {item.amount}
+                              </TableCell>
+                              <TableCell>
+                                  {item.remarks}
+                              </TableCell>
+                              <TableCell>
+                                  {item.item_unit}
+                              </TableCell>
+                              
+                          </TableRow>
+                      ))}
+                  </TableBody>
+                  
+                  </Table>
+                </div>
+
                 <Button
                   hidden={disabledView}
                   color="primary"
@@ -970,7 +1019,8 @@ export default function PurchaseOrderDetail() {
                       label="Say"
                       isInvalid={message?.say != null}
                       errorMessage={message?.say}
-                      isDisabled={true}
+                      isDisabled={!disabledView}
+                      isReadOnly={true}
                     />
                     </div>
                     <div  className=" p-2 w-full">
@@ -985,7 +1035,7 @@ export default function PurchaseOrderDetail() {
                       isInvalid={message?.description != null}
                       errorMessage={message?.description}
                       onChange={(e) => setPoData({ ...poData, description: e.target.value })}
-                      isDisabled={disabledView}
+                      isReadOnly={disabledView}
                     />
                     </div>
                   </div>
@@ -1001,7 +1051,8 @@ export default function PurchaseOrderDetail() {
                       label="Sub Total"
                       isInvalid={message?.sub_total != null}
                       errorMessage={message?.sub_total}
-                      isDisabled={true}
+                      isDisabled={!disabledView}
+                      isReadOnly={true}
                     />
                     </div>
                     <div  className=" p-2 w-full">
@@ -1015,7 +1066,7 @@ export default function PurchaseOrderDetail() {
                       label="Discount"
                       isInvalid={message?.discount != null}
                       errorMessage={message?.discount}
-                      isDisabled = {disabledView}
+                      isReadOnly = {disabledView}
                       onChange={(e) => handleInputChange('discount',e.target.value)} 
                       onBlur={() => handleOnBlur2()}
                     />
@@ -1031,7 +1082,7 @@ export default function PurchaseOrderDetail() {
                       label="Freight Cost"
                       isInvalid={message?.freight_cost != null}
                       errorMessage={message?.freight_cost}
-                      isDisabled = {disabledView}
+                      isReadOnly = {disabledView}
                       onChange={(e) => handleInputChange('freight_cost',e.target.value)}
                       onBlur={() => handleOnBlur2()}
                     />
@@ -1047,7 +1098,8 @@ export default function PurchaseOrderDetail() {
                       label="PPN 11%"
                       isInvalid={message?.ppn != null}
                       errorMessage={message?.ppn}
-                      isDisabled={true}
+                      isDisabled={!disabledView}
+                      isReadOnly={true}
                     />
                     </div>
                     <div  className=" p-2 w-full">
@@ -1061,7 +1113,8 @@ export default function PurchaseOrderDetail() {
                       label="Total Order"
                       isInvalid={message?.total_order != null}
                       errorMessage={message?.total_order}
-                      isDisabled={true}
+                      isDisabled={!disabledView}
+                      isReadOnly={true}
                     />
                     </div>
                   </div>
@@ -1080,7 +1133,8 @@ export default function PurchaseOrderDetail() {
                       label="Prepared By"
                       isInvalid={message?.prepared_by != null}
                       errorMessage={message?.prepared_by}
-                      isDisabled={true}
+                      isDisabled={!disabledView}
+                      isReadOnly={true}
                     />
                     </div>
                   </div>
@@ -1100,7 +1154,6 @@ export default function PurchaseOrderDetail() {
                         label="Verified By"
                         isInvalid={message?.verified_by != null}
                         errorMessage={message?.verified_by}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       />                    
                       <Modal isOpen={isModalVerifiedBy} onOpenChange={handleCloseModalVerifiedBy} size='4xl'>
@@ -1142,7 +1195,6 @@ export default function PurchaseOrderDetail() {
                         label="Approved By"
                         isInvalid={message?.approved_by != null}
                         errorMessage={message?.approved_by}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       />
                       <Modal isOpen={isModalApprovedBy} onOpenChange={handleCloseModalApprovedBy} size='4xl'>
@@ -1179,7 +1231,7 @@ export default function PurchaseOrderDetail() {
                       type="text"
                       defaultValue={poData.remarks}
                       label="Remarks"
-                      isDisabled= {true}
+                      isReadOnly= {true}
                     />
                     </div>
                   </div>         

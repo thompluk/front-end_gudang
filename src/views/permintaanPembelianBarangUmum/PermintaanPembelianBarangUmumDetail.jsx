@@ -217,7 +217,7 @@ export default function PermintaanPembelianBarangUmumDetail() {
                     label="Tanggal"
                     isInvalid={message?.tanggal != null}
                     errorMessage={message?.tanggal}
-                    isDisabled={true}
+                    isReadOnly={true}
                   />
                   </div>
 
@@ -232,7 +232,7 @@ export default function PermintaanPembelianBarangUmumDetail() {
                       label="No. PPB"
                       isInvalid={message?.no_ppb != null}
                       errorMessage={message?.no_ppb}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                   </div>
                   <div  className="xl:w-2/4 w-full"></div>
@@ -251,112 +251,31 @@ export default function PermintaanPembelianBarangUmumDetail() {
                     <TableColumn className='w-1/10'>QTY</TableColumn>
                     <TableColumn className='w-1/10'>EXPECTED ETA</TableColumn>
                     <TableColumn className='w-1/5'>PROJECT & CUSTOMER</TableColumn>
-                    <TableColumn className='w-1/20' hideHeader={disabledView}>ACTION</TableColumn>
                 </TableHeader>
                 <TableBody emptyContent={"No Data found"} items={details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
                     {details.map((item,index) => (
                         <TableRow key={index}>
                             <TableCell>
-                                <Input 
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.nama_barang} 
-                                    onChange={(e) => handleInputChange(index, 'nama_barang', e.target.value)}
-                                />
+                                {item.nama_barang}
                             </TableCell>
                             <TableCell>
-                                <Input 
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.kode} 
-                                    onChange={(e) => handleInputChange(index, 'kode', e.target.value)}
-                                />
+                                {item.kode}
                             </TableCell>
                             <TableCell>
-                                <Input
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.spesifikasi} 
-                                    onChange={(e) => handleInputChange(index, 'spesifikasi', e.target.value)}
-                                />
+                                {item.spesifikasi}
                             </TableCell>
                             <TableCell>
-                                <Input
-                                    isDisabled = {disabledView}
-                                    type="number" 
-                                    variant='bordered' 
-                                    value={item.quantity} 
-                                    onChange={(e) => handleInputChange(index, 'quantity', e.target.value)}
-                                />
+                                {item.quantity}
                             </TableCell>
                             <TableCell>
-                                <Input
-                                    isDisabled = {disabledView} 
-                                    type="date"
-                                    variant='bordered' 
-                                    value={item.expected_eta} 
-                                    onChange={(e) => handleInputChange(index, 'expected_eta', e.target.value)}
-                                />
+                                {item.expected_eta}
                             </TableCell>
                             <TableCell>
-                                <Textarea
-                                    isDisabled = {disabledView} 
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.project_and_customer} 
-                                    onChange={(e) => handleInputChange(index, 'project_and_customer', e.target.value)}
-                                />
-                            </TableCell>
-                            <TableCell hidden={disabledView}>
-                                <Button className='bg-red-300' isIconOnly>
-                                    <img
-                                        src={DeleteIcon}
-                                        alt="Delete Icon"
-                                        className="w-6 h-6 hover:cursor-pointer"
-                                        onClick={() => handleDelete(index)}
-                                    />
-                                </Button>
+                                {item.project_and_customer}
                             </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
-                {/* <TableBody emptyContent={"No Data found"} items={details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
-                  {(item) => (
-                    <TableRow key={item.id}>                      
-                      <TableCell>
-                        <Input variant='bordered' defaultValue={item.nama_barang}></Input>
-                    </TableCell>
-                    <TableCell>
-                        <Input variant='bordered' defaultValue={item.kode}></Input>
-                    </TableCell>
-                    <TableCell>
-                        <Input variant='bordered' defaultValue={item.spesifikasi}></Input>
-                    </TableCell>
-                    <TableCell>
-                        <Input variant='bordered' defaultValue={item.quantity}></Input>
-                    </TableCell>
-                    <TableCell>
-                        <Input variant='bordered' defaultValue={item.expected_eta}></Input>
-                    </TableCell>
-                    <TableCell>
-                        <Textarea variant='bordered' defaultValue={item.project_and_customer}></Textarea>
-                    </TableCell>
-                    <TableCell>
-                      <Button className='bg-red-300' onClick={() => btnDeleteDetail(item.id)}>
-                        <img
-                          src={DeleteIcon}
-                          alt="Delete Icon"
-                          className="w-6 h-6"
-                        />
-                      </Button>
-                    </TableCell>
-                      
-                    </TableRow>
-                  )}
-                </TableBody> */}
                 </Table>
                 
                 <div className=" w-full flex-wrap md:flex-nowrap pt-4 pb-2">
@@ -372,7 +291,7 @@ export default function PermintaanPembelianBarangUmumDetail() {
                       label="Pemohon"
                       isInvalid={message?.pemohon != null}
                       errorMessage={message?.pemohon}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                     </div>
                   </div>
@@ -389,7 +308,6 @@ export default function PermintaanPembelianBarangUmumDetail() {
                         label="Mengetahui"
                         isInvalid={message?.mengetahui != null}
                         errorMessage={message?.mengetahui}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       /> 
                     </div>
@@ -412,7 +330,6 @@ export default function PermintaanPembelianBarangUmumDetail() {
                         label="Menyetujui"
                         isInvalid={message?.menyetujui != null}
                         errorMessage={message?.menyetujui}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       />
                     </div>
@@ -435,7 +352,7 @@ export default function PermintaanPembelianBarangUmumDetail() {
                         label="Purchasing"
                         isInvalid={message?.purchasing != null}
                         errorMessage={message?.purchasing}
-                        isDisabled={true}
+                        isReadOnly={true}
                       />
                     </div>
                     <div className='p-4 w-1/4'>
@@ -455,7 +372,7 @@ export default function PermintaanPembelianBarangUmumDetail() {
                       type="text"
                       defaultValue={ppbData.remarks}
                       label="Remarks"
-                      isDisabled= {true}
+                      isReadOnly= {true}
                     />
                     </div>
                   </div>         

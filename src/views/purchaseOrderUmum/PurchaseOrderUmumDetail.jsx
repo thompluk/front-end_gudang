@@ -408,7 +408,7 @@ export default function PurchaseOrderUmumDetail() {
                       label="PO Date"
                       isInvalid={message?.tanggal != null}
                       errorMessage={message?.tanggal}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                   </div>
 
@@ -423,7 +423,7 @@ export default function PurchaseOrderUmumDetail() {
                       label="No. PO"
                       isInvalid={message?.no_po != null}
                       errorMessage={message?.no_po}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                   </div>
                   <div  className="xl:w-2/6 w-full"></div>
@@ -444,7 +444,6 @@ export default function PurchaseOrderUmumDetail() {
                         label="Vendor"
                         isInvalid={message?.vendor != null}
                         errorMessage={message?.vendor}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       />  
                     
@@ -462,7 +461,6 @@ export default function PurchaseOrderUmumDetail() {
                         label="Ship To"
                         isInvalid={message?.ship_to != null}
                         errorMessage={message?.ship_to}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       /> 
                     
@@ -478,8 +476,7 @@ export default function PurchaseOrderUmumDetail() {
                       label="Terms"
                       isInvalid={message?.terms != null}
                       errorMessage={message?.terms}
-                      isDisabled={disabledView}
-                      onChange={(e) => setPoData({ ...poData, terms: e.target.value })}
+                      isReadOnly={true}
                     />
                   </div>
                   <div  className=" p-2 xl:w-1/4 w-full">
@@ -493,8 +490,7 @@ export default function PurchaseOrderUmumDetail() {
                       label="Ship Via"
                       isInvalid={message?.ship_via != null}
                       errorMessage={message?.ship_via}
-                      isDisabled={disabledView}
-                      onChange={(e) => setPoData({ ...poData, ship_via: e.target.value })}
+                      isReadOnly={true}
                     />
                   </div>
                   <div  className=" p-2 xl:w-1/4 w-full">
@@ -508,8 +504,7 @@ export default function PurchaseOrderUmumDetail() {
                       label="Expected Date"
                       isInvalid={message?.expected_date != null}
                       errorMessage={message?.expected_date}
-                      isDisabled={disabledView}
-                      onChange={(e) => setPoData({ ...poData, expected_date: e.target.value })}
+                      isReadOnly={true}
                     />
                   </div>
                   <div  className=" p-2 xl:w-1/4 w-full">
@@ -523,8 +518,7 @@ export default function PurchaseOrderUmumDetail() {
                       label="Currency"
                       isInvalid={message?.currency != null}
                       errorMessage={message?.currency}
-                      isDisabled={disabledView}
-                      onChange={(e) => setPoData({ ...poData, currency: e.target.value })}
+                      isReadOnly={true}
                     />
                   </div>
                 </div>
@@ -544,109 +538,28 @@ export default function PurchaseOrderUmumDetail() {
                     {rows.map((item,index) => (
                         <TableRow key={index}>
                             <TableCell>
-                                <Input
-                                    startContent={<SearchIcon onClick={()=>handleOpenModalItems(index)} className="cursor-pointer"/>}
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.item} 
-                                    aria-label="Item Name"
-                                    // onChange={(e) => handleInputChangeRow(index, 'item', e.target.value)}
-                                />
-                                
+                                {item.item}
                             </TableCell>
                             <TableCell>
-                                <Textarea 
-                                    aria-label="Description"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.description} 
-                                />
+                                {item.description}
                             </TableCell>
                             <TableCell>
-                                <Input
-                                    aria-label="Quantity"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.quantity} 
-                                />
+                                {item.quantity}
                             </TableCell>
                             <TableCell hidden={user.role == 'INVENTORY'}>
-                                <Input
-                                    aria-label="Unit Price"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.unit_price} 
-                                />
+                                {item.unit_price} 
                             </TableCell>
                             <TableCell hidden={user.role == 'INVENTORY'}>
-                                <Input
-                                    aria-label="Discount"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView} 
-                                    type="text"
-                                    variant='bordered' 
-                                    value={item.discount} 
-                                />
+                                {item.discount}
                             </TableCell>
                             <TableCell hidden={user.role == 'INVENTORY'}>
-                                <Input
-                                    aria-label="Amount"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {true} 
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.amount}
-                                    hidden={user.role == 'INVENTORY'}
-                                />
+                                {item.amount}
                             </TableCell>
                             <TableCell>
-                                <Textarea
-                                    aria-label="Remarks"
-                                    style={{ fontSize: '12px' }}
-                                    isDisabled = {disabledView} 
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.remarks} 
-                                />
+                                {item.remarks}
                             </TableCell>
                             <TableCell>
-                                {/* <Input
-                                    isDisabled = {disabledView} 
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.item_unit} 
-                                    onChange={(e) => handleInputChangeRow(index, 'item_unit', e.target.value)}
-                                /> */}
-
-                                <Select
-                                  aria-label="Item Unit"
-                                  variant='bordered'
-                                  items={item_units_selects}
-                                  placeholder="Select"
-                                  className="max-w-xs"
-                                  value={item.item_unit}
-                                  onChange={(e) => handleInputChangeRow(index, 'item_unit', e.target.value)}
-                                  isDisabled = {disabledView} 
-                                  defaultSelectedKeys={[item.item_unit]}
-                                >
-                                  {item_units_selects.map((item_units_select) => (
-                                    <SelectItem
-                                      key={item_units_select.key}
-                                      value={item_units_select.key} // Use 'key' as 'value'
-                                      className="text-left"
-                                    >
-                                      {item_units_select.label}
-                                    </SelectItem>
-                                  ))}
-                                </Select>
+                                {item.item_unit}
                             </TableCell>
                             
                         </TableRow>
@@ -669,7 +582,7 @@ export default function PurchaseOrderUmumDetail() {
                       label="Say"
                       isInvalid={message?.say != null}
                       errorMessage={message?.say}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                     </div>
                     <div  className=" p-2 w-full">
@@ -683,8 +596,7 @@ export default function PurchaseOrderUmumDetail() {
                       label="Description"
                       isInvalid={message?.description != null}
                       errorMessage={message?.description}
-                      onChange={(e) => setPoData({ ...poData, description: e.target.value })}
-                      isDisabled={disabledView}
+                      isReadOnly={true}
                     />
                     </div>
                   </div>
@@ -700,7 +612,7 @@ export default function PurchaseOrderUmumDetail() {
                       label="Sub Total"
                       isInvalid={message?.sub_total != null}
                       errorMessage={message?.sub_total}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                     </div>
                     <div  className=" p-2 w-full">
@@ -714,7 +626,7 @@ export default function PurchaseOrderUmumDetail() {
                       label="Discount"
                       isInvalid={message?.discount != null}
                       errorMessage={message?.discount}
-                      isDisabled = {disabledView}
+                      isReadOnly = {true}
                     />
                     </div>
                     <div  className=" p-2 w-full">
@@ -728,7 +640,7 @@ export default function PurchaseOrderUmumDetail() {
                       label="Freight Cost"
                       isInvalid={message?.freight_cost != null}
                       errorMessage={message?.freight_cost}
-                      isDisabled = {disabledView}
+                      isReadOnly = {true}
                     />
                     </div>
                     <div  className=" p-2 w-full">
@@ -742,7 +654,7 @@ export default function PurchaseOrderUmumDetail() {
                       label="PPN 11%"
                       isInvalid={message?.ppn != null}
                       errorMessage={message?.ppn}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                     </div>
                     <div  className=" p-2 w-full">
@@ -756,7 +668,7 @@ export default function PurchaseOrderUmumDetail() {
                       label="Total Order"
                       isInvalid={message?.total_order != null}
                       errorMessage={message?.total_order}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                     </div>
                   </div>
@@ -775,7 +687,7 @@ export default function PurchaseOrderUmumDetail() {
                       label="Prepared By"
                       isInvalid={message?.prepared_by != null}
                       errorMessage={message?.prepared_by}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                     </div>
                   </div>
@@ -793,7 +705,6 @@ export default function PurchaseOrderUmumDetail() {
                         label="Verified By"
                         isInvalid={message?.verified_by != null}
                         errorMessage={message?.verified_by}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       />    
                     </div>
@@ -819,7 +730,6 @@ export default function PurchaseOrderUmumDetail() {
                         label="Approved By"
                         isInvalid={message?.approved_by != null}
                         errorMessage={message?.approved_by}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       />
                     </div>
@@ -847,8 +757,7 @@ export default function PurchaseOrderUmumDetail() {
                             label="Arrival Date"
                             isInvalid={message?.arrival_date != null}
                             errorMessage={message?.arrival_date}
-                            isDisabled={disabledView}
-                            onChange={(e) => setPoData({ ...poData, arrival_date: e.target.value })}
+                            isReadOnly={true}
                             />
                         </div>
                         <div  className=" p-2 xl:w-1/4 w-full">
@@ -862,8 +771,7 @@ export default function PurchaseOrderUmumDetail() {
                             label="Receiver"
                             isInvalid={message?.receiver != null}
                             errorMessage={message?.receiver}
-                            isDisabled={disabledView}
-                            onChange={(e) => setPoData({ ...poData, receiver: e.target.value })}
+                            isReadOnly={true}
                             /> 
                         </div>
                     </div>

@@ -160,7 +160,7 @@ export default function PrinsipalDetail() {
                 label="Name"
                 isInvalid={message?.name != null}
                 errorMessage={message?.name}
-                isDisabled={disabledView}
+                isReadOnly={disabledView}
                 
               />
               </div>
@@ -176,7 +176,7 @@ export default function PrinsipalDetail() {
                   label="Telephone"
                   isInvalid={message?.telephone != null}
                   errorMessage={message?.telephone}
-                  isDisabled={disabledView}
+                  isReadOnly={disabledView}
                 />
               </div>
 
@@ -191,7 +191,7 @@ export default function PrinsipalDetail() {
                   label="Fax"
                   isInvalid={message?.fax != null}
                   errorMessage={message?.fax}
-                  isDisabled={disabledView}
+                  isReadOnly={disabledView}
                 />
               </div>
 

@@ -42,6 +42,10 @@ import BpbDelivery from "./views/bpbDelivery/BpbDelivery.jsx"
 import BpbDeliveryDetail from "./views/bpbDelivery/BpbDeliveryDetail.jsx"
 import PoDelivery from "./views/poDelivery/PoDelivery.jsx"
 import PoDeliveryDetail from "./views/poDelivery/PoDeliveryDetail.jsx"
+import SuratJalanUmum from "./views/suratJalanUmum/SuratJalanUmum.jsx"
+import SuratJalanUmumDetail from "./views/suratJalanUmum/SuratJalanUmumDetail.jsx"
+import PengembalianBarang from "./views/pengembalianBarang/PengembalianBarang.jsx"
+import PengembalianBarangDetail from "./views/pengembalianBarang/PengembalianBarangDetail.jsx"
 
 const router = createBrowserRouter( [
     {
@@ -208,6 +212,19 @@ const router = createBrowserRouter( [
             },
 
             {
+                path: '/suratjalanumum',
+                element: <SuratJalanUmum/>
+            },
+            {
+                path: '/suratjalanumum/:param',
+                element: <SuratJalanUmumDetail/>
+            }, 
+            {
+                path: '/suratjalanumum/:param/:param2',
+                element: <SuratJalanUmumDetail/>
+            },
+
+            {
                 path: '/bpb',
                 element: <BuktiPengeluaranBarang/>
             },
@@ -257,6 +274,19 @@ const router = createBrowserRouter( [
             {
                 path: '/approval/:param/:param2',
                 element: <ApprovalDetail/>
+            },
+
+            {
+                path: '/pengembalianbarang',
+                element: <PengembalianBarang/>
+            },
+            {
+                path: '/pengembalianbarang/:param',
+                element: <PengembalianBarangDetail/>
+            }, 
+            {
+                path: '/pengembalianbarang/:param/:param2',
+                element: <PengembalianBarangDetail/>
             },
 
             //print

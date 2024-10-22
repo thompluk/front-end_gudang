@@ -173,7 +173,7 @@ export default function UsersDetail() {
                 label="Name"
                 isInvalid={message?.name != null}
                 errorMessage={message?.name}
-                isDisabled={disabledView}
+                isReadOnly={disabledView}
                 
               />
               </div>
@@ -189,7 +189,7 @@ export default function UsersDetail() {
                   label="Email"
                   isInvalid={message?.email != null}
                   errorMessage={message?.email}
-                  isDisabled={disabledView}
+                  isReadOnly={disabledView}
                 />
               </div>
 
@@ -218,7 +218,7 @@ export default function UsersDetail() {
                   label="Phone Number"
                   isInvalid={message?.phone_number != null}
                   errorMessage={message?.phone_number}
-                  isDisabled={disabledView}
+                  isReadOnly={disabledView}
                 />
               </div>
 

@@ -298,7 +298,7 @@ export default function ApprovalPPBView() {
                     label="Tanggal"
                     isInvalid={message?.tanggal != null}
                     errorMessage={message?.tanggal}
-                    isDisabled={true}
+                    isReadOnly={true}
                   />
                   </div>
 
@@ -313,7 +313,7 @@ export default function ApprovalPPBView() {
                       label="No. PPB"
                       isInvalid={message?.no_ppb != null}
                       errorMessage={message?.no_ppb}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                   </div>
                   <div  className="xl:w-2/4 w-full"></div>
@@ -336,61 +336,25 @@ export default function ApprovalPPBView() {
                 <TableBody emptyContent={"No Data found"} items={rows} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
                     {rows.map((item,index) => (
                         <TableRow key={index}>
-                            <TableCell>
-                                <Input 
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.nama_barang} 
-                                    onChange={(e) => handleInputChange(index, 'nama_barang', e.target.value)}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Input 
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.kode} 
-                                    onChange={(e) => handleInputChange(index, 'kode', e.target.value)}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Input
-                                    isDisabled = {disabledView}
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.spesifikasi} 
-                                    onChange={(e) => handleInputChange(index, 'spesifikasi', e.target.value)}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Input
-                                    isDisabled = {disabledView}
-                                    type="number" 
-                                    variant='bordered' 
-                                    value={item.quantity} 
-                                    onChange={(e) => handleInputChange(index, 'quantity', e.target.value)}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Input
-                                    isDisabled = {disabledView} 
-                                    type="date"
-                                    variant='bordered' 
-                                    value={item.expected_eta} 
-                                    onChange={(e) => handleInputChange(index, 'expected_eta', e.target.value)}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Textarea
-                                    isDisabled = {disabledView} 
-                                    type="text" 
-                                    variant='bordered' 
-                                    value={item.project_and_customer} 
-                                    onChange={(e) => handleInputChange(index, 'project_and_customer', e.target.value)}
-                                />
-                            </TableCell>
-                        </TableRow>
+                        <TableCell>
+                            {item.nama_barang}
+                        </TableCell>
+                        <TableCell>
+                            {item.kode}
+                        </TableCell>
+                        <TableCell>
+                            {item.spesifikasi}
+                        </TableCell>
+                        <TableCell>
+                            {item.quantity}
+                        </TableCell>
+                        <TableCell>
+                            {item.expected_eta}
+                        </TableCell>
+                        <TableCell>
+                            {item.project_and_customer}
+                        </TableCell>
+                    </TableRow>
                     ))}
                 </TableBody>
                 </Table>
@@ -407,7 +371,7 @@ export default function ApprovalPPBView() {
                       label="Pemohon"
                       isInvalid={message?.pemohon != null}
                       errorMessage={message?.pemohon}
-                      isDisabled={true}
+                      isReadOnly={true}
                     />
                     </div>
                   </div>
@@ -427,7 +391,6 @@ export default function ApprovalPPBView() {
                         label="Mengetahui"
                         isInvalid={message?.mengetahui != null}
                         errorMessage={message?.mengetahui}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       />             
                     </div>
@@ -453,7 +416,6 @@ export default function ApprovalPPBView() {
                         label="Menyetujui"
                         isInvalid={message?.menyetujui != null}
                         errorMessage={message?.menyetujui}
-                        isDisabled={disabledView}
                         isReadOnly={true}
                       />
                     </div>
@@ -476,7 +438,7 @@ export default function ApprovalPPBView() {
                         label="Purchasing"
                         isInvalid={message?.purchasing != null}
                         errorMessage={message?.purchasing}
-                        isDisabled={true}
+                        isReadOnly={true}
                       />
                     </div>
                     <div className='p-4 w-1/4'>

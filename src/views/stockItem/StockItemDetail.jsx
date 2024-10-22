@@ -23,6 +23,8 @@ import {
   } from '@nextui-org/react'
   import { SearchIcon } from '../../assets/SearchIcon'
   import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
+  import CheckMark from '../../assets/check-mark.png'
+  import CrossMark from '../../assets/cross.png'
 // import { Input } from 'mdb-react-ui-kit'
 
 export default function StockItemDetail() {
@@ -185,7 +187,7 @@ export default function StockItemDetail() {
                     label="Stock Name"
                     isInvalid={message?.stock_name != null}
                     errorMessage={message?.stock_name}
-                    isDisabled={disabledView || stockItemData.is_exist === 'ya'}
+                    isReadOnly={true}
                     onChange={(e) => setStockItemData({ ...stockItemData, stock_name: e.target.value })}
                 />
                 </div>
@@ -199,7 +201,7 @@ export default function StockItemDetail() {
                     label="Quantity"
                     isInvalid={message?.quantity != null}
                     errorMessage={message?.quantity}
-                    isDisabled={disabledView || stockItemData.is_exist === 'ya'}
+                    isReadOnly={true}
                     onChange={(e) => setStockItemData({ ...stockItemData, quantity: e.target.value })}
                 />
                 </div>
@@ -208,6 +210,7 @@ export default function StockItemDetail() {
 
               <br />
 
+              {/* <div hidden={true}>
                 <Table aria-label="Example static collection table" 
                 classNames={{
                   // base: "min-w-[100%] max-w-[100%] overflow-x-scroll",
@@ -354,7 +357,72 @@ export default function StockItemDetail() {
                       ))}
                   </TableBody>
                   
-                  </Table>
+                </Table>
+              </div> */}
+              <div>
+                <Table aria-label="Example static collection table" 
+                classNames={{
+                  // base: "min-w-[100%] max-w-[100%] overflow-x-scroll",
+                  table: "min-w-[120%] overflow-x-scroll",
+                }}
+                >
+                  <TableHeader >
+                      <TableColumn className='w-15/100'>ITEM NAME</TableColumn>
+                      <TableColumn className='w-1/10'>DESCRIPTION</TableColumn>
+                      <TableColumn className='w-1/10'>NO EDP</TableColumn>
+                      <TableColumn className='w-1/10'>NO S/N</TableColumn>
+                      <TableColumn className='w-1/10'>ARRIVAL DATE</TableColumn>
+                      <TableColumn className='w-1/20'>IN STOCK?</TableColumn>
+                      <TableColumn className='w-1/10'>LEAVING DATE</TableColumn>
+                      <TableColumn className='w-1/10'>NO PO</TableColumn>
+                      <TableColumn className='w-1/10'>REMARKS</TableColumn>
+                      <TableColumn className='w-1/10'>RECEIVER</TableColumn>
+                  </TableHeader>
+                  <TableBody emptyContent={"No Data found"} items={details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
+                      {details.map((item,index) => (
+                          <TableRow key={index}>
+                              <TableCell>
+                                  {item.item_name}
+                              </TableCell>
+                              <TableCell>
+                                  {item.description}
+                              </TableCell>
+                              <TableCell>
+                                  {item.no_edp}
+                              </TableCell>
+                              <TableCell>
+                                  {item.no_sn}
+                              </TableCell>
+                              <TableCell>
+                                  {item.arrival_date}
+                              </TableCell>
+                              <TableCell>
+                                  {/* {item.is_in_stock == '1'? 'Yes': item.is_in_stock == '0'? 'No': 'N/A'}  */}
+                                  <div hidden={item.is_in_stock == '1'} className='justify-center'>
+                                    <img src={CrossMark} alt="check mark" className="w-12 h-12" />
+                                  </div>
+                                  <div hidden={item.is_in_stock == '0'} className='justify-center'>
+                                      <img src={CheckMark} alt="check mark" className="w-12 h-12" />
+                                  </div>
+                              </TableCell>
+                              <TableCell>
+                                 {item.leaving_date}
+                              </TableCell>
+                              <TableCell>
+                                  {item.no_po}
+                              </TableCell>
+                              <TableCell>
+                                  {item.remarks}
+                              </TableCell>
+                              <TableCell>
+                                  {item.receiver}
+                              </TableCell>
+                          </TableRow>
+                      ))}
+                  </TableBody>
+                  
+                </Table>
+              </div>
             </div>
           )}
         </form>
