@@ -48,6 +48,7 @@ export default function BuktiPengeluaranBarangDetail() {
   const [isModalShipTo, setIsModalOpenShipTo] = useState(false);
   const [isModalItems, setIsModalOpenItems] = useState(false);
   const [payloadItems, setPayloadItems] = useState([]);
+  const [isDraft, setIsDraft] = useState(true);
 
 //   const handleOpenModalVerifiedBy = () => setIsModalOpenVerifiedBy(true);
 //   const handleCloseModalVerifiedBy = () => setIsModalOpenVerifiedBy(false);
@@ -105,6 +106,19 @@ export default function BuktiPengeluaranBarangDetail() {
       stock_name: null,
       quantity: null,
       notes: null,
+    }
+  ]);
+
+  const [details_details, setDetailsDetails] = useState([
+    {
+        id: null,
+        bpb_detail_id:null,
+        item_id: null,
+        item_name: null,
+        no_edp: null,
+        no_sn: null,
+        quantity: null,
+        notes: null,
     }
   ]);
 
@@ -174,6 +188,10 @@ export default function BuktiPengeluaranBarangDetail() {
             remarks: data.data.remarks,
         })
         setLoading(false)
+        if (data.data.status == 'On Approval' || data.data.status == 'Done') {
+          setIsDraft(false)
+          getDetailsDetails();
+        }
       })
       .catch(() => {
         setLoading(false)
@@ -188,6 +206,21 @@ export default function BuktiPengeluaranBarangDetail() {
       .get('/bpbdetaillist/'+ param)
       .then(({ data }) => {
         setDetails(data.data);
+        setLoading2(false);
+      })
+      .catch(() => {
+        setLoading2(false);
+      })
+  }
+
+  const getDetailsDetails = () => {
+
+    setLoading2(true);
+
+    axiosClient
+      .get('/bpbdetaildetaillist/'+ param)
+      .then(({ data }) => {
+        setDetailsDetails(data.data);
         setLoading2(false);
       })
       .catch(() => {
@@ -349,7 +382,7 @@ export default function BuktiPengeluaranBarangDetail() {
 
     const post = () => {
       axiosClient
-      .post('/bpb/postToOutsanding/' + param)
+      .post('/bpb/post/' + param)
       .then(({}) => {
         console.log(param)
         handleSaveAll(param)
@@ -434,6 +467,76 @@ export default function BuktiPengeluaranBarangDetail() {
       setIsModalOpenItems(false)
     }
 
+    const detailTable = () => {
+      return (
+        <div>
+          {details.map((detail,index) => (
+            <div key={index} className='pt-4'>
+              <div className='p-2 rounded-large border'>
+                <div className='flex'>
+                  <Input
+                    style={{ fontSize: '12px' }}
+                    type="text" 
+                    value={detail.stock_name} 
+                    label="Stock Name"
+                    readOnly
+                    className='w-1/5 p-2'
+                  />
+                  <Input
+                    style={{ fontSize: '12px' }}
+                    type="number" 
+                    value={detail.quantity} 
+                    label="Quantity"
+                    readOnly
+                    className='w-1/5 p-2'
+                  />
+                  <Textarea
+                    style={{ fontSize: '12px' }}
+                    type="text" 
+                    value={detail.notes} 
+                    label="Note"
+                    readOnly
+                    className='w-1/4 p-2'
+                  />
+                </div>
+                <div>
+                  <Table aria-label="Example static collection table" className='p-2'>
+                    <TableHeader>
+                        <TableColumn className='w-2/10'>ITEM NAME</TableColumn>
+                        <TableColumn className='w-15/100'>EDP</TableColumn>
+                        <TableColumn className='w-15/100'>S/N</TableColumn>
+                        <TableColumn className='w-2/10'>NOTE</TableColumn>
+                    </TableHeader>
+                    <TableBody emptyContent={"No Data found"} items={details_details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
+                        {details_details
+                        .filter(item => item.bpb_detail_id === detail.id)
+                        .map((item,id) => (
+                            <TableRow key={id}>
+                                <TableCell>
+                                    {item.item_name}
+                                </TableCell>
+                                <TableCell>
+                                    {item.no_edp}
+                                </TableCell>
+                                <TableCell>
+                                    {item.no_sn}
+                                </TableCell>
+                                <TableCell>
+                                    {item.notes}
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                    
+                  </Table>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    };
+
   return (
     <div className="bg-white p-4 rounded-large animated fadeInDown">
       <div className="flex-col items-center">
@@ -486,174 +589,174 @@ export default function BuktiPengeluaranBarangDetail() {
                     isDisabled={!disabledView}
                     isReadOnly={true}
                     />
-                </div>
-                <div  className=" p-2 xl:w-1/4 w-full">
-                    <Input
-                    id="no_bpb"
-                    // ref={no_ppbRef}
-                    variant="bordered"
-                    className="bg-white "
-                    type="text"
-                    value={bpbData.no_bpb}
-                    label="No. BPB"
-                    isInvalid={message?.no_bpb != null}
-                    errorMessage={message?.no_bpb}
-                    isDisabled={!disabledView}
-                    isReadOnly={true}
-                    />
-                </div>
-                    <div className='flex w-full'>
-                        
-                        <div className='w-1/2 p-2'>
-                          <Card className='p-4'>
-                              <div  className="flex p-2 xl:w-3/4 w-full">
-                                  <Input
-                                  id="salesman"
-                                  // ref={no_ppbRef}
-                                  variant="bordered"
-                                  className="bg-white "
-                                  type="text"
-                                  value={bpbData.salesman}
-                                  label="Salesman"
-                                  isInvalid={message?.salesman != null}
-                                  errorMessage={message?.salesman}
-                                  onChange={e => setBpbData({ ...bpbData, salesman: e.target.value })}
-                                  isReadOnly={disabledView}
-                                  />
-                              </div>
-                              <div  className=" p-2 xl:w-3/4 w-full">
-                                  <Input
-                                  id="no_po"
-                                  // ref={no_ppbRef}
-                                  variant="bordered"
-                                  className="bg-white "
-                                  type="text"
-                                  value={bpbData.no_po}
-                                  label="No. PO"
-                                  isInvalid={message?.no_po != null}
-                                  errorMessage={message?.no_po}
-                                  onChange={e => setBpbData({ ...bpbData, no_po: e.target.value })}
-                                  isReadOnly={disabledView}
-                                  />
-                              </div>
-                              <div  className=" p-2 xl:w-3/4 w-full">
-                                  <Input
-                                  id="delivery_by"
-                                  // ref={no_ppbRef}
-                                  variant="bordered"
-                                  className="bg-white "
-                                  type="text"
-                                  value={bpbData.delivery_by}
-                                  label="Delivery By"
-                                  isInvalid={message?.delivery_by != null}
-                                  errorMessage={message?.delivery_by}
-                                  onChange={(e) => setBpbData( {...bpbData, delivery_by: e.target.value} )}
-                                  isReadOnly={disabledView}
-                                  />
-                              </div>
-                              <div  className=" p-2 xl:w-3/4 w-full">
-                                  <Input
-                                      id="Delivery Date"
-                                      // ref={dateRef}
-                                      variant="bordered"
-                                      className="bg-white "
-                                      type="date"
-                                      value={bpbData.delivery_date}
-                                      label="Delivery Date"
-                                      isInvalid={message?.delivery_date != null}
-                                      errorMessage={message?.delivery_date}
-                                      onChange={(e) => setBpbData( {...bpbData, delivery_date: e.target.value} )}
-                                      isReadOnly={disabledView}
-                                  />
-                              </div>
-                              <div className=" pt-2 pb-2 ps-4 xl:w-3/4 w-full">
-                                <RadioGroup
-                                    id="Is Partial Delivery"
+                  </div>
+                  <div  className=" p-2 xl:w-1/4 w-full">
+                      <Input
+                      id="no_bpb"
+                      // ref={no_ppbRef}
+                      variant="bordered"
+                      className="bg-white "
+                      type="text"
+                      value={bpbData.no_bpb}
+                      label="No. BPB"
+                      isInvalid={message?.no_bpb != null}
+                      errorMessage={message?.no_bpb}
+                      isDisabled={!disabledView}
+                      isReadOnly={true}
+                      />
+                  </div>
+                  <div className='flex w-full'>
+                      
+                      <div className='w-1/2 p-2'>
+                        <Card className='p-4'>
+                            <div  className="flex p-2 xl:w-3/4 w-full">
+                                <Input
+                                id="salesman"
+                                // ref={no_ppbRef}
+                                variant="bordered"
+                                className="bg-white "
+                                type="text"
+                                value={bpbData.salesman}
+                                label="Salesman"
+                                isInvalid={message?.salesman != null}
+                                errorMessage={message?.salesman}
+                                onChange={e => setBpbData({ ...bpbData, salesman: e.target.value })}
+                                isReadOnly={disabledView}
+                                />
+                            </div>
+                            <div  className=" p-2 xl:w-3/4 w-full">
+                                <Input
+                                id="no_po"
+                                // ref={no_ppbRef}
+                                variant="bordered"
+                                className="bg-white "
+                                type="text"
+                                value={bpbData.no_po}
+                                label="No. PO"
+                                isInvalid={message?.no_po != null}
+                                errorMessage={message?.no_po}
+                                onChange={e => setBpbData({ ...bpbData, no_po: e.target.value })}
+                                isReadOnly={disabledView}
+                                />
+                            </div>
+                            <div  className=" p-2 xl:w-3/4 w-full">
+                                <Input
+                                id="delivery_by"
+                                // ref={no_ppbRef}
+                                variant="bordered"
+                                className="bg-white "
+                                type="text"
+                                value={bpbData.delivery_by}
+                                label="Delivery By"
+                                isInvalid={message?.delivery_by != null}
+                                errorMessage={message?.delivery_by}
+                                onChange={(e) => setBpbData( {...bpbData, delivery_by: e.target.value} )}
+                                isReadOnly={disabledView}
+                                />
+                            </div>
+                            <div  className=" p-2 xl:w-3/4 w-full">
+                                <Input
+                                    id="Delivery Date"
+                                    // ref={dateRef}
                                     variant="bordered"
-                                    className='bg-white'
-                                    label="Is Partial Delivery?"
-                                    aria-label="Apakah Merupakan Pengiriman Partial?"
-                                    orientation="horizontal"
-                                    value={bpbData.is_partial_delivery}  // Nilai yang sesuai dengan Radio
-                                    onChange={(e) => setBpbData({...bpbData, is_partial_delivery: e.target.value})}
-                                    isDisabled = {disabledView}                             
-                                    >
-                                    <Radio value="1">Ya</Radio>
-                                    <Radio value="0">Tidak</Radio>
-                                </RadioGroup>
-                              </div>
-                          </Card>
-                        </div>
-                        <div className='w-1/2 p-2'>
-                          <Card className='p-4'>
-                              <div  className=" p-2 xl:w-3/4 w-full">
-                                  <Input
-                                  id="customer"
-                                  // ref={no_ppbRef}
+                                    className="bg-white "
+                                    type="date"
+                                    value={bpbData.delivery_date}
+                                    label="Delivery Date"
+                                    isInvalid={message?.delivery_date != null}
+                                    errorMessage={message?.delivery_date}
+                                    onChange={(e) => setBpbData( {...bpbData, delivery_date: e.target.value} )}
+                                    isReadOnly={disabledView}
+                                />
+                            </div>
+                            <div className=" pt-2 pb-2 ps-4 xl:w-3/4 w-full">
+                              <RadioGroup
+                                  id="Is Partial Delivery"
                                   variant="bordered"
-                                  className="bg-white "
-                                  type="text"
-                                  value={bpbData.customer}
-                                  label="Customer"
-                                  isInvalid={message?.customer != null}
-                                  errorMessage={message?.customer}
-                                  onChange={(e) => setBpbData( {...bpbData, customer: e.target.value} )}
-                                  isReadOnly={disabledView}
-                                  />
-                              </div>
-                              <div  className=" p-2 xl:w-3/4 w-full">
-                                  <Textarea
-                                  id="customer_address"
-                                  // ref={no_ppbRef}
-                                  variant="bordered"
-                                  className="bg-white "
-                                  type="text"
-                                  value={bpbData.customer_address}
-                                  label="Address"
-                                  isInvalid={message?.customer_address != null}
-                                  errorMessage={message?.customer_address}
-                                  onChange={(e) => setBpbData( {...bpbData, customer_address: e.target.value} )}
-                                  isReadOnly={disabledView}
-                                  />
-                              </div>
-                              <div  className=" p-2 xl:w-3/4 w-full">
-                                  <Input
-                                  id="customer_pic_name"
-                                  // ref={no_ppbRef}
-                                  variant="bordered"
-                                  className="bg-white "
-                                  type="text"
-                                  value={bpbData.customer_pic_name}
-                                  label="PIC Name"
-                                  isInvalid={message?.customer_pic_name != null}
-                                  errorMessage={message?.customer_pic_name}
-                                  onChange={(e) => setBpbData( {...bpbData, customer_pic_name: e.target.value} )}
-                                  isReadOnly={disabledView}
-                                  />
-                              </div>
-                              <div  className=" p-2 xl:w-3/4 w-full">
-                                  <Input
-                                  id="customer_pic_phone"
-                                  // ref={no_ppbRef}
-                                  variant="bordered"
-                                  className="bg-white "
-                                  type="text"
-                                  value={bpbData.customer_pic_phone}
-                                  label="PIC Phone"
-                                  isInvalid={message?.customer_pic_phone != null}
-                                  errorMessage={message?.customer_pic_phone}
-                                  onChange={(e) => setBpbData( {...bpbData, customer_pic_phone: e.target.value} )}
-                                  isReadOnly={disabledView}
-                                  />
-                              </div>
-                          </Card>
-                        </div>
-                    </div>
+                                  className='bg-white'
+                                  label="Is Partial Delivery?"
+                                  aria-label="Apakah Merupakan Pengiriman Partial?"
+                                  orientation="horizontal"
+                                  value={bpbData.is_partial_delivery}  // Nilai yang sesuai dengan Radio
+                                  onChange={(e) => setBpbData({...bpbData, is_partial_delivery: e.target.value})}
+                                  isDisabled = {disabledView}                             
+                                  >
+                                  <Radio value="1">Ya</Radio>
+                                  <Radio value="0">Tidak</Radio>
+                              </RadioGroup>
+                            </div>
+                        </Card>
+                      </div>
+                      <div className='w-1/2 p-2'>
+                        <Card className='p-4'>
+                            <div  className=" p-2 xl:w-3/4 w-full">
+                                <Input
+                                id="customer"
+                                // ref={no_ppbRef}
+                                variant="bordered"
+                                className="bg-white "
+                                type="text"
+                                value={bpbData.customer}
+                                label="Customer"
+                                isInvalid={message?.customer != null}
+                                errorMessage={message?.customer}
+                                onChange={(e) => setBpbData( {...bpbData, customer: e.target.value} )}
+                                isReadOnly={disabledView}
+                                />
+                            </div>
+                            <div  className=" p-2 xl:w-3/4 w-full">
+                                <Textarea
+                                id="customer_address"
+                                // ref={no_ppbRef}
+                                variant="bordered"
+                                className="bg-white "
+                                type="text"
+                                value={bpbData.customer_address}
+                                label="Address"
+                                isInvalid={message?.customer_address != null}
+                                errorMessage={message?.customer_address}
+                                onChange={(e) => setBpbData( {...bpbData, customer_address: e.target.value} )}
+                                isReadOnly={disabledView}
+                                />
+                            </div>
+                            <div  className=" p-2 xl:w-3/4 w-full">
+                                <Input
+                                id="customer_pic_name"
+                                // ref={no_ppbRef}
+                                variant="bordered"
+                                className="bg-white "
+                                type="text"
+                                value={bpbData.customer_pic_name}
+                                label="PIC Name"
+                                isInvalid={message?.customer_pic_name != null}
+                                errorMessage={message?.customer_pic_name}
+                                onChange={(e) => setBpbData( {...bpbData, customer_pic_name: e.target.value} )}
+                                isReadOnly={disabledView}
+                                />
+                            </div>
+                            <div  className=" p-2 xl:w-3/4 w-full">
+                                <Input
+                                id="customer_pic_phone"
+                                // ref={no_ppbRef}
+                                variant="bordered"
+                                className="bg-white "
+                                type="text"
+                                value={bpbData.customer_pic_phone}
+                                label="PIC Phone"
+                                isInvalid={message?.customer_pic_phone != null}
+                                errorMessage={message?.customer_pic_phone}
+                                onChange={(e) => setBpbData( {...bpbData, customer_pic_phone: e.target.value} )}
+                                isReadOnly={disabledView}
+                                />
+                            </div>
+                        </Card>
+                      </div>
+                  </div>
 
                 </div>
                     
                 <br />
-                <div hidden={disabledView}>
+                <div hidden={disabledView || !isDraft}>
                   <Table aria-label="Example static collection table" className='p-2'>
                   <TableHeader>
                       <TableColumn className='w-2/10'>STOCK NAME</TableColumn>
@@ -676,31 +779,8 @@ export default function BuktiPengeluaranBarangDetail() {
                                       value={item.stock_name} 
                                       aria-label="Stock Name"
                                       readOnly
-                                      // onChange={(e) => handleInputChangeRow(index, 'item', e.target.value)}
                                   />
                               </TableCell>
-                              {/* <TableCell>
-                                  <Input 
-                                      aria-label="No EDP"
-                                      style={{ fontSize: '12px' }}
-                                      isDisabled = {disabledView}
-                                      type="text" 
-                                      variant='bordered' 
-                                      value={item.no_edp} 
-                                      readOnly
-                                  />
-                              </TableCell>
-                              <TableCell>
-                                  <Input
-                                      aria-label="No SN"
-                                      style={{ fontSize: '12px' }}
-                                      isDisabled = {disabledView}
-                                      type="text" 
-                                      variant='bordered' 
-                                      value={item.no_sn} 
-                                      readOnly
-                                  />
-                              </TableCell> */}
                               <TableCell>
                                   <Input
                                       aria-label="Quantity"
@@ -740,7 +820,7 @@ export default function BuktiPengeluaranBarangDetail() {
                   
                   </Table>
                 </div>
-                <div hidden={!disabledView}>
+                <div hidden={!disabledView || !isDraft}>
                   <Table aria-label="Example static collection table" className='p-2'>
                   <TableHeader>
                       <TableColumn className='w-2/10'>STOCK NAME</TableColumn>
@@ -765,6 +845,11 @@ export default function BuktiPengeluaranBarangDetail() {
                   
                   </Table>
                 </div>
+
+                <div hidden={isDraft}>
+                  {detailTable()}
+                </div>
+
                 <Button
                   hidden={disabledView}
                   color="primary"

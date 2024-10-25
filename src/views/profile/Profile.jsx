@@ -1,21 +1,34 @@
 import {
     Button,
     Input,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalHeader,
   } from '@nextui-org/react'
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, createRef } from 'react';
 import React from "react";
 import { AiFillPrinter } from "react-icons/ai";
 import axiosClient from '../../axios-client'
 import { useNavigate, useParams } from 'react-router-dom'
+import Swal from 'sweetalert2';
 
 export default function Profile() {
     const navigate = useNavigate()
     const [profileData, setProfileData] = useState([])
+    const [isModalPasswordOpen, setIsModalPasswordOpen] = useState(false);
+    const passwordLamaRef = createRef();
+    const passwordBaruRef = createRef();
+    const passwordKonfirmasiRef = createRef();
 
-    const btnBack = () => [
-        navigate('/dashboard')
-    ]
+    const handleModalPasswordOpen = () => {
+        setIsModalPasswordOpen(true);
+    };
+
+    const handleModalPasswordClose = () => {  
+        setIsModalPasswordOpen(false);
+    };
 
     useEffect(() => {
         getProfile();
@@ -30,6 +43,57 @@ export default function Profile() {
           })
           .catch(() => {
           })
+    }
+
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });  
+
+    const btnUbahPassword = () => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, Post it!"
+          }).then((result) => {
+            const payload = {
+                password_lama: passwordLamaRef.current.value,
+                password_baru: passwordBaruRef.current.value,
+                password_konfirmasi: passwordKonfirmasiRef.current.value
+            }
+            if (result.isConfirmed) {
+                axiosClient
+                .post('/ubahPassword', payload)
+                .then(({}) => {
+                    Toast.fire({
+                    icon: "success",
+                    title: "Ubah Password is successfully"
+                    }); 
+                })
+                .catch(err => {
+                    const response = err.response
+                    if (response && response.status === 400) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: response.data.message,
+                        // footer: '<a href="#">Why do I have this issue?</a>'
+                    });
+                    }
+                })
+            }
+          });
     }
 
       return (
@@ -48,13 +112,10 @@ export default function Profile() {
                     <iframe src="https://giphy.com/embed/vR1dPIYzQmkRzLZk2w" width="200" height="200" class="giphy-embed" allowFullScreen></iframe>
                 </div>
                 <div className='flex-col justify-center items-center w-full'>
-                    <div className='flex p-4 w-full justify-between'>
+                    <div className='flex w-full justify-between'>
                         <h3>
                                 {profileData.name}
                         </h3>
-                        <Button className="bg-red-300" onClick={btnBack}>
-                            Back
-                        </Button>
                     </div>
                     <hr/>
                     <p>
@@ -66,35 +127,31 @@ export default function Profile() {
                     <p>
                         {profileData.role}
                     </p>
-                    {/* <Input 
-                        className='pb-2'
-                        value={profileData.name} 
-                        label='Nama' 
-                        variant='bordered'>
-                    </Input>
-                    <Input 
-                        className='pb-2'
-                        value={profileData.email} 
-                        label='Email' 
-                        variant='bordered'>
-                    </Input>
-                    <Input 
-                        className='pb-2'
-                        value={profileData.phone_number} 
-                        label='Phone Number' 
-                        variant='bordered'
-                        >
-                    </Input>
-                    <Input 
-                        className='pb-2'
-                        value={profileData.role} 
-                        label='Role' 
-                        variant='bordered'
-                        isReadOnly>
-                    </Input> */}
+                    <div className='w-full flex justify-end'>
+                        <Button className='bg-yellow-300' onClick={handleModalPasswordOpen}>
+                            Ubah Password
+                        </Button>
+                    </div>
+                    <Modal isOpen={isModalPasswordOpen} onOpenChange={handleModalPasswordClose} size='xl'>
+                        <ModalContent>
+                        {(onClose) => (
+                            <>
+                            <ModalHeader className="flex flex-col gap-1">Ubah Password</ModalHeader>
+                            <ModalBody>
+                            <Input ref={passwordLamaRef} type ="password" variant='bordered' label="Password Lama" placeholder="Password Lama" />
+                            <Input ref={passwordBaruRef} type ="password" variant='bordered' label="Password Baru" placeholder="Password Baru" />
+                            <Input ref={passwordKonfirmasiRef} type ="password" variant='bordered' label="Password Konfirmasi" placeholder="Password Konfirmasi" />
+                            <div className='flex justify-end'>
+                                <Button className='bg-red-300' onClick={onClose}>Batal</Button>
+                                <Button className='bg-green-300' onClick={btnUbahPassword}>Simpan</Button>
+                            </div>
+                            </ModalBody>
+                            </>
+                        )}
+                        </ModalContent>
+                    </Modal>
                 </div>
             </div>
         </div>
-
       )
 }

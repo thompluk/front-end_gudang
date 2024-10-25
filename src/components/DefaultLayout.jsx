@@ -86,15 +86,15 @@ export default function DefaultLayout(){
           }
           console.log(response.data.data)
       })
-      axiosClient.get('/allbpbdelivery')
-        .then(response => {
-          if (response.data.data) {
-            setBpb(response.data.data);
-          } else {
-            setBpb([]);
-          }
-          console.log(response.data.data)
-      })
+      // axiosClient.get('/allbpbdelivery')
+      //   .then(response => {
+      //     if (response.data.data) {
+      //       setBpb(response.data.data);
+      //     } else {
+      //       setBpb([]);
+      //     }
+      //     console.log(response.data.data)
+      // })
     }
   
     useEffect(() => {
@@ -231,7 +231,7 @@ export default function DefaultLayout(){
                           src={RedDot}
                           alt="RedDot"
                           className="w-4 h-4"
-                          hidden={po.length === 0 || bpb.length === 0}
+                          hidden={po.length === 0}
                         />
                       </div> 
                       <div className="pl-2 pt-1">{isExpanded4 ? <AiFillCaretDown /> : <AiFillCaretRight />}</div>
@@ -250,7 +250,7 @@ export default function DefaultLayout(){
                         </div> 
                       </CDBSidebarMenuItem>
                     </NavLink>
-                    <NavLink exact to="/bpbdelivery">
+                    {/* <NavLink exact to="/bpbdelivery">
                       <CDBSidebarMenuItem>
                         <div className="flex gap-2">Outstanding BPB 
                           <img 
@@ -261,10 +261,11 @@ export default function DefaultLayout(){
                           />
                         </div> 
                       </CDBSidebarMenuItem>
-                      <NavLink exact to="/pengembalianBarang">
-                        <CDBSidebarMenuItem>Pengembalian Barang</CDBSidebarMenuItem>
-                      </NavLink>
+                    </NavLink> */}
+                    <NavLink exact to="/pengembalianBarang">
+                      <CDBSidebarMenuItem>Pengembalian Barang</CDBSidebarMenuItem>
                     </NavLink>
+
                   </div>
 
                   <CDBSidebarMenuItem icon="warehouse" onClick={toggleExpand5}>
@@ -282,18 +283,23 @@ export default function DefaultLayout(){
                   </div>
                   
                   <NavLink exact to="/approval">
-                  <CDBSidebarMenuItem className="flex" icon="clipboard">
-                    <div className="flex gap-2">
-                      Approval
-                      <img 
-                        src={RedDot}
-                        alt="RedDot"
-                        className="w-4 h-4"
-                        hidden={approval.length === 0}
-                      />
-                    </div>
-                    
-                  </CDBSidebarMenuItem>
+                    <CDBSidebarMenuItem className="flex" icon="clipboard">
+                      <div className="flex gap-2">
+                        Approval
+                        <img 
+                          src={RedDot}
+                          alt="RedDot"
+                          className="w-4 h-4"
+                          hidden={approval.length === 0}
+                        />
+                      </div>
+                      
+                    </CDBSidebarMenuItem>
+                  </NavLink>
+                  <NavLink exact to="/profile">
+                    <CDBSidebarMenuItem className="flex" icon="user">
+                      Profile
+                    </CDBSidebarMenuItem>
                   </NavLink>
                 </CDBSidebarMenu>
               </CDBSidebarContent>
@@ -319,10 +325,10 @@ export default function DefaultLayout(){
                 <img src="https://www.ptgmi.co.id/wp-content/uploads/2021/07/logo-gmi.png" alt="gudang" style={{maxBlockSize: "50px"}} />
               </div>
               <div>
-                <NavLink exact to="/profile">
+                {/* <NavLink exact to="/profile"> */}
                   {user.name} &nbsp; &nbsp;
                   {/* <a onClick={onLogout} className="btn-logout" href="#">Logout</a> */}
-                </NavLink>
+                {/* </NavLink> */}
               </div>
             </header>
             <main style={{backgroundColor: "rgb(230, 230, 230)", minHeight: "100vh"}}>

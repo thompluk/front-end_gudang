@@ -8,12 +8,18 @@ import ApprovalPOView from './ApprovalPOView'
 import Swal from 'sweetalert2'
 import ApprovalBPBView from './ApprovalBPBView'
 import ApprovalSuratJalanView from './ApprovalSuratJalanView'
-
+import React, { useRef } from 'react';
+// import handleSaveAll from './ApprovalBPBView';
 
 export default function ApprovalDetail() {
     const navigate = useNavigate()
     const { param,param2 } = useParams()
     const remarksRef = createRef()
+    const approvalBPBViewRef = useRef();
+
+    const onSaveAllClick = () => {
+      approvalBPBViewRef.current?.handleSaveAll();
+    };
     
     const btnBack = () => [navigate('/approval')]
 
@@ -49,6 +55,16 @@ export default function ApprovalDetail() {
         })
         .catch(err => {
           const response = err.response
+
+          if (response && response.status === 400) {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: response.data.message,
+              // footer: '<a href="#">Why do I have this issue?</a>'
+            });
+          }
+          
           if (response && response.status === 400) {
             setMessage(response.data.message);
             setErrors(true);
@@ -69,6 +85,9 @@ export default function ApprovalDetail() {
         confirmButtonText: "Yes, Approve it!"
       }).then((result) => {
         if (result.isConfirmed) {
+          if(param2 === 'bpb') {
+            onSaveAllClick();
+          }
           btnApprove();
         }
       });
@@ -173,7 +192,7 @@ export default function ApprovalDetail() {
             </ApprovalPOView>
           )}
           {param2 == 'bpb' && (
-            <ApprovalBPBView>
+            <ApprovalBPBView ref={approvalBPBViewRef}>
             </ApprovalBPBView>
           )}
           {param2 == 'Surat Jalan' && (
@@ -186,7 +205,6 @@ export default function ApprovalDetail() {
                 <Button className="bg-green-300" onClick={handleApprove}>
                     Approve
                 </Button>
-
                 <Button className="bg-yellow-300" onClick={() => handleClick('Return')}>
                     Return
                 </Button>

@@ -1,4 +1,5 @@
-import React, { createRef } from 'react'
+// import React, { createRef } from 'react'
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { useEffect, useState} from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
@@ -17,22 +18,24 @@ import {
   Select,
   SelectItem,
   Card,
+  RadioGroup,
+  Radio,
 } from '@nextui-org/react'
 import axiosClient from '../../axios-client'
 import {PlusIcon} from '../../assets/PlusIcon'
 import CheckMark from '../../assets/check-mark.png'
-import CrossMark from '../../assets/cross.png'
 
 import Swal from 'sweetalert2'
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
 import TableSelect from '../../custom/TableSelect'
 import { SearchIcon } from '../../assets/SearchIcon'
 import numberToWords from 'number-to-words';
+import TableSelectWithFIlter from '../../custom/TableSelectWithFIlter'
 // import { IconButton } from "@material-tailwind/react";
 
-export default function BuktiPengeluaranBarangDetailUmum() {
+export default function BuktiPengeluaranBarangUmumDetail() {
   const navigate = useNavigate()
-  const [indexNow, setIndexNow] = useState(null)
+  const [idNow, setIdNow] = useState(null)
   const [loading, setLoading] = useState(false)
   const [loading2, setLoading2] = useState(false)
   const { param,param2 } = useParams()
@@ -41,6 +44,19 @@ export default function BuktiPengeluaranBarangDetailUmum() {
   const [isModalApprovedBy, setIsModalOpenApprovedBy] = useState(false);
   const [isModalItems, setIsModalOpenItems] = useState(false);
   const [payloadItems, setPayloadItems] = useState([]);
+  const [filter, setFilter] = useState(null);
+
+  const handleOpenModalItems = (id, filter) =>{
+    setIsModalOpenItems(true)
+    setIdNow(id)
+    setFilter(filter)
+  }
+
+  const handleCloseModalItems = (id) =>{
+    setIsModalOpenItems(false)
+    setIdNow(null)
+    setFilter(null)
+  }
 
   const [bpbData, setBpbData] = useState({
     status: null,
@@ -67,6 +83,17 @@ export default function BuktiPengeluaranBarangDetailUmum() {
   const [details, setDetails] = useState([
     {
         id: null,
+        stock_id: null,
+        stock_name: null,
+        quantity: null,
+        notes: null,
+    }
+  ]);
+
+  const [details_details, setDetailsDetails] = useState([
+    {
+        id: null,
+        bpb_detail_id:null,
         item_id: null,
         item_name: null,
         no_edp: null,
@@ -76,8 +103,13 @@ export default function BuktiPengeluaranBarangDetailUmum() {
     }
   ]);
 
-
-
+  const columnsItems = [
+    {name: "ID", uid: "id", sortable: true},
+    {name: "ITEM NAME", uid: "item_name", sortable: true},
+    {name: "NO EDP", uid: "no_edp", sortable: true},
+    {name: "NO SN", uid: "no_sn", sortable: true},
+    {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
+  ];
 
   useEffect(() => {
 
@@ -86,6 +118,7 @@ export default function BuktiPengeluaranBarangDetailUmum() {
     }
     if (param != 'new') {
       getDetails();
+      getDetailsDetails();
       getBpb();
     }
     if (param2 == 'view') {
@@ -107,6 +140,8 @@ export default function BuktiPengeluaranBarangDetailUmum() {
             date: data.data.date,
             no_po: data.data.no_po,
             delivery_by: data.data.delivery_by,
+            delivery_date: data.data.delivery_date,
+            is_partial_delivery: data.data.is_partial_delivery.toString(),
             no_bpb: data.data.no_bpb,
             customer: data.data.customer,
             customer_address: data.data.customer_address,
@@ -143,82 +178,94 @@ export default function BuktiPengeluaranBarangDetailUmum() {
       })
   }
 
+  const getDetailsDetails = () => {
 
-  // const [rows, setRows] = useState(details);
+    setLoading2(true);
 
-  // useEffect(() => {
-  //     setRows(details);
-  // }, [details]);
+    axiosClient
+      .get('/bpbdetaildetaillist/'+ param)
+      .then(({ data }) => {
+        setDetailsDetails(data.data);
+        setLoading2(false);
+      })
+      .catch(() => {
+        setLoading2(false);
+      })
+  }
 
-  useEffect(() => {
-    const newPayloadItems = {
-      item_ids: details
-        .filter(row => row.item_id != null) // Hanya masukkan yang tidak null
-        .map(row => row.item_id) // Ambil nilai ppb_detail_id
-    };
-    setPayloadItems(newPayloadItems);
-  }, [details]);
-
-  const handleInputChangeRow = (index, field, value) => {
-    setDetails(details.map((row, i) => i === index ? { ...row, [field]: value } : row));
-  };
-
-    const Toast = Swal.mixin({
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 2000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      }
-    });  
-    
-    const handleDeliver = (id) => {
-        Swal.fire({
-          title: "Are you sure?",
-          text: "You won't be able to revert this!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, Deliver it!"
-        }).then((result) => {
-          if (result.isConfirmed) {
-            axiosClient
-            .post('/bpbdetail/deliver/' + id)
-            .then(({}) => {
-              Toast.fire({
-                icon: "success",
-                title: "Deliver is successfully"
-              }); 
-              getDetails();
-            })
-            .catch(err => {
-              const response = err.response
-              Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: response.data.message,
-              });
-              setMessage(response.data.message);
-              setErrors(true);
-            //   if (response && response.status === 400) {
-            //     Swal.fire({
-            //         icon: "error",
-            //         title: "Oops...",
-            //         text: response.data.message,
-            //       });
-            //   }
-            })
-          }
-        });
-      };
-
-    const btnBack = () => [
+    const btnBack = () => {
         navigate('/bpbumum')
-      ]
+    }
+
+    const detailTable = () => {
+      return (
+        <div>
+          {details.map((detail,index) => (
+            <div key={index} className='pt-4'>
+              <div className='p-2 rounded-large border'>
+                <div className='flex'>
+                  <Input
+                    style={{ fontSize: '12px' }}
+                    type="text" 
+                    value={detail.stock_name} 
+                    label="Stock Name"
+                    readOnly
+                    className='w-1/5 p-2'
+                  />
+                  <Input
+                    style={{ fontSize: '12px' }}
+                    type="number" 
+                    value={detail.quantity} 
+                    label="Quantity"
+                    readOnly
+                    className='w-1/5 p-2'
+                  />
+                  <Textarea
+                    style={{ fontSize: '12px' }}
+                    type="text" 
+                    value={detail.notes} 
+                    label="Note"
+                    readOnly
+                    className='w-1/4 p-2'
+                  />
+                </div>
+                <div>
+                  <Table aria-label="Example static collection table" className='p-2'>
+                    <TableHeader>
+                        <TableColumn className='w-2/10'>ITEM NAME</TableColumn>
+                        <TableColumn className='w-15/100'>EDP</TableColumn>
+                        <TableColumn className='w-15/100'>S/N</TableColumn>
+                        <TableColumn className='w-2/10'>NOTE</TableColumn>
+                    </TableHeader>
+                    <TableBody emptyContent={"No Data found"} items={details_details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
+                        {details_details
+                        .filter(item => item.bpb_detail_id === detail.id)
+                        .map((item,id) => (
+                            <TableRow key={id}>
+                                <TableCell>
+                                    {item.item_name}
+                                </TableCell>
+                                <TableCell>
+                                    {item.no_edp}
+                                </TableCell>
+                                <TableCell>
+                                    {item.no_sn}
+                                </TableCell>
+                                <TableCell>
+                                    {item.notes}
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                    
+                  </Table>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    };
 
   return (
     <div className="bg-white p-4 rounded-large animated fadeInDown border">
@@ -226,15 +273,18 @@ export default function BuktiPengeluaranBarangDetailUmum() {
         <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
           <h1> Bukti Pengeluaran Barang Umum</h1>
           <Button className="bg-red-300" onClick={btnBack}>
-            Back
+            Back 
           </Button>
         </div>
           <div className="pt-8">
-              <div className="flex w-full flex-wrap md:flex-nowrap p-2 justify-between" >
+          <div className="flex w-full flex-wrap md:flex-nowrap p-2 justify-between" >
+                    {/* <Button id="save" className="bg-green-300" onClick={btnCheckPayload}>
+                        check payload
+                    </Button> */}
                     <div></div>
-                    <div  className="xl:w-2/10 p-4" hidden={bpbData.delivery_status === null}>
+                    <div  className="xl:w-2/10 p-4" hidden={bpbData.status === null}>
                         <p id="status" >
-                        Status : {bpbData.delivery_status}
+                        Status : {bpbData.status}
                         </p>
                     </div>
               </div>
@@ -246,6 +296,38 @@ export default function BuktiPengeluaranBarangDetailUmum() {
               )}
               {!loading && (
               <div>
+                <div className='flex'>
+                  <div  className=" p-2 xl:w-1/4 w-full">
+                    <Input
+                    id="Date"
+                    // ref={dateRef}
+                    variant="bordered"
+                    className="bg-white "
+                    type="text"
+                    value={bpbData.date}
+                    label="Date"
+                    isInvalid={message?.date != null}
+                    errorMessage={message?.date}
+                    // isDisabled={!disabledView}
+                    isReadOnly={true}
+                    />
+                  </div>
+                  <div  className=" p-2 xl:w-1/4 w-full">
+                      <Input
+                      id="no_bpb"
+                      // ref={no_ppbRef}
+                      variant="bordered"
+                      className="bg-white "
+                      type="text"
+                      value={bpbData.no_bpb}
+                      label="No. BPB"
+                      isInvalid={message?.no_bpb != null}
+                      errorMessage={message?.no_bpb}
+                      // isDisabled={!disabledView}
+                      isReadOnly={true}
+                      />
+                  </div>
+                </div>
                 <div className="flex w-full flex-wrap md:flex-nowrap pt-4 pb-2">
                     <div className='flex w-full'>
                         <div className='w-1/2 p-2'>
@@ -265,7 +347,7 @@ export default function BuktiPengeluaranBarangDetailUmum() {
                                     readOnly
                                     />
                                 </div>
-                                <div  className=" p-2 xl:w-3/4 w-full">
+                                {/* <div  className=" p-2 xl:w-3/4 w-full">
                                     <Input
                                     id="Date"
                                     // ref={dateRef}
@@ -278,7 +360,7 @@ export default function BuktiPengeluaranBarangDetailUmum() {
                                     errorMessage={message?.date}
                                     readOnly
                                     />
-                                </div>
+                                </div> */}
                                 <div  className=" p-2 xl:w-3/4 w-full">
                                     <Input
                                     id="no_po"
@@ -309,6 +391,37 @@ export default function BuktiPengeluaranBarangDetailUmum() {
                                     readOnly
                                     />
                                 </div>
+                                <div  className=" p-2 xl:w-3/4 w-full">
+                                    <Input
+                                        id="Delivery Date"
+                                        // ref={dateRef}
+                                        variant="bordered"
+                                        className="bg-white "
+                                        type="date"
+                                        value={bpbData.delivery_date}
+                                        label="Delivery Date"
+                                        isInvalid={message?.delivery_date != null}
+                                        errorMessage={message?.delivery_date}
+                                        onChange={(e) => setBpbData( {...bpbData, delivery_date: e.target.value} )}
+                                        isReadOnly={true}
+                                    />
+                                </div>
+                                <div className=" pt-2 pb-2 ps-4 xl:w-3/4 w-full">
+                                  <RadioGroup
+                                      id="Is Partial Delivery"
+                                      variant="bordered"
+                                      className='bg-white'
+                                      label="Is Partial Delivery?"
+                                      aria-label="Apakah Merupakan Pengiriman Partial?"
+                                      orientation="horizontal"
+                                      value={bpbData.is_partial_delivery}  // Nilai yang sesuai dengan Radio
+                                      onChange={(e) => setBpbData({...bpbData, is_partial_delivery: e.target.value})}
+                                      isDisabled = {true}                             
+                                      >
+                                      <Radio value="1">Ya</Radio>
+                                      <Radio value="0">Tidak</Radio>
+                                  </RadioGroup>
+                                </div>
                                 {/* <div  className=" p-2 xl:w-3/4 w-full">
                                     <Input
                                         id="Delivery Date"
@@ -328,7 +441,7 @@ export default function BuktiPengeluaranBarangDetailUmum() {
                         </div>
                         <div className='w-1/2 p-2'>
                             <Card className='p-4'>
-                                <div  className=" p-2 xl:w-3/4 w-full">
+                                {/* <div  className=" p-2 xl:w-3/4 w-full">
                                     <Input
                                     id="no_bpb"
                                     // ref={no_ppbRef}
@@ -341,7 +454,7 @@ export default function BuktiPengeluaranBarangDetailUmum() {
                                     errorMessage={message?.no_bpb}
                                     readOnly
                                     />
-                                </div>
+                                </div> */}
                                 <div  className=" p-2 xl:w-3/4 w-full">
                                     <Input
                                     id="customer"
@@ -409,56 +522,9 @@ export default function BuktiPengeluaranBarangDetailUmum() {
                 </div>
                     
                 <br />
-                <Table aria-label="Example static collection table" className='p-2'>
-                <TableHeader>
-                    <TableColumn className='w-1/20'>PARTIAL?</TableColumn>
-                    <TableColumn className='w-2/10'>ITEM NAME</TableColumn>
-                    <TableColumn className='w-15/100'>EDP</TableColumn>
-                    <TableColumn className='w-15/100'>S/N</TableColumn>
-                    <TableColumn className='w-1/20'>QUANTITY</TableColumn>
-                    <TableColumn className='w-1/13'>DEL. DATE</TableColumn>
-                    <TableColumn className='w-2/10'>NOTE</TableColumn>
-                    <TableColumn className='w-1/10'>DEL. Status</TableColumn>
-                </TableHeader>
-                <TableBody emptyContent={"No Data found"} items={details} isLoading={loading2} loadingContent={<Spinner label="Loading..." />}>
-                    {details.map((item,index) => (
-                        <TableRow key={index}>
-                            <TableCell>
-                                {item.is_partial_delivery == '1' ? "Yes" : "No"}
-                            </TableCell>
-                            <TableCell>
-                                {item.item_name}
-                            </TableCell>
-                            <TableCell>
-                                {item.no_edp} 
-                            </TableCell>
-                            <TableCell>
-                                {item.no_sn} 
-                            </TableCell>
-                            <TableCell>
-                                {item.quantity} 
-                            </TableCell>
-                            <TableCell>
-                                {item.delivery_date} 
-                            </TableCell>
-                            <TableCell>
-                                {item.notes}
-                            </TableCell>
-                            <TableCell>
-                                <div hidden={item.is_delivered == '1'} className='justify-center'>
-                                  <img src={CrossMark} alt="check mark" className="w-12 h-12" />
-                                </div>
-                                <div hidden={item.is_delivered == '0'} className='justify-center'>
-                                    <img src={CheckMark} alt="check mark" className="w-12 h-12" />
-                                </div>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
                 
-                </Table>
+                {detailTable()}
 
-                <hr />
                 <div className=" w-full flex-wrap md:flex-nowrap pt-4 pb-2">
                   <div className='flex'>
                     <div  className=" p-2 xl:w-1/4 w-full">
@@ -524,6 +590,20 @@ export default function BuktiPengeluaranBarangDetailUmum() {
           </div>
         
       </div>
+      <Modal isOpen={isModalItems} onOpenChange={handleCloseModalItems} size='4xl'>
+            <ModalContent>
+            {(onClose) => (
+                <>
+                <ModalHeader className="flex flex-col gap-1">Select Items</ModalHeader>
+                <ModalBody>
+                    <TableSelectWithFIlter columns={columnsItems} apiname={'itemselect'} payload={payloadItems} filter={filter} handleAction={(data) => handleItems(data)}>
+                    </TableSelectWithFIlter>
+                </ModalBody>
+                </>
+            )}
+            </ModalContent>
+        </Modal>
     </div>
   )
 }
+

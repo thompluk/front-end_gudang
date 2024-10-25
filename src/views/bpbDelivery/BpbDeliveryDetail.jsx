@@ -193,12 +193,6 @@ export default function BpbDeliveryDetail() {
   }
 
 
-  // const [rows, setRows] = useState(details);
-
-  // useEffect(() => {
-  //     setRows(details);
-  // }, [details]);
-
   useEffect(() => {
     const newPayloadItems = {
       item_ids: details_details
@@ -223,47 +217,6 @@ export default function BpbDeliveryDetail() {
         toast.onmouseleave = Swal.resumeTimer;
       }
     });  
-    
-    const handleDeliver = (id) => {
-        Swal.fire({
-          title: "Are you sure?",
-          text: "You won't be able to revert this!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, Deliver it!"
-        }).then((result) => {
-          if (result.isConfirmed) {
-            axiosClient
-            .post('/bpbdetail/deliver/' + id)
-            .then(({}) => {
-              Toast.fire({
-                icon: "success",
-                title: "Deliver is successfully"
-              }); 
-              getDetails();
-            })
-            .catch(err => {
-              const response = err.response
-              Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: response.data.message,
-              });
-              setMessage(response.data.message);
-              setErrors(true);
-            //   if (response && response.status === 400) {
-            //     Swal.fire({
-            //         icon: "error",
-            //         title: "Oops...",
-            //         text: response.data.message,
-            //       });
-            //   }
-            })
-          }
-        });
-      };
 
     const btnBack = () => {
         navigate('/bpbdelivery')
@@ -277,65 +230,6 @@ export default function BpbDeliveryDetail() {
           : row
       ));     
       setIsModalOpenItems(false)
-    }
-    
-    const onSubmit = ev => {
-      ev.preventDefault()
-
-      const payload = {
-        salesman: bpbData.salesman,
-        no_po: bpbData.no_po,
-        delivery_by: bpbData.delivery_by,
-        delivery_date: bpbData.delivery_date,
-        is_partial_delivery: bpbData.is_partial_delivery,
-        customer: bpbData.customer,
-        customer_address: bpbData.customer_address,
-        customer_pic_name: bpbData.customer_pic_name,
-        customer_pic_phone: bpbData.customer_pic_phone,
-        approved_by: bpbData.approved_by,
-        approved_by_id: bpbData.approved_by_id,
-      }
-      if (param == 'new') {
-        axiosClient
-          .post('/bpb', payload)
-          .then(({data}) => {
-            console.log(data.data.id)
-            handleSaveAll(data.data.id)
-            Toast.fire({
-              icon: "success",
-              title: "Create is successfully"
-            });  
-            navigate('/bpb')
-          })
-          .catch(err => {
-            const response = err.response
-            if (response && response.status === 400) {
-              setMessage(response.data.message);
-              setErrors(true);
-            }
-          })
-      }
-      else{
-        axiosClient
-          .put('/bpb/update/' + param, payload)
-          .then(({}) => {
-            console.log(param)
-            handleSaveAll(param)
-            Toast.fire({
-              icon: "success",
-              title: "Update is successfully"
-            });  
-            navigate('/bpb')
-          })
-          .catch(err => {
-            const response = err.response
-            if (response && response.status === 400) {
-              setMessage(response.data.message);
-              setErrors(true);
-            }
-          })
-      }
-      
     }
 
     const handleSaveAll = () => {
