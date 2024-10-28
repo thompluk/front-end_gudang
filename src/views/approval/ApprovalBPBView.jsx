@@ -300,6 +300,11 @@ const ApprovalBPBView = forwardRef((props, ref) => {
                     className='w-1/4 p-2'
                   />
                 </div>
+                <div className='w-full'>
+                  <Card className='w-full bg-red-300 text-center'>
+                    <h5>Mohon diisi sesuai dengan Item yang akan dikirim</h5>
+                  </Card>
+                </div>
                 <div>
                   <Table aria-label="Example static collection table" className='p-2'>
                     <TableHeader>
@@ -322,6 +327,7 @@ const ApprovalBPBView = forwardRef((props, ref) => {
                                         value={item.item_name} 
                                         aria-label="Item Name"
                                         readOnly
+                                        
                                         // onChange={(e) => handleInputChangeRow(index, 'item', e.target.value)}
                                     />
                                 </TableCell>

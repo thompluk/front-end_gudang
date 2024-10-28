@@ -31,8 +31,9 @@ export default function Approval() {
       apiname: "indexApproval",
       isHidden: false,
       columns: [
+        {name: "No.", uid: "no", sortable: false},
         {name: "ID", uid: "id", sortable: true},
-        {name: "NO", uid: "no", sortable: true},
+        {name: "No. DOCUMENT", uid: "no_document", sortable: true},
         {name: "TANGGAL", uid: "tanggal", sortable: true},
         {name: "PEMOHON", uid: "pemohon", sortable: true},
         {name: "TIPE", uid: "tipe", sortable: true},
@@ -46,7 +47,8 @@ export default function Approval() {
       apiname: "indexApprovalRecord",
       isHidden: true,
       columns: [
-        {name: "NO", uid: "no", sortable: true},
+        {name: "No.", uid: "no", sortable: false},
+        {name: "No. DOCUMENT", uid: "no_document", sortable: true},
         {name: "DATE", uid: "date", sortable: true},
         {name: "TYPE", uid: "type", sortable: true},
         {name: "REQUESTOR", uid: "requestor", sortable: true},

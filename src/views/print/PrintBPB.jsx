@@ -96,7 +96,7 @@ function PrintBPB() {
 
     const getDetails = () => {
         axiosClient
-          .get('/bpbdetaillist/'+ param)
+          .get('/bpbdetaildetaillist/'+ param)
           .then(({ data }) => {
             setDetails(data.data);
           })
@@ -218,12 +218,10 @@ function PrintBPB() {
                                 <thead>
                                     <tr>
                                         <th className="w-[4%] text-center">No.</th>
-                                        <th className='w-[5%]'>Partial?</th>
                                         <th className='w-[15%]'>EDP</th>
                                         <th className='w-[11%]'>S/N</th>
                                         <th className='w-[25%]'>Item Name</th> 
-                                        <th className='w-[5%]'>QTY</th>
-                                        <th className='w-[12%]'>Del. Date</th>
+                                        {/* <th className='w-[5%]'>QTY</th> */}
                                         <th className='w-[25%]'>Notes</th>
                                     </tr>
                                 </thead>
@@ -231,14 +229,12 @@ function PrintBPB() {
                                     {details.length > 0 ? (
                                     details.map((item, index) => (
                                         <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>{(item.is_partial_delivery == 1)? "Yes" : "No"}</td>
-                                        <td>{item.no_edp}</td>
-                                        <td>{item.no_sn}</td>
-                                        <td>{item.item_name}</td>
-                                        <td>{item.quantity}</td>
-                                        <td>{item.delivery_date}</td>
-                                        <td>{item.notes}</td>
+                                            <td>{index + 1}</td>
+                                            <td>{item.no_edp}</td>
+                                            <td>{item.no_sn}</td>
+                                            <td>{item.item_name}</td>
+                                            {/* <td>{item.quantity}</td> */}
+                                            <td>{item.notes}</td>
                                         </tr>
                                     ))
                                     ) : (
@@ -246,6 +242,10 @@ function PrintBPB() {
                                         <td colSpan="8">No data available</td>
                                     </tr>
                                     )}
+                                    {/* <tr>
+                                        <td colSpan="4" className="w-[4%] text-center">Total</td>
+                                        <td className='w-[5%]'>4</td>
+                                    </tr> */}
                                 </tbody>
                             </table>
                         </div>

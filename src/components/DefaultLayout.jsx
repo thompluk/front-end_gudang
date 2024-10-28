@@ -18,6 +18,7 @@ import RedDot from '../assets/record-button.png'
 import { AiFillCaretRight } from "react-icons/ai";
 import { AiFillCaretDown } from "react-icons/ai";
 import { AiFillAppstore } from "react-icons/ai";
+import router from "../router";
 
 export default function DefaultLayout(){
 
@@ -96,7 +97,7 @@ export default function DefaultLayout(){
       //     console.log(response.data.data)
       // })
     }
-  
+      
     useEffect(() => {
 
       if (!token) {
@@ -331,7 +332,7 @@ export default function DefaultLayout(){
                 {/* </NavLink> */}
               </div>
             </header>
-            <main style={{backgroundColor: "rgb(230, 230, 230)", minHeight: "100vh"}}>
+            <main style={{backgroundColor: "rgb(230, 230, 230)", minHeight: "100vh", }}>
               <Outlet/>
             </main>
             {notification &&

@@ -61,6 +61,7 @@ export default function SuratJalan() {
   const navigate = useNavigate();
 
   const columns = [
+      {name: "No.", uid: "no", sortable: false},
       {name: "NO SURAT JALAN", uid: "no_surat_jalan", sortable: true},
       {name: "COMPANY", uid: "company", sortable: true},
       {name: "MENYERAHKAN", uid: "menyerahkan", sortable: true},

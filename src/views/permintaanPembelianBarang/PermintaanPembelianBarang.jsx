@@ -62,6 +62,7 @@ export default function PermintaanPembelianBarang() {
   const [ppb, setPpb] = useState([])
 
   const columns = [
+      {name: "No.", uid: "no", sortable: false},
       {name: "No. PPB", uid: "no_ppb", sortable: true},
       {name: "TANGGAL", uid: "tanggal", sortable: true},
       {name: "PEMOHON", uid: "pemohon", sortable: true},

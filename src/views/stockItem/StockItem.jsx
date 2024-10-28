@@ -19,6 +19,7 @@ export default function StockItem() {
   const [datas, setDatas] = useState([])
   const navigate = useNavigate();
   const columns = [
+    {name: "No.", uid: "no", sortable: false},
     {name: "STOCK NAME", uid: "stock_name", sortable: true},
     {name: "TIPE", uid: "tipe", sortable: true},
     {name: "PRINSIPAL", uid: "prinsipal", sortable: true},

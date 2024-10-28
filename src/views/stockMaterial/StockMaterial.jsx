@@ -19,6 +19,7 @@ export default function StockMaterial() {
   const [datas, setDatas] = useState([])
   const navigate = useNavigate();
   const columns = [
+    {name: "No.", uid: "no", sortable: false},
     {name: "STOCK NAME", uid: "stock_name", sortable: true},
     {name: "QUANTITY", uid: "quantity", sortable: true},
     {name: "ITEM UNIT", uid: "item_unit", sortable: true},

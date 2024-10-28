@@ -26,7 +26,7 @@ import Swal from 'sweetalert2'
 const TableCustom = ( {columns = [], addButton, renderCellTable, getDatas, loading, datas}) => {
     // const [datas, setDatas] = useState([])
     const [filterValue, setFilterValue] = React.useState("");
-    const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
+    // const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     // const [loading, setLoading] = useState(false)
     const [sortDescriptor, setSortDescriptor] = React.useState({
@@ -89,67 +89,18 @@ const TableCustom = ( {columns = [], addButton, renderCellTable, getDatas, loadi
     }, [sortDescriptor, items]);
   
     const navigate = useNavigate();
-  
-    // const handleAction = async (key) => {
-    //   if (key.startsWith('/')) {
-    //     // Navigasi ke path
-    //     navigate(key);
-    //   } else{
-    //     // Aksi hapus
-  
-    //     Swal.fire({
-    //       title: "Are you sure?",
-    //       text: "You won't be able to revert this!",
-    //       icon: "warning",
-    //       showCancelButton: true,
-    //       confirmButtonColor: "#3085d6",
-    //       cancelButtonColor: "#d33",
-    //       confirmButtonText: "Yes, delete it!"
-    //     }).then((result) => {
-    //       if (result.isConfirmed) {
-    //         axiosClient.delete(`/${apiname}/${key}`).then(() => {
-    //           Swal.fire({
-    //             title: "Deleted!",
-    //             text: "Your file has been deleted.",
-    //             icon: "success"
-    //           });
-    //           getDatas()
-    //         });
-    //       }
-    //     });
-    //   }
-    // };
-  
-    // const renderCell = React.useCallback((data, columnKey) => {
-    //   const cellValue = data[columnKey];
-  
-    //   switch (columnKey) {
-    //     case "actions":
-    //       return (
-    //         <div className="relative flex justify-end items-center gap-2">
-    //           <Dropdown>
-    //             <DropdownTrigger>
-    //               <Button isIconOnly size="sm" variant="light">
-    //                 <VerticalDotsIcon className="text-default-300" />
-    //               </Button>
-    //             </DropdownTrigger>
-    //             <DropdownMenu onAction={handleAction}>
-    //               <DropdownItem key={"/"+pathname+"/"+data.id +"/view"}>View</DropdownItem>
-    //               <DropdownItem key={"/"+pathname+"/"+data.id} hidden={isHidden}>Edit</DropdownItem>
-    //               <DropdownItem key={data.id} hidden={isHidden}>Delete</DropdownItem>
-    //             </DropdownMenu>
-    //           </Dropdown>
-    //         </div>
-    //       );
-    //     default:
-    //       return cellValue;
-    //   }
-    // }, []);
 
-    const renderCell = React.useCallback((data, columnKey) => {
+    const renderCell = React.useCallback((data, columnKey,index) => {
       const cellValue = data[columnKey];
   
+      // console.log(page)
       switch (columnKey) {
+        case 'no':
+          return (
+            <div>
+              {(page - 1) * rowsPerPage + index + 1}
+            </div>
+          )
         case 'actions':
           return (
             <div>
@@ -159,7 +110,7 @@ const TableCustom = ( {columns = [], addButton, renderCellTable, getDatas, loadi
         default:
           return cellValue;
       }
-    }, [renderCellTable]);
+    }, [renderCellTable, page]);
   
     const onNextPage = React.useCallback(() => {
       if (page < pages) {
@@ -244,9 +195,9 @@ const TableCustom = ( {columns = [], addButton, renderCellTable, getDatas, loadi
       return (
         <div className="py-2 px-2 flex justify-between items-center">
           <span className="w-[30%] text-small text-default-400">
-            {selectedKeys === "all"
+            {/* {selectedKeys === "all"
               ? "All items selected"
-              : `${selectedKeys.size} of ${filteredItems.length} selected`}
+              : `${selectedKeys.size} of ${filteredItems.length} selected`} */}
           </span>
           <Pagination
             isCompact
@@ -267,7 +218,8 @@ const TableCustom = ( {columns = [], addButton, renderCellTable, getDatas, loadi
           </div>
         </div>
       );
-    }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+    }, [ items.length, page, pages, hasSearchFilter]);
+  // }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
   
     return (
         <Table
@@ -279,12 +231,12 @@ const TableCustom = ( {columns = [], addButton, renderCellTable, getDatas, loadi
           classNames={{
             wrapper: "max-h-screen",
           }}
-          selectedKeys={selectedKeys}
-          selectionMode="multiple"
+          // selectedKeys={selectedKeys}
+          // selectionMode="multiple"
           sortDescriptor={sortDescriptor}
           topContent={topContent}
           topContentPlacement="outside"
-          onSelectionChange={setSelectedKeys}
+          // onSelectionChange={setSelectedKeys}
           onSortChange={setSortDescriptor}
         >
           
@@ -301,11 +253,11 @@ const TableCustom = ( {columns = [], addButton, renderCellTable, getDatas, loadi
             )}
           </TableHeader>
           <TableBody emptyContent={"No Data found"} items={sortedItems} isLoading={loading} loadingContent={<Spinner label="Loading..." />}>
-            {(item) => (
+            {sortedItems.map((item, index) => (
               <TableRow key={item.id}>
-                {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                {(columnKey) => <TableCell>{renderCell(item, columnKey, index)}</TableCell>}
               </TableRow>
-            )}
+            ))}
           </TableBody>
           {/* )} */}
         </Table>

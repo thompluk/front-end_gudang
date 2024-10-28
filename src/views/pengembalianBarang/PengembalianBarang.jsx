@@ -61,6 +61,7 @@ export default function PengembalianBarang() {
   const navigate = useNavigate();
 
   const columns = [
+      {name: "No.", uid: "no", sortable: false},
       {name: "NO SURAT JALAN", uid: "no_surat_jalan", sortable: true},
       {name: "PENERIMA", uid: "penerima", sortable: true},
       {name: "TANGGAL MENERIMA", uid: "penerima_date", sortable: true},

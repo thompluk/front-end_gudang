@@ -46,11 +46,14 @@ import SuratJalanUmum from "./views/suratJalanUmum/SuratJalanUmum.jsx"
 import SuratJalanUmumDetail from "./views/suratJalanUmum/SuratJalanUmumDetail.jsx"
 import PengembalianBarang from "./views/pengembalianBarang/PengembalianBarang.jsx"
 import PengembalianBarangDetail from "./views/pengembalianBarang/PengembalianBarangDetail.jsx"
+import PrintSuratJalan from "./views/print/PrintSuratJalan.jsx"
+import Redirect from "./views/Redirect.jsx"
 
-const router = createBrowserRouter( [
+
+const router = createBrowserRouter([
     {
         path: '/',
-        element: <DefaultLayout/>, 
+        element:<DefaultLayout/>,
         children: [
             {
                 path: '/',
@@ -302,6 +305,10 @@ const router = createBrowserRouter( [
                 path: '/printBPB/:param/',
                 element: <PrintBPB/>
             },
+            {
+                path: '/printSuratJalan/:param/',
+                element: <PrintSuratJalan/>
+            },
             //
 
             //profile
@@ -321,7 +328,14 @@ const router = createBrowserRouter( [
             },
         ]
     },
-    
+    {
+        path: '/login',
+        element: <Login/>
+    },
+    {
+        path: '/redirect',
+        element: <Redirect/>
+    },
     {
         path: '*',
         element: <NotFound/>

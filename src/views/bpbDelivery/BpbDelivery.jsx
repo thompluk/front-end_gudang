@@ -19,6 +19,7 @@ export default function BpbDelivery() {
   const [datas, setDatas] = useState([])
   const navigate = useNavigate();
   const columns = [
+    {name: "No.", uid: "no", sortable: false},
     {name: "No. BPB", uid: "no_bpb", sortable: true},
     {name: "DATE", uid: "date", sortable: true},
     {name: "SALESMAN", uid: "salesman", sortable: true},

@@ -20,38 +20,38 @@ import { AiFillPrinter } from "react-icons/ai";
 import axiosClient from '../../axios-client'
 import { useNavigate, useParams } from 'react-router-dom'
 
-function PrintPPB() {
+function PrintSuratJalan() {
     const contentToPrint = useRef();
     const { param } = useParams()
     const navigate = useNavigate()
 
     const btnBack = () => [
-        navigate('/ppb/'+param+'/view')
+        navigate('/suratjalan/'+param+'/view')
       ]
 
-    const [ppbData, setPpbData] = useState({
-        tanggal: '',
-        no_ppb: '',
+    const [suratJalanData, setSuratJalanData] = useState({
         status: '',
-        pemohon: '',
-        mengetahui: '',
+        no_surat_jalan: '',
+        company_id: '',
+        company: '',
+        company_address: '',
+        company_telephone: '',
+        company_fax: '',
+        company_email: '',
+        menyerahkan_id: '',
+        menyerahkan: '',
+        menyerahkan_date: '',
         mengetahui_id: '',
-        mengetahui_date: '',
+        mengetahui: '',
         mengetahui_status: '',
-        menyetujui: '',
-        menyetujui_id: '',
-        menyetujui_date: '',
-        menyetujui_status: '',
-        purchasing: '',
-        purchasing_status: '',
-        purchasing_date: '',
-        remarks: '',
+        mengetahui_date: '',
+        remarks: null,
       })
     
       const [details, setDetails] = useState([]);
 
     const handlePrint = useReactToPrint({
-        documentTitle: "Permintaan Pembelian Barang No. " + ppbData.no_ppb,
+        documentTitle: "Surat Jalan Proses No. " + suratJalanData.no_surat_jalan,
         onBeforePrint: () => console.log("before printing..."),
         onAfterPrint: () => console.log("after printing..."),
         removeAfterPrint: true,
@@ -59,30 +59,30 @@ function PrintPPB() {
 
     useEffect(() => {
         getDetails();
-        getPpb();
+        getSuratJalan();
       }, [])
 
-      const getPpb = () => {
+      const getSuratJalan = () => {
         axiosClient
-          .get('/ppb/' + param)
+          .get('/suratjalan/' + param)
           .then(({ data }) => {
-            setPpbData({
-              tanggal: data.data.tanggal,
-              no_ppb: data.data.no_ppb,
-              status: data.data.status,
-              pemohon: data.data.pemohon,
-              mengetahui: data.data.mengetahui,
-              mengetahui_id: data.data.mengetahui_id,
-              mengetahui_status: data.data.mengetahui_status,
-              mengetahui_date: data.data.mengetahui_date,
-              menyetujui: data.data.menyetujui,
-              menyetujui_id: data.data.menyetujui_id,
-              menyetujui_status: data.data.menyetujui_status,
-              menyetujui_date: data.data.menyetujui_date,
-              purchasing: data.data.purchasing,
-              purchasing_status: data.data.purchasing_status,
-              purchasing_date: data.data.purchasing_date,
-              remarks: data.data.remarks,
+            setSuratJalanData({
+                status: data.data.status,
+                no_surat_jalan: data.data.no_surat_jalan,
+                company_id: data.data.company_id,
+                company: data.data.company,
+                company_address: data.data.company_address,
+                company_telephone: data.data.company_telephone,
+                company_fax: data.data.company_fax,
+                company_email: data.data.company_email,
+                menyerahkan_id: data.data.menyerahkan_id,
+                menyerahkan: data.data.menyerahkan,
+                menyerahkan_date: data.data.menyerahkan_date,
+                mengetahui_id: data.data.mengetahui_id,
+                mengetahui: data.data.mengetahui,
+                mengetahui_status: data.data.mengetahui_status,
+                mengetahui_date: data.data.mengetahui_date,
+                remarks: data.data.remarks,
             })
           })
           .catch(() => {
@@ -92,7 +92,7 @@ function PrintPPB() {
     const getDetails = () => {
     
         axiosClient
-          .get('/ppbdetaillist/'+ param)
+          .get('/suratjalandetaillist/'+ param)
           .then(({ data }) => {
             setDetails(data.data);
           })
@@ -135,19 +135,30 @@ function PrintPPB() {
                         </div>
                         <div className="text-center">  
                             <h2>
-                                Permintaan Pembelian Barang
+                                Surat Jalan Proses
                             </h2>
-                        </div>
-                        <div >
-                            <p className="p-0">
-                                Tanggal : {ppbData.tanggal}
-                            </p>
                         </div>
                         <div>  
                             <p className="p-0">
-                                No. PPB : {ppbData.no_ppb}
+                                No. Surat Jalan : {suratJalanData.no_surat_jalan}
                             </p>
                         </div>
+
+                        <div className=' pt-2 w-full'>
+                            <p className='w-1/2'>
+                                Company : {suratJalanData.company}
+                            </p>
+                            <p className='w-1/2'>
+                                Telp/Fax : {suratJalanData.company_telephone}/{suratJalanData.company_fax}
+                            </p>
+                            <p>
+                                Company Address : {suratJalanData.company_address}
+                            </p>
+                            <p>
+                                Email : {suratJalanData.company_email}
+                            </p>
+                        </div>
+
                     </div>
 
                     <div className="pt-8 w-full">
@@ -156,25 +167,21 @@ function PrintPPB() {
                                 <thead>
                                     <tr>
                                         <th className="w-10 text-center">No.</th>
+                                        <th>Part No.</th>
                                         <th>Nama Barang</th>
-                                        <th>Kode</th>
-                                        <th>Spesifikasi</th>
                                         <th>Qty</th>
-                                        <th>Expected ETA</th>
-                                        <th>Project & Customer</th>
+                                        <th>Keterangan</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {details.length > 0 ? (
                                     details.map((item, index) => (
                                         <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>{item.nama_barang}</td>
-                                        <td>{item.kode}</td>
-                                        <td>{item.spesifikasi}</td>
-                                        <td>{item.quantity}</td>
-                                        <td>{item.expected_eta}</td>
-                                        <td>{item.project_and_customer}</td>
+                                            <td>{index + 1}</td>
+                                            <td>{item.id}</td>
+                                            <td>{item.nama_barang}</td>
+                                            <td>{item.quantity}</td>
+                                            <td>{item.keterangan}</td>
                                         </tr>
                                     ))
                                     ) : (
@@ -191,14 +198,14 @@ function PrintPPB() {
                         <div className='p-2 w-1/4 '>
                             <div className='p-4 rounded border'>
                                 <p className="p-0">
-                                    Pemohon : 
+                                    Menyerahkan : 
                                 </p>
-                                <p className="pt-5 text-center">
-                                    {ppbData.pemohon}
+                                <p className="p-0 text-center">
+                                    {suratJalanData.menyerahkan}
                                 </p>
                                 <hr />
                                 <p className="p-0">
-                                    Date : {ppbData.tanggal}
+                                    Date : {suratJalanData.menyerahkan_date}
                                 </p>
                             </div>    
                         </div>
@@ -208,46 +215,15 @@ function PrintPPB() {
                                 <p className="p-0">
                                     Mengetahui :
                                 </p>
-                                <p className="pt-5 text-center">
-                                    {ppbData.mengetahui}
+                                <p className="p-0 text-center">
+                                    {suratJalanData.mengetahui}
                                 </p>
                                 <hr />
                                 <p className="p-0">
-                                    Date : {ppbData.mengetahui_date}
+                                    Date : {suratJalanData.mengetahui_date}
                                 </p>
                             </div>    
                         </div>
-
-                        <div className='p-2 w-1/4 '>
-                            <div className='p-4 rounded border'>
-                                <p className="p-0">
-                                    Menyetujui :
-                                </p>
-                                <p className="pt-5 text-center">
-                                    {ppbData.menyetujui}
-                                </p>
-                                <hr />
-                                <p className="p-0">
-                                    Date : {ppbData.menyetujui_date}
-                                </p>
-                            </div>    
-                        </div>
-
-                        <div className='p-2 w-1/4 '>
-                            <div className='p-4 rounded border'>
-                                <p className="p-0">
-                                    Purchasing :
-                                </p>
-                                <p className="pt-5 text-center">
-                                    {ppbData.purchasing}
-                                </p>
-                                <hr />
-                                <p className="p-0">
-                                    Date : {ppbData.purchasing_date}
-                                </p>
-                            </div>    
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -255,4 +231,4 @@ function PrintPPB() {
 
       )
 }
-export default PrintPPB;
+export default PrintSuratJalan;

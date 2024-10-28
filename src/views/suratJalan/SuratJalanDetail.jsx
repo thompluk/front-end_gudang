@@ -421,6 +421,9 @@ export default function SuratJalanDetail() {
     const onCheck = () => {
       console.log(details)
     }
+    const handlePrint = () => {
+      navigate('/printSuratJalan/' + param);
+    }
   return (
     <div className="bg-white p-4 rounded-large animated fadeInDown">
       <div className="flex-col items-center">
@@ -439,6 +442,9 @@ export default function SuratJalanDetail() {
                   </Button>
                   <Button className="bg-green-300" onClick={handlePost} hidden={!disabledView || suratjalanData.status !== 'Draft' && suratjalanData.status !== 'Returned'}>
                     Post
+                  </Button>
+                  <Button className="bg-green-300" onClick={handlePrint} hidden={suratjalanData.status !== 'Done'}>
+                    Print
                   </Button>
               </div>
 

@@ -19,6 +19,7 @@ export default function Companies() {
   const [datas, setDatas] = useState([])
   const navigate = useNavigate();
   const columns = [
+    {name: "No.", uid: "no", sortable: false},
     {name: "NAME", uid: "name", sortable: true},
     {name: "ADDRESS", uid: "address", sortable: true},
     {name: "TELEPHONE", uid: "telephone", sortable: true},

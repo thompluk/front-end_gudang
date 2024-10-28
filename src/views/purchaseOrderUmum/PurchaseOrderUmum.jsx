@@ -19,6 +19,7 @@ export default function PurchaseOrderUmum() {
   const [datas, setDatas] = useState([])
   const navigate = useNavigate();
   const columns = [
+    {name: "No.", uid: "no", sortable: false},
     {name: "No. Po", uid: "no_po", sortable: true},
     {name: "TANGGAL", uid: "tanggal", sortable: true},
     {name: "PEMOHON", uid: "prepared_by", sortable: true},

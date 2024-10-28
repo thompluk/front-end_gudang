@@ -4,6 +4,8 @@ import { createRef } from 'react'
 import { useState } from 'react'
 import { useStateContext } from '../contexts/ContextProvider.jsx'
 import { Card, CardHeader, CardBody, Input, Button } from '@nextui-org/react'
+import Swal from 'sweetalert2'
+import BgLogin from '../assets/BGy.jpg'
 
 export default function Login() {
   const emailRef = createRef()
@@ -26,6 +28,12 @@ export default function Login() {
       })
       .catch(err => {
         const response = err.response
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: response.data.message,
+          // footer: '<a href="#">Why do I have this issue?</a>'
+        });
         if (response && response.status === 422) {
           setMessage(response.data.message)
         }
@@ -33,22 +41,28 @@ export default function Login() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-400">
-      <Card className="w-full max-w-md mx-auto bg-[#5b08a7]">
-        <CardHeader className="border-b-1">
-          <h1 className="text-center text-gray-200">Login into your account</h1>
+    <div className="flex justify-center items-center min-h-screen"
+      style={{
+        backgroundImage:  `url(${BgLogin})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}>
+      {/* <Card className="w-full max-w-md mx-auto bg-[#257180] border-4 "> */}
+      <Card className="w-full max-w-md mx-auto bg-gray-200 border-4 ">
+        <CardHeader className="">
+          <h1 className="text-center text-gray-800">Login into your account</h1>
         </CardHeader>
         <CardBody>
           <form onSubmit={handleLogin}>
             <div className="mb-4">
-              <Input ref={emailRef} type="email" placeholder="Email" bordered  title='Email'  />
+              <Input ref={emailRef} type="text" bordered  label='Email'/>
               
             </div>
             <div className="mb-4">
-              <Input ref={passwordRef} type="password" placeholder="Password" bordered  title='Password' />
+              <Input ref={passwordRef} type="password" bordered  label='Password'/>
             </div>
-            <div>
-              <Button type="submit" className="w-full btn-login">
+            <div className="flex justify-center">
+              <Button type="submit" className="w-full btn-login rounded-3xl bg-[#77CDFF]">
                 Login
               </Button>
             </div>

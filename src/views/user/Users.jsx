@@ -24,6 +24,7 @@ export default function Users() {
   const [datas, setDatas] = useState([])
   const navigate = useNavigate();
   const columns = [
+    {name: "No.", uid: "no", sortable: false},
     {name: "ID", uid: "id", sortable: true},
     {name: "NAME", uid: "name", sortable: true},
     {name: "EMAIL", uid: "email", sortable: true},
@@ -61,27 +62,53 @@ export default function Users() {
       // Navigasi ke path
       navigate(key);
     } else{
-      // Aksi hapus
-
-      Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          axiosClient.delete(`/user/${key}`).then(() => {
-            Toast.fire({
-              icon: "success",
-              title: "Delete is successfully"
+      console.log(key);
+      if (key.includes('delete')) {
+        const apiKey = key.split('delete')[1];
+        // console.log(apiKey);
+        // Aksi hapus
+  
+        Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            axiosClient.delete(`/user/${apiKey}`).then(() => {
+              Toast.fire({
+                icon: "success",
+                title: "Delete is successfully"
+              });
+              getDatas()
             });
-            getDatas()
-          });
-        }
-      });
+          }
+        });
+      }else{
+        const apiKey = key.split('reset')[1];
+        Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this! Password will be reset to default (Password: 12345).",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            axiosClient.post(`/resetPassword/${apiKey}`).then(() => {
+              Toast.fire({
+                icon: "success",
+                title: "Delete is successfully"
+              });
+              getDatas()
+            });
+          }
+        });
+      }
     }
   };
 
@@ -111,7 +138,8 @@ export default function Users() {
           <DropdownMenu onAction={handleAction}>
             <DropdownItem key={"/users/" + data.id + "/view"}>View</DropdownItem>
             <DropdownItem key={"/users/" + data.id}>Edit</DropdownItem>
-            <DropdownItem key={data.id}>Delete</DropdownItem>
+            <DropdownItem key={'delete'+data.id} >Delete</DropdownItem>
+            <DropdownItem key={'reset'+data.id} >Reset Password</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>

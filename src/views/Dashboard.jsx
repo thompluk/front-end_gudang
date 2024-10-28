@@ -1,7 +1,7 @@
 import React, { createRef, useEffect, useState } from 'react'
 
-import { Button, Card, CardBody, CardHeader, Select, SelectItem, Table, Tooltip } from '@nextui-org/react'
-import { Bar, BarChart, CartesianGrid, Legend, Rectangle, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import { Button, Card, CardBody, CardHeader, Select, SelectItem, Table } from '@nextui-org/react'
+import { Bar, BarChart, CartesianGrid, Legend, Rectangle, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts'
 import axiosClient from '../axios-client'
 
 export default function Dashboard() {
@@ -10,10 +10,13 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false)
   const [datas1, setDatas1] = useState([])
   const [datas2, setDatas2] = useState([])
+  const [datas3, setDatas3] = useState([])
 
   useEffect(() => {
+    
     getCharts1()
     getCharts2()
+    getCharts3()
   }, [])
 
   const getCharts1 = () => {
@@ -32,7 +35,7 @@ export default function Dashboard() {
   const getCharts2 = () => {
     setLoading(true)
     axiosClient
-      .get('/ppbdashboard')
+      .get('/stockmaterialdashboard')
       .then(({ data }) => {
         setLoading(false)
         setDatas2(data.data)
@@ -42,9 +45,22 @@ export default function Dashboard() {
       })
   }
 
+  const getCharts3 = () => {
+    setLoading(true)
+    axiosClient
+      .get('/ppbdashboard')
+      .then(({ data }) => {
+        setLoading(false)
+        setDatas3(data.data)
+      })
+      .catch(() => {
+        setLoading(false)
+      })
+  }
+
   return (
-    <div className="flex-col">
-      <div className="flex-col justify-center p-4 animated fadeInDown w-1/2">
+    <div className="flex flex-wrap justify-center animated fadeInDown text-tiny">
+      <div className="justify-center p-4 animated fadeInDown w-1/2">
         <Card>
           <CardHeader> Stock Item</CardHeader>
           <CardBody className='h-72 w-full'>
@@ -65,19 +81,40 @@ export default function Dashboard() {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar
-                  dataKey="quantity"
-                  fill="#82ca9d"
-                  activeShape={(props) => (
-                    <Rectangle {...props} fill="gold" stroke="purple" />
-                  )}
-                />
+                <Bar dataKey="quantity" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="purple" />} />
               </BarChart>
             </ResponsiveContainer>
           </CardBody>
         </Card>
       </div>
-      <div className="flex-col justify-center p-4 animated fadeInDown w-[100%]">
+      <div className="justify-center p-4 animated fadeInDown w-1/2">
+        <Card>
+          <CardHeader> Stock Material</CardHeader>
+          <CardBody className='h-72 w-full'>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                width={500}
+                height={300}
+                data={datas2}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="stock_name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="quantity" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="purple" />} />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardBody>
+        </Card>
+      </div>
+      <div className="justify-center p-4 animated fadeInDown w-full">
         <Card>
           <CardHeader> PPB</CardHeader>
           <CardBody className='h-72 w-full'>
@@ -85,7 +122,7 @@ export default function Dashboard() {
               <BarChart
                 width={500}
                 height={300}
-                data={datas2}
+                data={datas3}
                 margin={{
                   top: 5,
                   right: 30,
@@ -106,6 +143,8 @@ export default function Dashboard() {
         </Card>
       </div>
     </div>
+
+
   )
 }
 
