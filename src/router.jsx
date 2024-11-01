@@ -48,6 +48,8 @@ import PengembalianBarang from "./views/pengembalianBarang/PengembalianBarang.js
 import PengembalianBarangDetail from "./views/pengembalianBarang/PengembalianBarangDetail.jsx"
 import PrintSuratJalan from "./views/print/PrintSuratJalan.jsx"
 import Redirect from "./views/Redirect.jsx"
+import PengembalianBarangUmum from "./views/pengembalianBarangUmum/PengembalianBarangUmum.jsx"
+import PengembalianBarangUmumDetail from "./views/pengembalianBarangUmum/PengembalianBarangUmumDetail.jsx"
 
 
 const router = createBrowserRouter([
@@ -290,6 +292,19 @@ const router = createBrowserRouter([
             {
                 path: '/pengembalianbarang/:param/:param2',
                 element: <PengembalianBarangDetail/>
+            },
+
+            {
+                path: '/pengembalianbarangumum',
+                element: <PengembalianBarangUmum/>
+            },
+            {
+                path: '/pengembalianbarangumum/:param',
+                element: <PengembalianBarangUmumDetail/>
+            }, 
+            {
+                path: '/pengembalianbarangumum/:param/:param2',
+                element: <PengembalianBarangUmumDetail/>
             },
 
             //print

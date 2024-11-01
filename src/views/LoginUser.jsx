@@ -5,13 +5,26 @@ import { useState } from 'react'
 import { useStateContext } from '../contexts/ContextProvider.jsx'
 import { Card, CardHeader, CardBody, Input, Button } from '@nextui-org/react'
 import Swal from 'sweetalert2'
-import BgLogin from '../assets/BGy.jpg'
+import BgLogin from '../assets/BG-Custom.jpg'
 
 export default function Login() {
   const emailRef = createRef()
   const passwordRef = createRef()
   const { setUser, setToken } = useStateContext()
   const [message, setMessage] = useState(null)
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    }
+  });
+
 
   const handleLogin = ev => {
     ev.preventDefault()
@@ -25,6 +38,10 @@ export default function Login() {
       .then(({ data }) => {
         setUser(data.user)
         setToken(data.token)
+        Toast.fire({
+          icon: "success",
+          title: "Login is successfully"
+        });
       })
       .catch(err => {
         const response = err.response

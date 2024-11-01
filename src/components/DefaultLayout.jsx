@@ -178,6 +178,9 @@ export default function DefaultLayout(){
                     <NavLink exact to="/suratjalanumum">
                       <CDBSidebarMenuItem>Surat Jalan Umum</CDBSidebarMenuItem>
                     </NavLink>
+                    <NavLink exact to="/pengembalianbarangumum">
+                      <CDBSidebarMenuItem>Pengembalian Barang Umum</CDBSidebarMenuItem>
+                    </NavLink>
                   </div>
 
                   <CDBSidebarMenuItem icon="database" onClick={toggleExpand1}>

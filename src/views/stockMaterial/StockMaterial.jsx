@@ -12,9 +12,15 @@ import {
 import { VerticalDotsIcon } from "../../assets/VerticalDotIcon";
 import { PlusIcon } from "../../assets/PlusIcon";
 import Swal from 'sweetalert2'
+import * as XLSX from "xlsx";
+import { FaFileUpload } from "react-icons/fa";
+import { LuDownload } from "react-icons/lu";
+import { useStateContext } from "../../contexts/ContextProvider.jsx";
 
 export default function StockMaterial() {
 
+  const {user} = useStateContext(); 
+  const [loadingUpload, setLoadingUpload] = useState(false)
   const [loading, setLoading] = useState(false)
   const [datas, setDatas] = useState([])
   const navigate = useNavigate();
@@ -104,12 +110,118 @@ export default function StockMaterial() {
     );
   };
 
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    }
+  });  
+
+  const handleUpload = async () => {
+    const { value: file } = await Swal.fire({
+      title: "Select file excel",
+      input: "file",
+      inputAttributes: {
+        "accept": ".xlsx,.xls,.csv",
+        // accept=".xlsx,.xls,.csv"
+        "aria-label": "Upload your excel file"
+      }
+    });
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file); // Menambahkan file ke FormData
+      setLoadingUpload(true);
+      axiosClient
+      .post('/stockmaterial/upload-excel', formData , {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+      .then(({}) => {
+        Toast.fire({
+          icon: "success",
+          title: "Create is successfully"
+        });
+        setLoadingUpload(false);
+        getDatas();
+      })
+      .catch(err => {
+        setLoadingUpload(false);
+        const response = err.response
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: response.data.message,
+          // footer: '<a href="#">Why do I have this issue?</a>'
+        });
+        if (response && response.status === 404) {
+          setMessage(response.data.message);
+          setErrors(true);
+          console.log(errors) ;
+        }
+      })
+    };
+  };
+
+
+  const downloadExcel = () => {
+    // Tambahkan header di baris pertama
+    const header = [["Stock Name*", "Quantity*", "Item Unit*", "No. PPB", "No. PO", "Description", "Unit Price", "Remarks", "Arrival Date", "Receiver"]];
+  
+    // Data yang akan di-download ke dalam Excel
+    const data = [
+      [],
+    ];
+  
+    // Gabungkan header dan data
+    const sheetData = [...header, ...data];
+  
+    // Buat worksheet dari data
+    const ws = XLSX.utils.aoa_to_sheet(sheetData); // AOA stands for Array of Arrays
+
+    // Terapkan gaya untuk kolom yang wajib diisi (A1, B1, dan C1)
+    ws["A1"].c = [{ t: "Kolom ini wajib diisi"}];
+    ws["A1"].c.hidden = true;
+    ws["B1"].c = [{ t: "Kolom ini wajib diisi" }];
+    ws["B1"].c.hidden = true;
+    ws["C1"].c = [{ t: "Kolom ini wajib diisi" }];
+    ws["C1"].c.hidden = true;
+    ws["I1"].c = [{ t: "Format tanggal: dd/mm/yyyy" }];
+    ws["I1"].c.hidden = true;
+  
+    // Buat workbook baru dan tambahkan worksheet
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+  
+    // Generate dan download file Excel
+    XLSX.writeFile(wb, "templateStockMaterial.xlsx");
+  };
+
   return (
     <div className="flex-col justify-center bg-white p-4 rounded-large animated fadeInDown ">
-      <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
-          <h1>Stock Material List</h1>
-      </div>
-      <TableCustom columns={columns} addButton={addButton} renderCellTable={renderCellTable} getDatas={getDatas} loading={loading} datas={datas}/>
+      {loadingUpload && (
+            <div className="row">
+              <div className="col-md-12 mb-12 text-center">Loading...</div>
+            </div>
+          )}
+      {!loadingUpload && (
+      <div>
+          <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
+              <h1>Stock Material List</h1>
+          </div>
+          <div className="pt-2" hidden= {user.role != 'ADMIN'}>
+            <div className="flex gap-2">
+              <Button className="bg-blue-300" onClick={handleUpload}>Upload <FaFileUpload size={'20px'} color="black"/> </Button>
+              <Button className="bg-orange-300" onClick={downloadExcel}>Download Template <LuDownload size={'20px'} color="black"/></Button>
+            </div>
+          </div>
+          <TableCustom columns={columns} addButton={addButton} renderCellTable={renderCellTable} getDatas={getDatas} loading={loading} datas={datas}/>
+      </div>)}
     </div>
   );
 }

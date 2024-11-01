@@ -16,9 +16,11 @@ import Swal from 'sweetalert2'
 import * as XLSX from "xlsx";
 import { FaFileUpload } from "react-icons/fa";
 import { LuDownload } from "react-icons/lu";
+import { useStateContext } from "../../contexts/ContextProvider.jsx";
 
 export default function Users() {
  
+  const {user} = useStateContext(); 
   const [loadingUpload, setLoadingUpload] = useState(false)
   const [loading, setLoading] = useState(false)
   const [datas, setDatas] = useState([])
@@ -278,20 +280,12 @@ export default function Users() {
           <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
               <h1>User List</h1>
           </div>
-          <div className="pt-2">
-                {/* <form onSubmit={handleSubmit} className="create-edit-form p-2"> */}
-                    <div className="flex gap-2">
-                      {/* <input
-                          type="file"
-                          accept=".xlsx,.xls,.csv"
-                          onChange={handleFileChange}
-                      /> */}
-                      <Button className="bg-blue-300" onClick={handleUpload}>Upload <FaFileUpload size={'20px'} color="black"/> </Button>
-                      <Button className="bg-orange-300" onClick={downloadExcel}>Download Template <LuDownload size={'20px'} color="black"/></Button>
-                    </div>
-                {/* </form>
-                {message && <p>{message}</p>} */}
+          <div className="pt-2" hidden = {user.role !== 'ADMIN'}>
+            <div className="flex gap-2">
+              <Button className="bg-blue-300" onClick={handleUpload}>Upload <FaFileUpload size={'20px'} color="black"/> </Button>
+              <Button className="bg-orange-300" onClick={downloadExcel}>Download Template <LuDownload size={'20px'} color="black"/></Button>
             </div>
+          </div>
           <TableCustom columns={columns} addButton={addButton} renderCellTable={renderCellTable} getDatas={getDatas} loading={loading} datas={datas}/>
         </div>)}
     </div>
