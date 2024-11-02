@@ -41,7 +41,7 @@ export default function Users() {
 
   const addButton = () => {
     return (
-      <Button color="primary" endContent={<PlusIcon />} onClick={addBtn}>
+      <Button color="primary" endContent={<PlusIcon />} onClick={addBtn} hidden = {user.role !== 'ADMIN'}>
         Add New
       </Button>
     );
@@ -139,9 +139,9 @@ export default function Users() {
           </DropdownTrigger>
           <DropdownMenu onAction={handleAction}>
             <DropdownItem key={"/users/" + data.id + "/view"}>View</DropdownItem>
-            <DropdownItem key={"/users/" + data.id}>Edit</DropdownItem>
-            <DropdownItem key={'delete'+data.id} >Delete</DropdownItem>
-            <DropdownItem key={'reset'+data.id} >Reset Password</DropdownItem>
+            <DropdownItem key={"/users/" + data.id} hidden = {user.role !== 'ADMIN'}>Edit</DropdownItem>
+            <DropdownItem key={'delete'+data.id} hidden = {user.role !== 'ADMIN'}>Delete</DropdownItem>
+            <DropdownItem key={'reset'+data.id} hidden = {user.role !== 'ADMIN'}>Reset Password</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>

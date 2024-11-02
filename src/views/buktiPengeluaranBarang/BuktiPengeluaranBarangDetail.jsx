@@ -947,7 +947,7 @@ export default function BuktiPengeluaranBarangDetail() {
             <>
                 <ModalHeader className="flex flex-col gap-1">Select Approved By</ModalHeader>
                 <ModalBody>
-                <TableSelect columns={columnsUsers} apiname={'userSelectInventory'} handleAction={handleApprovedBy}>
+                <TableSelect columns={columnsUsers} apiname={'userSelectWarehouse'} handleAction={handleApprovedBy}>
                 </TableSelect>
                 </ModalBody>
             </>

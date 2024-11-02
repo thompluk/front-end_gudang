@@ -209,7 +209,7 @@ export default function DefaultLayout(){
                     <NavLink exact to="/ppb">
                       <CDBSidebarMenuItem>Permintaan Pembelian Barang</CDBSidebarMenuItem>
                     </NavLink>
-                    <NavLink exact to="/po">
+                    <NavLink exact to="/po" hidden={user.role !== 'PURCHASING'}>
                       <CDBSidebarMenuItem>Purchase Order</CDBSidebarMenuItem>
                     </NavLink>
                   </div>
@@ -228,7 +228,7 @@ export default function DefaultLayout(){
                     </NavLink>
                   </div>
 
-                  <CDBSidebarMenuItem icon="box" onClick={toggleExpand4}>
+                  <CDBSidebarMenuItem icon="box" onClick={toggleExpand4} hidden={user.role !== 'WAREHOUSE'}>
                     <div className="flex">
                       <div className="flex gap-2">Warehouse 
                         <img 
@@ -254,18 +254,6 @@ export default function DefaultLayout(){
                         </div> 
                       </CDBSidebarMenuItem>
                     </NavLink>
-                    {/* <NavLink exact to="/bpbdelivery">
-                      <CDBSidebarMenuItem>
-                        <div className="flex gap-2">Outstanding BPB 
-                          <img 
-                            src={RedDot}
-                            alt="RedDot"
-                            className="w-4 h-4"
-                            hidden={bpb.length === 0}
-                          />
-                        </div> 
-                      </CDBSidebarMenuItem>
-                    </NavLink> */}
                     <NavLink exact to="/pengembalianBarang">
                       <CDBSidebarMenuItem>Pengembalian Barang</CDBSidebarMenuItem>
                     </NavLink>
@@ -330,7 +318,7 @@ export default function DefaultLayout(){
               </div>
               <div>
                 {/* <NavLink exact to="/profile"> */}
-                  {user.name} &nbsp; &nbsp;
+                  {user.name} - {user.role} &nbsp; &nbsp;
                   {/* <a onClick={onLogout} className="btn-logout" href="#">Logout</a> */}
                 {/* </NavLink> */}
               </div>

@@ -12,9 +12,11 @@ import {
 import { VerticalDotsIcon } from "../../assets/VerticalDotIcon";
 import { PlusIcon } from "../../assets/PlusIcon";
 import Swal from 'sweetalert2'
+import { useStateContext } from "../../contexts/ContextProvider.jsx";
 
 export default function Prinsipal() {
 
+  const {user} = useStateContext(); 
   const [loading, setLoading] = useState(false)
   const [datas, setDatas] = useState([])
   const navigate = useNavigate();
@@ -32,7 +34,7 @@ export default function Prinsipal() {
 
   const addButton = () => {
     return (
-      <Button color="primary" endContent={<PlusIcon />} onClick={addBtn}>
+      <Button color="primary" endContent={<PlusIcon />} onClick={addBtn} hidden = {user.role !== 'ADMIN'}>
         Add New
       </Button>
     );
@@ -104,8 +106,8 @@ export default function Prinsipal() {
           </DropdownTrigger>
           <DropdownMenu onAction={handleAction}>
             <DropdownItem key={"/prinsipal/" + data.id + "/view"}>View</DropdownItem>
-            <DropdownItem key={"/prinsipal/" + data.id}>Edit</DropdownItem>
-            <DropdownItem key={data.id}>Delete</DropdownItem>
+            <DropdownItem key={"/prinsipal/" + data.id} hidden = {user.role !== 'ADMIN'}>Edit</DropdownItem>
+            <DropdownItem key={data.id} hidden = {user.role !== 'ADMIN'}>Delete</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>

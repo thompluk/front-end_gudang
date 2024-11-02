@@ -528,9 +528,9 @@ export default function PurchaseOrderUmumDetail() {
                     <TableColumn className='w-15/100'>ITEM</TableColumn>
                     <TableColumn className='w-15/100'>DESCRIPTION</TableColumn>
                     <TableColumn className='w-1/13'>QTY</TableColumn>
-                    <TableColumn className='w-1/10' hidden={user.role == 'INVENTORY'}>UNIT PRICE</TableColumn>
-                    <TableColumn className='w-1/13' hidden={user.role == 'INVENTORY'}>DISCOUNT %</TableColumn>
-                    <TableColumn className='w-1/10' hidden={user.role == 'INVENTORY'}>AMOUNT</TableColumn>
+                    <TableColumn className='w-1/10' hidden={user.role == 'WAREHOUSE'}>UNIT PRICE</TableColumn>
+                    <TableColumn className='w-1/13' hidden={user.role == 'WAREHOUSE'}>DISCOUNT %</TableColumn>
+                    <TableColumn className='w-1/10' hidden={user.role == 'WAREHOUSE'}>AMOUNT</TableColumn>
                     <TableColumn className='w-12/100'>REMARKS</TableColumn>
                     <TableColumn className='w-1/10'>ITEM UNIT</TableColumn>
                 </TableHeader>
@@ -546,13 +546,13 @@ export default function PurchaseOrderUmumDetail() {
                             <TableCell>
                                 {item.quantity}
                             </TableCell>
-                            <TableCell hidden={user.role == 'INVENTORY'}>
+                            <TableCell hidden={user.role == 'WAREHOUSE'}>
                                 {item.unit_price} 
                             </TableCell>
-                            <TableCell hidden={user.role == 'INVENTORY'}>
+                            <TableCell hidden={user.role == 'WAREHOUSE'}>
                                 {item.discount}
                             </TableCell>
-                            <TableCell hidden={user.role == 'INVENTORY'}>
+                            <TableCell hidden={user.role == 'WAREHOUSE'}>
                                 {item.amount}
                             </TableCell>
                             <TableCell>
@@ -571,7 +571,7 @@ export default function PurchaseOrderUmumDetail() {
 
                 <div className='flex justify-between'>
                   <div className='w-3/5'>
-                    <div  className=" p-2 w-full" hidden={user.role == 'INVENTORY'}>
+                    <div  className=" p-2 w-full" hidden={user.role == 'WAREHOUSE'}>
                       <Input
                       id="say"
                       // ref={sayRef}
@@ -600,7 +600,7 @@ export default function PurchaseOrderUmumDetail() {
                     />
                     </div>
                   </div>
-                  <div className='w-2/5' hidden={user.role == 'INVENTORY'}>
+                  <div className='w-2/5' hidden={user.role == 'WAREHOUSE'}>
                     <div  className=" p-2 w-full">
                       <Input
                       id="sub_total"

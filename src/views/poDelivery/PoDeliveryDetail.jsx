@@ -549,7 +549,7 @@ export default function PoDeliveryDetail() {
 
                 <div className='flex justify-between'>
                   <div className='w-3/5'>
-                    <div  className=" p-2 w-full" hidden={user.role == 'INVENTORY'}>
+                    <div  className=" p-2 w-full" hidden={user.role == 'WAREHOUSE'}>
                       <Input
                       id="say"
                       // ref={sayRef}
@@ -579,7 +579,7 @@ export default function PoDeliveryDetail() {
                     />
                     </div>
                   </div>
-                  <div className='w-2/5' hidden={user.role == 'INVENTORY'}>
+                  <div className='w-2/5' hidden={user.role == 'WAREHOUSE'}>
                     <div  className=" p-2 w-full">
                       <Input
                       id="sub_total"
@@ -757,7 +757,7 @@ export default function PoDeliveryDetail() {
                         </div>
                     </div>
                     {/* <div  className=" p-2 xl:w-1/12 w-full">
-                        <Button className="bg-green-300" onClick={() => handleOpenModalItems()} hidden={user.role !== 'INVENTORY' || poData.arrival_status === 'Arrived'}>
+                        <Button className="bg-green-300" onClick={() => handleOpenModalItems()} hidden={user.role !== 'WAREHOUSE' || poData.arrival_status === 'Arrived'}>
                             Arrived
                         </Button>
                     </div> */}
