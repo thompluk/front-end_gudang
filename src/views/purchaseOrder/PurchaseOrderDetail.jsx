@@ -554,6 +554,7 @@ export default function PurchaseOrderDetail() {
       {name: "NAMA BARANG", uid: "nama_barang", sortable: true},
       {name: "NO PPB", uid: "no_ppb", sortable: true},
       {name: "KODE", uid: "kode", sortable: true},
+      {name: "QTY", uid: "quantity", sortable: true},
       {name: "SPESIFIKASI", uid: "spesifikasi", sortable: true},
       {name: "PROJECT & CUSTOMER", uid: "project_and_customer", sortable: true},
       {name: "ACTIONS", uid: "actions", headerClassName:'text-end'},
@@ -606,7 +607,7 @@ export default function PurchaseOrderDetail() {
     }
 
     const handleItems = (data) => {
-      setDetails(details.map((row, i) => i === indexNow ? { ...row, item: data.nama_barang, ppb_detail_id: (data.id).toString(), no_ppb: data.no_ppb } : row));
+      setDetails(details.map((row, i) => i === indexNow ? { ...row, item: data.nama_barang, ppb_detail_id: (data.id).toString(), no_ppb: data.no_ppb, quantity: data.quantity } : row));
       setIsModalOpenItems(false)
     }
 

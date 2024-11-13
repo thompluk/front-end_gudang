@@ -93,6 +93,7 @@ export default function SuratJalanDetail() {
       // no_sn:null,
       nama_barang:null,
       quantity:null,
+      max_quantity:null,
       // is_dikembalikan:null,
       keterangan:null,
     }
@@ -107,6 +108,7 @@ export default function SuratJalanDetail() {
       // no_sn:null,
       nama_barang:null,
       quantity:null,
+      max_quantity:null,
       // is_dikembalikan:null,
       keterangan:null,
     };
@@ -414,7 +416,7 @@ export default function SuratJalanDetail() {
     }
 
     const handleItems = (data) => {
-      setDetails(details.map((row, i) => i === indexNow ? { ...row, nama_barang: data.stock_name, stock_material_id: (data.id).toString() } : row));
+      setDetails(details.map((row, i) => i === indexNow ? { ...row, nama_barang: data.stock_name, stock_material_id: (data.id).toString(), max_quantity: data.quantity } : row));
       setIsModalOpenItems(false)
     }
 
@@ -579,10 +581,12 @@ export default function SuratJalanDetail() {
                                     aria-label="Quantity"
                                     style={{ fontSize: '12px' }}
                                     isDisabled = {disabledView}
-                                    type="text" 
+                                    type="number" 
                                     variant='bordered' 
                                     value={item.quantity} 
                                     onChange={(e) => handleInputChangeRow(index, 'quantity', e.target.value)}
+                                    isInvalid={item.quantity > item.max_quantity}
+                                    errorMessage={'Max quantity is ' + item.max_quantity}
                                 />
                             </TableCell>
                             {/* <TableCell>
@@ -685,9 +689,9 @@ export default function SuratJalanDetail() {
                         <ModalContent>
                           {(onClose) => (
                             <>
-                              <ModalHeader className="flex flex-col gap-1">Select Verified By</ModalHeader>
+                              <ModalHeader className="flex flex-col gap-1">Select Verified By (Purchasing)</ModalHeader>
                               <ModalBody>
-                                <TableSelect columns={columnsUsers} apiname={'userSelect'} handleAction={handleMengetahui}>
+                                <TableSelect columns={columnsUsers} apiname={'userSelectPurchasing'} handleAction={handleMengetahui}>
                                 </TableSelect>
                               </ModalBody>
                             </>

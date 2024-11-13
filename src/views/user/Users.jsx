@@ -260,6 +260,16 @@ export default function Users() {
     // Buat worksheet dari data
     const ws = XLSX.utils.aoa_to_sheet(sheetData); // AOA stands for Array of Arrays
   
+    // Terapkan gaya untuk kolom yang wajib diisi (A1, B1, dan C1)
+    // ws["A1"].c = [{ t: "Kolom ini wajib diisi"}];
+    // ws["A1"].c.hidden = true;
+    // ws["B1"].c = [{ t: "Kolom ini wajib diisi" }];
+    // ws["B1"].c.hidden = true;
+    ws["C1"].c = [{ t: "Gunakan ( ' ) sebelum angka 0 contoh: '08123912381 " }];
+    ws["C1"].c.hidden = true;
+    ws["E1"].c = [{ t: "Opsi yang tersedia: ADMIN, SALES, PURCHASING, WAREHOUSE" }];
+    ws["E1"].c.hidden = true;
+
     // Buat workbook baru dan tambahkan worksheet
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");

@@ -28,6 +28,7 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure}
 import TableSelect from '../../custom/TableSelect'
 import { SearchIcon } from '../../assets/SearchIcon'
 import numberToWords from 'number-to-words';
+import { m } from 'framer-motion'
 // import { IconButton } from "@material-tailwind/react";
 
 export default function BuktiPengeluaranBarangDetail() {
@@ -105,6 +106,7 @@ export default function BuktiPengeluaranBarangDetail() {
       stock_id: null,
       stock_name: null,
       quantity: null,
+      max_quantity: null,
       notes: null,
     }
   ]);
@@ -128,6 +130,7 @@ export default function BuktiPengeluaranBarangDetail() {
       stock_id: null,
       stock_name: null,
       quantity: null,
+      max_quantity: null,
       notes: null,
     };
 
@@ -463,7 +466,7 @@ export default function BuktiPengeluaranBarangDetail() {
     // }
 
     const handleItems = (data) => {
-      setDetails(details.map((row, i) => i === indexNow ? { ...row, stock_name: data.stock_name, stock_id : (data.id).toString()} : row));
+      setDetails(details.map((row, i) => i === indexNow ? { ...row, stock_name: data.stock_name, stock_id : (data.id).toString(), max_quantity: data.quantity} : row));
       setIsModalOpenItems(false)
     }
 
@@ -791,6 +794,8 @@ export default function BuktiPengeluaranBarangDetail() {
                                       value={item.quantity} 
                                       onChange={(e) => handleInputChangeRow(index, 'quantity', e.target.value)}
                                       isReadOnly={disabledView}
+                                      isInvalid={item.quantity > item.max_quantity}
+                                      errorMessage={'Max quantity is ' + item.max_quantity}
                                   />
                               </TableCell>
                               <TableCell>
@@ -890,7 +895,7 @@ export default function BuktiPengeluaranBarangDetail() {
                         className="bg-white w-full"
                         type="text"
                         value={bpbData.approved_by|| ''}
-                        label="Approved By"
+                        label="Approved By (Warehouse)"
                         isInvalid={message?.approved_by != null}
                         errorMessage={message?.approved_by}
                         isReadOnly={true}
@@ -945,7 +950,7 @@ export default function BuktiPengeluaranBarangDetail() {
         <ModalContent>
             {(onClose) => (
             <>
-                <ModalHeader className="flex flex-col gap-1">Select Approved By</ModalHeader>
+                <ModalHeader className="flex flex-col gap-1">Select Approved By (Warehouse)</ModalHeader>
                 <ModalBody>
                 <TableSelect columns={columnsUsers} apiname={'userSelectWarehouse'} handleAction={handleApprovedBy}>
                 </TableSelect>

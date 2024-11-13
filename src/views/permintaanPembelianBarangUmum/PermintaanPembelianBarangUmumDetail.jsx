@@ -42,10 +42,14 @@ export default function PermintaanPembelianBarangUmumDetail() {
     mengetahui: '',
     mengetahui_id: '',
     mengetahui_status: '',
+    mengetahui_date: null,
     menyetujui: '',
     menyetujui_id: '',
     menyetujui_status: '',
+    menyetujui_date: null,
     purchasing: '',
+    purchasing_status: '',
+    purchasing_date: null,
     remarks: '',
   })
 
@@ -96,11 +100,14 @@ export default function PermintaanPembelianBarangUmumDetail() {
           mengetahui: data.data.mengetahui,
           mengetahui_id: data.data.mengetahui_id,
           mengetahui_status: data.data.mengetahui_status,
+          mengetahui_date: data.data.mengetahui_date,
           menyetujui: data.data.menyetujui,
           menyetujui_id: data.data.menyetujui_id,
           menyetujui_status: data.data.menyetujui_status,
+          menyetujui_date: data.data.menyetujui_date,
           purchasing: data.data.purchasing,
           purchasing_status: data.data.purchasing_status,
+          purchasing_date: data.data.purchasing_date,
           remarks: data.data.remarks,
         })
         setLoading(false)
@@ -311,9 +318,12 @@ export default function PermintaanPembelianBarangUmumDetail() {
                         isReadOnly={true}
                       /> 
                     </div>
-                    <div className='p-4 w-1/4' hidden={ppbData.status === 'Draft' || ppbData.status === ''}>
+                    <div className='flex p-4 w-1/4' hidden={ppbData.status === 'Draft' || ppbData.status === ''}>
                           <p id="status" >
                             Status : {ppbData.mengetahui_status}
+                          </p>
+                          <p id="date" hidden={ppbData.mengetahui_date == null}>
+                            / Date : {ppbData.mengetahui_date}
                           </p>
                     </div>
                   </div>
@@ -333,9 +343,12 @@ export default function PermintaanPembelianBarangUmumDetail() {
                         isReadOnly={true}
                       />
                     </div>
-                    <div className='p-4 w-1/4' hidden={ppbData.status === 'Draft' || ppbData.status === ''}>
+                    <div className='flex p-4 w-1/4' hidden={ppbData.status === 'Draft' || ppbData.status === ''}>
                         <p id="status" >
                           Status : {ppbData.menyetujui_status}
+                        </p>
+                        <p id="date" hidden={ppbData.menyetujui_date == null}>
+                          / Date : {ppbData.menyetujui_date}
                         </p>
                     </div>
                   </div>
@@ -355,9 +368,12 @@ export default function PermintaanPembelianBarangUmumDetail() {
                         isReadOnly={true}
                       />
                     </div>
-                    <div className='p-4 w-1/4'>
+                    <div className='flex p-4 w-1/4'>
                         <p id="status" >
                           Status : {ppbData.purchasing_status}
+                        </p>
+                        <p id="date" hidden={ppbData.purchasing_date == null}>
+                          / Date : {ppbData.purchasing_date}
                         </p>
                     </div>
                   </div> 

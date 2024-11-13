@@ -218,9 +218,9 @@ function PrintBPB() {
                                 <thead>
                                     <tr>
                                         <th className="w-[4%] text-center">No.</th>
+                                        <th className='w-[25%]'>Item Name</th> 
                                         <th className='w-[15%]'>EDP</th>
                                         <th className='w-[11%]'>S/N</th>
-                                        <th className='w-[25%]'>Item Name</th> 
                                         {/* <th className='w-[5%]'>QTY</th> */}
                                         <th className='w-[25%]'>Notes</th>
                                     </tr>
@@ -230,9 +230,9 @@ function PrintBPB() {
                                     details.map((item, index) => (
                                         <tr key={index}>
                                             <td>{index + 1}</td>
+                                            <td>{item.item_name}</td>
                                             <td>{item.no_edp}</td>
                                             <td>{item.no_sn}</td>
-                                            <td>{item.item_name}</td>
                                             {/* <td>{item.quantity}</td> */}
                                             <td>{item.notes}</td>
                                         </tr>

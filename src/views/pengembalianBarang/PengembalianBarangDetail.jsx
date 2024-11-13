@@ -391,10 +391,12 @@ export default function PengembalianBarangDetail() {
                                         aria-label="Quantity Dikembaliakn"
                                         style={{ fontSize: '12px' }}
                                         isDisabled = {disabledView}
-                                        type="text" 
+                                        type="number" 
                                         variant='bordered' 
                                         value={item.quantity_dikembalikan} 
                                         onChange={(e) => handleInputChangeRow(index, 'quantity_dikembalikan', e.target.value)}
+                                        isInvalid={item.quantity_dikembalikan > item.quantity_dikirim}
+                                        errorMessage={'Max quantity is ' + item.quantity_dikirim}
                                     />
                                 </TableCell>
                                 <TableCell>

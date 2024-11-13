@@ -121,13 +121,15 @@ export default function UsersDetail() {
         })
         .catch(err => {
           const response = err.response
+          setMessage(response.data.message);
+          setErrors(true);
           if (response && response.status === 400) {
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: response.data.message,
-              // footer: '<a href="#">Why do I have this issue?</a>'
-            });
+            // Swal.fire({
+            //   icon: "error",
+            //   title: "Oops...",
+            //   text: response.data.message,
+            //   // footer: '<a href="#">Why do I have this issue?</a>'
+            // });
           }
         })
     }

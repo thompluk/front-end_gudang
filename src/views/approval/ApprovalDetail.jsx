@@ -73,7 +73,7 @@ export default function ApprovalDetail() {
       
     }
 
-    const handleApprove = () => {
+    const handleApprove = async() => {
 
       Swal.fire({
         title: "Are you sure?",
@@ -87,12 +87,15 @@ export default function ApprovalDetail() {
         if (result.isConfirmed) {
           if(param2 === 'bpb') {
             onSaveAllClick();
+            setTimeout(() => {
+              btnApprove(); // Jalankan btnApprove setelah delay
+            }, 4000);
+          }else{
+            btnApprove();
           }
-          btnApprove();
+          // btnApprove();
         }
       });
-  
-      
     };
 
     const btnReturn = (remarks) => {

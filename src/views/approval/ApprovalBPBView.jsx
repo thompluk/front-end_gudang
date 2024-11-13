@@ -378,7 +378,7 @@ const ApprovalBPBView = forwardRef((props, ref) => {
     <div className="bg-white p-4 rounded-large animated fadeInDown border">
       <div className="flex-col items-center">
         <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid grey' }}>
-          <h1> BPB Delivery</h1>
+          <h1> Bukti Pengeluaran Barang</h1>
         </div>
           <div className="pt-8">
           <div className="flex w-full flex-wrap md:flex-nowrap p-2 justify-between" >
